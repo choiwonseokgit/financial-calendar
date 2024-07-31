@@ -20,10 +20,12 @@ function BigCalendarPrac() {
     if (e.direction === 'PREV') {
       //setSwipeState('prev');
       // console.log('좌로');
+
       setPanels([panels[0] - 1, ...panels]);
     } else if (e.direction === 'NEXT') {
       //setSwipeState('next');
       //   console.log('우로');
+
       setPanels([...panels, panels[panels.length - 1] + 1]);
     }
   };
@@ -48,6 +50,7 @@ function BigCalendarPrac() {
         renderOnlyVisible={true}
         defaultIndex={1}
         onMoveEnd={handleSwipe}
+        moveType={'strict'}
       >
         {panels.map((index) => (
           <div key={index} style={{ width: '100%' }}>
