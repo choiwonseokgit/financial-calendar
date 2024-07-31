@@ -1,32 +1,16 @@
-import ko from '@fullcalendar/core/locales/ko';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import FullCalendar from '@fullcalendar/react';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import { mobileSize } from '@styles/mobile';
-import styled from 'styled-components';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// import BigCalendar from './components/big-calendar';
+import '@egjs/react-flicking/dist/flicking.css';
+import '@egjs/react-flicking/dist/flicking-inline.css';
+import BigCalendarPrac from './components/big-calendar-prac';
 
 function CalendarView() {
   return (
-    <S.CalendarContainer>
-      <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
-        headerToolbar={{
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay',
-        }}
-        locale={ko}
-      />
-    </S.CalendarContainer>
+    <div>
+      {/* <BigCalendar /> */}
+      <BigCalendarPrac />
+    </div>
   );
 }
 
 export default CalendarView;
-
-const S = {
-  CalendarContainer: styled.div`
-    ${mobileSize}
-  `,
-};
