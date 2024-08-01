@@ -11,6 +11,7 @@ moment.locale('ko-KR');
 const localizer = momentLocalizer(moment);
 
 function BigCalendarPrac() {
+  const [currIdx, setCurrIdx] = useState(1);
   const [panels, setPanels] = useState([0, 1, 2]);
   const [navigateDate, setNavigateDate] = useState(new Date());
   const [onView, setOnView] = useState<View>('month');
@@ -51,6 +52,10 @@ function BigCalendarPrac() {
         defaultIndex={1}
         onMoveEnd={handleSwipe}
         moveType={'strict'}
+        onChanged={(e) => {
+          // console.log(e);
+          setCurrIdx(e.index);
+        }}
       >
         {panels.map((index) => (
           <div key={index} style={{ width: '100%' }}>
@@ -61,7 +66,7 @@ function BigCalendarPrac() {
                 justifyContent: 'center',
               }}
             >
-              {index}
+              {currIdx}
             </div>
             <Calendar
               localizer={localizer}
