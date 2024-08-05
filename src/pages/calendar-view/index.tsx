@@ -3,7 +3,7 @@ import Flicking, { MoveEndEvent } from '@egjs/react-flicking';
 import { addMonths } from 'date-fns';
 import '@egjs/react-flicking/dist/flicking.css';
 import Calendar from './components/calendar';
-//TODO: 서버사이드 렌더링으로 적용하면 잘 될듯?
+//TODO: 서버사이드 렌더링으로 데이터 받아오는거 적용해보기
 function CalendarView() {
   const currDate = new Date();
   const [dates, setDates] = useState([
@@ -15,15 +15,12 @@ function CalendarView() {
   const [isFlicking, setIsFlicking] = useState(false);
   const flickingRef = useRef<Flicking>(null);
   const isCanceledRef = useRef(0);
-  const flickingDirectionRef = useRef<'PREV' | 'NEXT' | 'NONE'>('NONE');
   const flickingPosRef = useRef(600);
 
   const handleOnMoveEnd = (e: MoveEndEvent<Flicking>) => {
     const isFlickingCanceled = !!isCanceledRef.current;
-    // console.log(isFlickingCanceled || !e.axesEvent.isTrusted);
-    if (isFlickingCanceled || !e.axesEvent.isTrusted) return;
 
-    // console.log(flickingDirectionRef.current);
+    if (isFlickingCanceled || !e.axesEvent.isTrusted) return;
 
     const direction = flickingPosRef.current > 600 ? 'NEXT' : 'PREV';
 
@@ -61,15 +58,7 @@ function CalendarView() {
         duration={200}
         defaultIndex={1}
         interruptable={false}
-        onMoveStart={(e) => {
-          if (e.axesEvent.isTrusted) {
-            flickingDirectionRef.current = e.direction;
-          }
-        }}
-        onMove={(e) => {
-          flickingPosRef.current = e.axesEvent.pos.flick;
-          console.log(flickingPosRef.current);
-        }}
+        onMove={(e) => (flickingPosRef.current = e.axesEvent.pos.flick)}
         onMoveEnd={handleOnMoveEnd}
         moveType={['strict', { count: 1 }]}
         changeOnHold={true}
