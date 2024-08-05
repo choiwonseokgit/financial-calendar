@@ -3,7 +3,7 @@ import Flicking, { MoveEndEvent } from '@egjs/react-flicking';
 import { addMonths } from 'date-fns';
 import '@egjs/react-flicking/dist/flicking.css';
 import Calendar from './components/calendar';
-
+//TODO: 서버사이드 렌더링으로 데이터 받아오는거 적용해보기
 function CalendarView() {
   const currDate = new Date();
   const [dates, setDates] = useState([
@@ -15,17 +15,21 @@ function CalendarView() {
   const [isFlicking, setIsFlicking] = useState(false);
   const flickingRef = useRef<Flicking>(null);
   const isCanceledRef = useRef(0);
+  const flickingPosRef = useRef(600);
 
   const handleOnMoveEnd = (e: MoveEndEvent<Flicking>) => {
     const isFlickingCanceled = !!isCanceledRef.current;
 
-    if (isFlickingCanceled) return;
+    if (isFlickingCanceled || !e.axesEvent.isTrusted) return;
 
-    if (e.direction === 'PREV') {
+    const direction = flickingPosRef.current > 600 ? 'NEXT' : 'PREV';
+
+    if (direction === 'PREV') {
       setDates([dates[0], dates[0], dates[2]]);
-    } else if (e.direction === 'NEXT') {
+    } else if (direction === 'NEXT') {
       setDates([dates[0], dates[2], dates[2]]);
     }
+
     setIsFlicking(true);
   };
 
@@ -35,6 +39,7 @@ function CalendarView() {
 
   useLayoutEffect(() => {
     if (isFlicking) {
+      console.log('effect');
       moveToInit();
       setDates([addMonths(dates[1], -1), dates[1], addMonths(dates[1], 1)]);
       setIsFlicking(false);
@@ -49,9 +54,11 @@ function CalendarView() {
         preventDefaultOnDrag={true}
         preventEventsBeforeInit={true}
         renderOnlyVisible={false}
+        circular={true}
         duration={200}
         defaultIndex={1}
         interruptable={false}
+        onMove={(e) => (flickingPosRef.current = e.axesEvent.pos.flick)}
         onMoveEnd={handleOnMoveEnd}
         moveType={['strict', { count: 1 }]}
         changeOnHold={true}
