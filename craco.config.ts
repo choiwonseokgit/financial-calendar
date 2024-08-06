@@ -10,7 +10,7 @@ const config: CracoConfig = {
       '@constants': path.resolve(__dirname, 'src/constants/'),
       '@hooks': path.resolve(__dirname, 'src/hooks/'),
       '@pages': path.resolve(__dirname, 'src/pages/'),
-      '@stores': path.resolve(__dirname, 'src/stores/'),
+      '@store': path.resolve(__dirname, 'src/store/'),
       '@utils': path.resolve(__dirname, 'src/utils/'),
       '@styles': path.resolve(__dirname, 'src/styles/'),
       '@': path.resolve(__dirname, 'src/'),

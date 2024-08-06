@@ -1,3 +1,4 @@
+//TODO: 순서 정렬 다시 한번 도전 해보기
 module.exports = {
   root: true,
   env: { browser: true, es2020: true },
@@ -14,11 +15,20 @@ module.exports = {
   rules: {
     'no-var': 'error',
     'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
-    'no-unused-vars': 'error',
+    'no-unused-vars': 'warn',
     'import/order': [
       'warn',
       {
-        groups: ['builtin', 'external', 'internal', 'type'],
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          'parent',
+          'sibling',
+          'index',
+          'type',
+          'unknown',
+        ],
         pathGroups: [
           {
             pattern: 'react',
@@ -31,7 +41,7 @@ module.exports = {
             position: 'after',
           },
           {
-            pattern: '@**/*.style',
+            pattern: '@**/*.{png,jpg,jpeg,gif}',
             group: 'unknown',
             position: 'after',
           },
