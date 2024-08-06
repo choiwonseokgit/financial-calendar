@@ -6,4 +6,5 @@ export const mobileSize = css`
   margin-left: auto;
   margin-right: auto;
   background-color: #fff;
+  /* background-color: #f5f8f7; */
 `;
