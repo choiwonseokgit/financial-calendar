@@ -1,11 +1,15 @@
-import arrowLeft from '@assets/icons/chevron-left-solid-green.svg';
-import arrowRight from '@assets/icons/chevron-right-solid-green.svg';
+import BarIcon from '@assets/icons/bars-solid.svg';
+import CalendarIcon from '@assets/icons/calendar-regular.svg';
+import arrowLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
+import arrowRightIcon from '@assets/icons/chevron-right-solid-green.svg';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { ToolbarProps } from 'react-big-calendar';
 import styled from 'styled-components';
 
 function MyToolbar({ date, onNavigate, onView, view }: ToolbarProps) {
+  // return <></>;
+
   //   console.log(date, view);
   //   const parsedDate = parse(label, 'M월 yyyy', new Date(), { locale: ko });
 
@@ -16,6 +20,9 @@ function MyToolbar({ date, onNavigate, onView, view }: ToolbarProps) {
       locale: ko,
     },
   );
+  const currDate = format(new Date(), 'M월 d일 EEEE', {
+    locale: ko,
+  });
   //console.log(label, parsedDate, formatedDate);
 
   const handlePrevBtnClick = () => {
@@ -30,19 +37,25 @@ function MyToolbar({ date, onNavigate, onView, view }: ToolbarProps) {
     <S.Container>
       <S.LeftBox>
         <button onClick={handlePrevBtnClick}>
-          <S.Img src={arrowLeft} alt="이전" />
+          <S.ArrowImg src={arrowLeftIcon} alt="이전" />
         </button>
         <S.Date>{formatedDate}</S.Date>
         <button onClick={handleNextBtnClick}>
-          <S.Img src={arrowRight} alt="다음" />
+          <S.ArrowImg src={arrowRightIcon} alt="다음" />
         </button>
+        {formatedDate !== currDate && (
+          <S.TodayBtn onClick={() => onNavigate('TODAY')}>오늘</S.TodayBtn>
+        )}
+        {view === 'day' && (
+          <button onClick={() => onView('month')}>
+            <S.Calendarimg src={CalendarIcon} alt="달력" />
+          </button>
+        )}
       </S.LeftBox>
-      <S.CenterBox>
-        <button onClick={() => onView('month')}>달</button>
-        <button onClick={() => onView('day')}>일</button>
-      </S.CenterBox>
       <S.RightBox>
-        <button onClick={() => onNavigate('TODAY')}>오늘</button>
+        <button>
+          <S.BarImg src={BarIcon} alt="메뉴바" />
+        </button>
       </S.RightBox>
     </S.Container>
   );
@@ -74,16 +87,32 @@ const S = {
     font-size: 25px;
     font-weight: bold;
   `,
-  Img: styled.img`
+  ArrowImg: styled.img`
     width: 15px;
     height: 15px;
     opacity: 0;
     transition: opacity 0.3s ease;
   `,
+  Calendarimg: styled.img`
+    width: 20px;
+  `,
   CenterBox: styled.div`
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
   `,
-  RightBox: styled.div``,
+  TodayBtn: styled.button`
+    width: 30px;
+    height: 30px;
+    border-radius: 20%;
+    border: 1px solid var(--green04);
+  `,
+  RightBox: styled.div`
+    display: flex;
+    align-items: center;
+  `,
+  BarImg: styled.img`
+    width: 20px;
+    margin-right: 15px;
+  `,
 };

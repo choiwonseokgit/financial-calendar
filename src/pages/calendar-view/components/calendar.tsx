@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import moment from 'moment';
 import 'moment/locale/ko';
 import {
@@ -18,35 +18,32 @@ const localizer = momentLocalizer(moment);
 interface CalendarProps {
   date: Date;
   handleFlicking: (onView: Partial<View>) => void;
+  handleDatesInit: (currDate: Date) => void;
 }
 
-function Calendar({ date, handleFlicking }: CalendarProps) {
-  const [navigateDate, setNavigateDate] = useState(new Date());
+function Calendar({ date, handleFlicking, handleDatesInit }: CalendarProps) {
+  // const [navigateDate, setNavigateDate] = useState(new Date());
   const [onView, setOnView] = useState<View>('month');
 
-  const handleNavigate = useCallback(
-    (date: Date) => {
-      setNavigateDate(date);
-    },
-    [setNavigateDate],
-  );
+  const handleNavigate = (date: Date) => {
+    // setNavigateDate(date);
+    handleDatesInit(date);
+  };
 
-  const handleOnView = useCallback(
-    (view: View) => {
-      setOnView(view);
-    },
-    [setOnView],
-  );
+  const handleOnView = (view: View) => {
+    setOnView(view);
+  };
 
   useEffect(() => {
     handleFlicking(onView);
-  }, [onView, handleFlicking]);
+  }, [onView]);
 
   return (
     <S.Container>
       <BigCalendar
         localizer={localizer}
-        date={onView === 'month' ? date : navigateDate}
+        // date={onView === 'month' ? date : navigateDate}
+        date={date}
         onNavigate={handleNavigate}
         view={onView}
         onView={handleOnView}
