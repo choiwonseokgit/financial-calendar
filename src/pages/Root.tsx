@@ -2,23 +2,28 @@ import GlobalStyle from '@styles/global';
 import { mobileSize } from '@styles/mobile';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
+import NavBar from './nav-bar';
 
 function Root() {
   return (
-    <div>
-      Root
+    <S.Container>
       <GlobalStyle />
-      <S.Main>
+      <NavBar />
+      <main>
         <Outlet />
-      </S.Main>
-    </div>
+      </main>
+    </S.Container>
   );
 }
 
 export default Root;
 
 const S = {
-  Main: styled.main`
+  Container: styled.div`
+    inset: 0px;
+    /* pointer-events: none; */
+    position: fixed;
+    z-index: 1000000000;
     ${mobileSize}
   `,
 };

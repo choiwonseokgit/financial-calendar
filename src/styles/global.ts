@@ -1,8 +1,10 @@
 import { createGlobalStyle } from 'styled-components';
+import colors from './colors';
 import reset from './reset';
 
 const GlobalStyle = createGlobalStyle`
     ${reset}
+    ${colors}
     @font-face {
     font-family: 'Pretendard';
     src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Light.woff') format('woff');
