@@ -26,18 +26,14 @@ interface CalendarProps {
 }
 
 function Calendar({ date, handleFlicking }: CalendarProps) {
-  // const [navigateDate, setNavigateDate] = useState(new Date());
-  // const [onView, setOnView] = useState<View>('month');
   const view = useAppSelector((state) => state.view);
   const dispatch = useAppDispatch();
 
   const handleNavigate = (date: Date) => {
-    // setNavigateDate(date);
     dispatch(init({ date: formatISO(date), view }));
   };
 
   const handleOnView = (view: View) => {
-    // setOnView(view);
     dispatch(changeView(view));
   };
 
@@ -50,7 +46,6 @@ function Calendar({ date, handleFlicking }: CalendarProps) {
     <S.Container>
       <BigCalendar
         localizer={localizer}
-        // date={onView === 'month' ? date : navigateDate}
         date={date}
         onNavigate={handleNavigate}
         view={view}

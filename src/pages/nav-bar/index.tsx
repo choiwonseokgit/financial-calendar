@@ -22,8 +22,6 @@ function NavBar() {
   }));
   const dispatch = useDispatch();
 
-  //console.log(dates);
-
   const formatedDate = format(
     dates[1],
     view === 'month' ? 'yyyy년 M월' : 'M월 d일 EEEE',
