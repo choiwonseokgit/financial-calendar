@@ -21,7 +21,7 @@ const localizer = momentLocalizer(moment);
 
 interface CalendarProps {
   date: Date | string;
-  handleFlicking: (onView: Partial<View>) => void;
+  handleFlicking: (view: Partial<View>) => void;
 }
 
 function Calendar({ date, handleFlicking }: CalendarProps) {

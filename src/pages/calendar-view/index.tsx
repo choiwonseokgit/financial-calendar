@@ -34,8 +34,8 @@ function CalendarView() {
     setIsFlicking(true);
   };
 
-  const handleFlicking = (onView: Partial<View>) => {
-    if (onView !== 'month') {
+  const handleFlicking = (view: Partial<View>) => {
+    if (view !== 'month') {
       flickingRef.current?.disableInput();
     } else {
       flickingRef.current?.enableInput();
