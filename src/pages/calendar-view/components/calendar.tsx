@@ -22,7 +22,6 @@ const localizer = momentLocalizer(moment);
 interface CalendarProps {
   date: Date | string;
   handleFlicking: (onView: Partial<View>) => void;
-  // handleDatesInit: (currDate: Date) => void;
 }
 
 function Calendar({ date, handleFlicking }: CalendarProps) {
@@ -38,7 +37,6 @@ function Calendar({ date, handleFlicking }: CalendarProps) {
   };
 
   useEffect(() => {
-    // handleFlicking(onView);
     handleFlicking(view);
   }, [view]);
 
