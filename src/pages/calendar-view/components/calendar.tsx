@@ -1,4 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { init } from '@store/datesSlice';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
+import { changeView } from '@store/viewSlice';
+import { formatISO } from 'date-fns';
 import moment from 'moment';
 import 'moment/locale/ko';
 import {
@@ -10,33 +14,37 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import styled from 'styled-components';
 import MyDateHeader from './my-date-header';
 import MyMonthHeader from './my-month-header';
-import MyToolbar from './my-toolbar';
+// import MyToolbar from './my-toolbar';
 
 moment.locale('ko-KR');
 const localizer = momentLocalizer(moment);
 
 interface CalendarProps {
-  date: Date;
+  date: Date | string;
   handleFlicking: (onView: Partial<View>) => void;
-  handleDatesInit: (currDate: Date) => void;
+  // handleDatesInit: (currDate: Date) => void;
 }
 
-function Calendar({ date, handleFlicking, handleDatesInit }: CalendarProps) {
+function Calendar({ date, handleFlicking }: CalendarProps) {
   // const [navigateDate, setNavigateDate] = useState(new Date());
-  const [onView, setOnView] = useState<View>('month');
+  // const [onView, setOnView] = useState<View>('month');
+  const view = useAppSelector((state) => state.view);
+  const dispatch = useAppDispatch();
 
   const handleNavigate = (date: Date) => {
     // setNavigateDate(date);
-    handleDatesInit(date);
+    dispatch(init({ date: formatISO(date), view }));
   };
 
   const handleOnView = (view: View) => {
-    setOnView(view);
+    // setOnView(view);
+    dispatch(changeView(view));
   };
 
   useEffect(() => {
-    handleFlicking(onView);
-  }, [onView]);
+    // handleFlicking(onView);
+    handleFlicking(view);
+  }, [view]);
 
   return (
     <S.Container>
@@ -45,10 +53,10 @@ function Calendar({ date, handleFlicking, handleDatesInit }: CalendarProps) {
         // date={onView === 'month' ? date : navigateDate}
         date={date}
         onNavigate={handleNavigate}
-        view={onView}
+        view={view}
         onView={handleOnView}
         components={{
-          toolbar: MyToolbar,
+          toolbar: () => <></>,
           month: {
             header: MyMonthHeader,
             dateHeader: MyDateHeader,
@@ -64,7 +72,7 @@ export default Calendar;
 const S = {
   Container: styled.div`
     .rbc-calendar {
-      height: 100dvh;
+      height: 70dvh;
       /* height: 500px; */
     }
     .rbc-label {
