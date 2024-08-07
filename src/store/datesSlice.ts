@@ -1,8 +1,14 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { addMonths, formatISO } from 'date-fns';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { addDays, addMonths, formatISO } from 'date-fns';
+import { View } from 'react-big-calendar';
 import type { RootState } from '@store/index';
 
 type Dates = [string, string, string];
+
+interface TPayload {
+  date: string;
+  view: View;
+}
 
 const initialState: Dates = [
   formatISO(addMonths(new Date(), -1)),
@@ -11,7 +17,7 @@ const initialState: Dates = [
 ];
 
 export const datesSlice = createSlice({
-  name: 'datesReducer',
+  name: 'dates',
   initialState,
   reducers: {
     today: (): Dates => {
@@ -21,17 +27,20 @@ export const datesSlice = createSlice({
         formatISO(addMonths(new Date(), 1)),
       ];
     },
-    prev: (dates): Dates => {
+    prev: (dates) => {
       return [dates[0], dates[0], dates[2]];
     },
-    next: (dates): Dates => {
+    next: (dates) => {
       return [dates[0], dates[2], dates[2]];
     },
-    init: (dates): Dates => {
+    init: (_, action: PayloadAction<TPayload>) => {
+      const { date, view } = action.payload;
+      const changeDate = view === 'day' ? addDays : addMonths;
+
       return [
-        formatISO(addMonths(dates[1], -1)),
-        dates[1],
-        formatISO(addMonths(dates[1], 1)),
+        formatISO(changeDate(date, -1)),
+        date,
+        formatISO(changeDate(date, 1)),
       ];
     },
   },

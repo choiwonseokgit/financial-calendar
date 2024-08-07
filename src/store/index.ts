@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import datesReducer from './datesSlice';
+import viewReducer from './viewSlice';
 
 export const store = configureStore({
   reducer: {
     dates: datesReducer,
+    view: viewReducer,
   },
 });
 
