@@ -1,8 +1,11 @@
-import { useEffect } from 'react';
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useEffect } from 'react';
 import { init } from '@store/datesSlice';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
+import { holidayApi, useGetHolidayQuery } from '@store/query/holidaySlice';
 import { changeView } from '@store/viewSlice';
-import { formatISO } from 'date-fns';
+import { formatISO, format, addMonths } from 'date-fns';
 import moment from 'moment';
 import 'moment/locale/ko';
 import {
@@ -13,8 +16,8 @@ import {
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import styled from 'styled-components';
 import MyDateHeader from './my-date-header';
+import MyEvent from './my-event';
 import MyMonthHeader from './my-month-header';
-// import MyToolbar from './my-toolbar';
 
 moment.locale('ko-KR');
 const localizer = momentLocalizer(moment);
@@ -22,11 +25,44 @@ const localizer = momentLocalizer(moment);
 interface CalendarProps {
   date: Date | string;
   handleFlicking: (view: Partial<View>) => void;
+  type: string;
 }
 
-function Calendar({ date, handleFlicking }: CalendarProps) {
+const EVENTS = [
+  {
+    title: '휴가',
+    start: new Date(),
+    end: new Date(),
+    resource: '광복절',
+  },
+];
+
+function Calendar({ date, handleFlicking, type }: CalendarProps) {
   const view = useAppSelector((state) => state.view);
   const dispatch = useAppDispatch();
+
+  //TODO: 렌더링 개선하기, 렌더링 많이 일어남
+  //console.log('렌더링');
+
+  const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
+
+  const cachedData = useAppSelector((state) =>
+    holidayApi.endpoints.getHoliday.select({ year, month })(state),
+  );
+
+  const [trigger] = holidayApi.endpoints.getHoliday.useLazyQuery();
+  // const { data } = useGetHolidayQuery(
+  //   {
+  //     year: format(date, 'yyyy'),
+  //     month: format(date, 'MM'),
+  //   },
+  //   {
+  //     // 캐시된 데이터를 재사용하도록 설정
+  //     refetchOnMountOrArgChange: false,
+  //     // 5분 동안 데이터 유지
+  //   },
+  // );
+  //console.log(data);
 
   const handleNavigate = (date: Date) => {
     dispatch(init({ date: formatISO(date), view }));
@@ -40,6 +76,19 @@ function Calendar({ date, handleFlicking }: CalendarProps) {
     handleFlicking(view);
   }, [view]);
 
+  useEffect(() => {
+    if (!cachedData.data && cachedData.data !== '') {
+      // console.log('발생');
+      trigger(
+        {
+          year: format(date, 'yyyy'),
+          month: format(date, 'MM'),
+        },
+        true,
+      );
+    }
+  }, [year, month, cachedData.data, trigger]);
+
   return (
     <S.Container>
       <BigCalendar
@@ -48,11 +97,13 @@ function Calendar({ date, handleFlicking }: CalendarProps) {
         onNavigate={handleNavigate}
         view={view}
         onView={handleOnView}
+        toolbar={false}
+        events={EVENTS}
         components={{
-          toolbar: () => <></>,
           month: {
             header: MyMonthHeader,
             dateHeader: MyDateHeader,
+            event: MyEvent,
           },
         }}
       />
@@ -60,7 +111,7 @@ function Calendar({ date, handleFlicking }: CalendarProps) {
   );
 }
 
-export default Calendar;
+export default React.memo(Calendar);
 
 const S = {
   Container: styled.div`
