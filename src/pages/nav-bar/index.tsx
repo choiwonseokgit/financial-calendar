@@ -2,6 +2,7 @@ import BarIcon from '@assets/icons/bars-solid.svg';
 import CalendarIcon from '@assets/icons/calendar-regular.svg';
 import arrowLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
 import arrowRightIcon from '@assets/icons/chevron-right-solid-green.svg';
+import useGetHolidayTitle from '@hooks/useGetHolidayTitle';
 import { init, today } from '@store/datesSlice';
 import { useAppSelector } from '@store/hooks';
 import { changeView } from '@store/viewSlice';
@@ -21,6 +22,8 @@ function NavBar() {
     view: state.view,
   }));
   const dispatch = useDispatch();
+
+  const holidayTitle = useGetHolidayTitle(dates[1]);
 
   const formatedDate = format(
     dates[1],
@@ -55,7 +58,10 @@ function NavBar() {
         <button onClick={() => handleArrowBtnClick(TArrowBtn.prev)}>
           <S.ArrowImg src={arrowLeftIcon} alt="이전" />
         </button>
-        <S.Date>{formatedDate}</S.Date>
+        <S.Date>
+          <div>{formatedDate}</div>
+          <S.Holiday>{view === 'day' && holidayTitle}</S.Holiday>
+        </S.Date>
         <button onClick={() => handleArrowBtnClick(TArrowBtn.next)}>
           <S.ArrowImg src={arrowRightIcon} alt="다음" />
         </button>
@@ -100,8 +106,17 @@ const S = {
     }
   `,
   Date: styled.div`
+    position: relative;
     font-size: 25px;
     font-weight: bold;
+  `,
+  Holiday: styled.div`
+    position: absolute;
+    color: red;
+    font-size: 15px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 100%);
   `,
   ArrowImg: styled.img`
     width: 15px;
