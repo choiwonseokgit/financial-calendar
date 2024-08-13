@@ -1,3 +1,4 @@
+import React from 'react';
 import { HeaderProps } from 'react-big-calendar';
 import styled from 'styled-components';
 
@@ -5,7 +6,7 @@ function MyMonthHeader({ label }: HeaderProps) {
   return <S.Container $label={label}>{label}</S.Container>;
 }
 
-export default MyMonthHeader;
+export default React.memo(MyMonthHeader);
 
 const S = {
   Container: styled.div<{ $label: string }>`
