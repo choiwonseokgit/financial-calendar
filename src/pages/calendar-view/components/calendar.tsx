@@ -1,11 +1,5 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect } from 'react';
-import { init } from '@store/datesSlice';
-import { useAppDispatch, useAppSelector } from '@store/hooks';
-import { holidayApi, useGetHolidayQuery } from '@store/query/holidaySlice';
-import { changeView } from '@store/viewSlice';
-import { formatISO, format, addMonths } from 'date-fns';
+import { parse } from 'date-fns';
 import moment from 'moment';
 import 'moment/locale/ko';
 import {
@@ -24,79 +18,59 @@ const localizer = momentLocalizer(moment);
 
 interface CalendarProps {
   date: Date | string;
-  handleFlicking: (view: Partial<View>) => void;
-  type: string;
+  idx: number;
+  view: View;
+  onFlicking: (view: View) => void;
+  onNavigate: (date: Date, idx: number, view: View) => void;
+  onChangeView: (view: View) => void;
 }
 
 const EVENTS = [
   {
-    title: '휴가',
+    title: '26000원',
     start: new Date(),
     end: new Date(),
-    resource: '광복절',
+    resource: 'financial',
+  },
+  {
+    title: '46000원',
+    start: parse('20240815', 'yyyyMMdd', new Date()),
+    end: parse('20240815', 'yyyyMMdd', new Date()),
+    resource: 'financial',
+  },
+  {
+    title: '56000원',
+    start: parse('20240801', 'yyyyMMdd', new Date()),
+    end: parse('20240801', 'yyyyMMdd', new Date()),
+    resource: 'financial',
   },
 ];
 
-function Calendar({ date, handleFlicking, type }: CalendarProps) {
-  const view = useAppSelector((state) => state.view);
-  const dispatch = useAppDispatch();
-
-  //TODO: 렌더링 개선하기, 렌더링 많이 일어남
-  //console.log('렌더링');
-
-  const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
-
-  const cachedData = useAppSelector((state) =>
-    holidayApi.endpoints.getHoliday.select({ year, month })(state),
-  );
-
-  const [trigger] = holidayApi.endpoints.getHoliday.useLazyQuery();
-  // const { data } = useGetHolidayQuery(
-  //   {
-  //     year: format(date, 'yyyy'),
-  //     month: format(date, 'MM'),
-  //   },
-  //   {
-  //     // 캐시된 데이터를 재사용하도록 설정
-  //     refetchOnMountOrArgChange: false,
-  //     // 5분 동안 데이터 유지
-  //   },
-  // );
-  //console.log(data);
-
-  const handleNavigate = (date: Date) => {
-    dispatch(init({ date: formatISO(date), view }));
-  };
-
-  const handleOnView = (view: View) => {
-    dispatch(changeView(view));
-  };
+function Calendar({
+  date,
+  idx,
+  view,
+  onFlicking,
+  onNavigate,
+  onChangeView,
+}: CalendarProps) {
+  // TODO: 렌더링 개선하기, 렌더링 많이 일어남
+  // console.log('렌더링');
 
   useEffect(() => {
-    handleFlicking(view);
+    onFlicking(view);
   }, [view]);
-
-  useEffect(() => {
-    if (!cachedData.data && cachedData.data !== '') {
-      // console.log('발생');
-      trigger(
-        {
-          year: format(date, 'yyyy'),
-          month: format(date, 'MM'),
-        },
-        true,
-      );
-    }
-  }, [year, month, cachedData.data, trigger]);
 
   return (
     <S.Container>
       <BigCalendar
         localizer={localizer}
         date={date}
-        onNavigate={handleNavigate}
+        onNavigate={(date, view) => {
+          onNavigate(date, idx, view);
+        }}
         view={view}
-        onView={handleOnView}
+        onView={onChangeView}
         toolbar={false}
         events={EVENTS}
         components={{
@@ -115,8 +89,10 @@ export default React.memo(Calendar);
 
 const S = {
   Container: styled.div`
+    height: 75%;
     .rbc-calendar {
-      height: 70dvh;
+      height: 75dvh;
+      max-height: 800px;
       /* height: 500px; */
     }
     .rbc-label {
@@ -162,6 +138,10 @@ const S = {
 
     .rbc-today {
       background-color: var(--green02);
+    }
+
+    .rbc-event {
+      background-color: var(--green04);
     }
   `,
 };
