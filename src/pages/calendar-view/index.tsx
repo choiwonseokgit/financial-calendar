@@ -1,159 +1,261 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import Flicking, { MoveEndEvent } from '@egjs/react-flicking';
-import { prev, next, init } from '@store/datesSlice';
-import { useAppDispatch, useAppSelector } from '@store/hooks';
+import { holidayApi } from '@store/query/holidaySlice';
+import calDateAndMakeStr from '@utils/cal-date-and-make-str';
+import { format, formatISO } from 'date-fns';
 import { View } from 'react-big-calendar';
 import Calendar from './components/calendar';
+import NavBar from './components/nav-bar';
 import '@egjs/react-flicking/dist/flicking.css';
-//import { addMonths, format } from 'date-fns';
-//import { holidayApi } from '@store/query/holidaySlice';
+import styled from 'styled-components';
 
-//import publicHolidayRequest from '@api/open-data/public-holiday';
-//TODO: 서버사이드 렌더링으로 데이터 받아오는거 적용해보기
+type Dates = string[];
 
-enum Nav {
-  prev = 0,
-  curr = 1,
-  next = 2,
+interface Action {
+  type: 'TODAY' | 'PREV' | 'NEXT' | 'INIT';
+  idx?: number;
+  view?: View;
+  date?: string;
 }
 
+const reducer = (dates: Dates, action: Action) => {
+  switch (action.type) {
+    case 'TODAY':
+      return [
+        calDateAndMakeStr(new Date(), -1),
+        calDateAndMakeStr(new Date()),
+        calDateAndMakeStr(new Date(), 1),
+      ];
+    case 'PREV': {
+      const { idx, view } = action;
+
+      switch (idx) {
+        case 0:
+          return [
+            dates[0],
+            calDateAndMakeStr(dates[0], -2, view),
+            calDateAndMakeStr(dates[0], -1, view),
+          ];
+        case 1:
+          return [
+            calDateAndMakeStr(dates[1], -1, view),
+            dates[1],
+            calDateAndMakeStr(dates[1], -2, view),
+          ];
+        case 2:
+          return [
+            calDateAndMakeStr(dates[2], -2, view),
+            calDateAndMakeStr(dates[2], -1, view),
+            dates[2],
+          ];
+        default:
+          return dates;
+      }
+    }
+    case 'NEXT': {
+      const { idx, view } = action;
+
+      switch (idx) {
+        case 0:
+          return [
+            dates[0],
+            calDateAndMakeStr(dates[0], 1, view),
+            calDateAndMakeStr(dates[0], 2, view),
+          ];
+        case 1:
+          return [
+            calDateAndMakeStr(dates[1], 2, view),
+            dates[1],
+            calDateAndMakeStr(dates[1], 1, view),
+          ];
+        case 2:
+          return [
+            calDateAndMakeStr(dates[2], 1, view),
+            calDateAndMakeStr(dates[2], 2, view),
+            dates[2],
+          ];
+        default:
+          return dates;
+      }
+    }
+    case 'INIT': {
+      const { date, view, idx } = action;
+
+      if (date)
+        switch (idx) {
+          case 0:
+            return [
+              date,
+              calDateAndMakeStr(date, 1, view),
+              calDateAndMakeStr(date, -1, view),
+            ];
+          case 1:
+            return [
+              calDateAndMakeStr(date, -1, view),
+              date,
+              calDateAndMakeStr(date, 1, view),
+            ];
+          case 2:
+            return [
+              calDateAndMakeStr(date, 1),
+              calDateAndMakeStr(date, -1),
+              date,
+            ];
+        }
+      return dates;
+    }
+    default:
+      return dates;
+  }
+};
+
 function CalendarView() {
-  const { dates, view } = useAppSelector((state) => ({
-    dates: state.dates,
-    view: state.view,
-  }));
-  const dispatch = useAppDispatch();
-  //const [currIdx, setCurrIdx] = useState(1); //idx 안쓸수도
-  const [isFlicking, setIsFlicking] = useState(false);
+  const [dates, dispatch] = useReducer(reducer, [
+    calDateAndMakeStr(new Date(), -1),
+    calDateAndMakeStr(new Date()),
+    calDateAndMakeStr(new Date(), 1),
+  ]);
+  const [view, setView] = useState<View>('month');
+  const [currIdx, setCurrIdx] = useState(1);
   const flickingRef = useRef<Flicking>(null);
   const isCanceledRef = useRef(0);
-  const flickingPosRef = useRef(600);
-
-  //const [trigger] = holidayApi.endpoints.getHoliday.useLazyQuery();
-
-  // const initHolidayQueries = dates.map((date) => {
-  //   const year = format(date, 'yyyy');
-  //   const month = format(date, 'MM');
-  //   const [trigger] = holidayApi.endpoints.getHoliday.useLazyQuery();
-  //   return () => trigger({ year: year, month: month }).unwrap();
-  // });
 
   const handleOnMoveEnd = (e: MoveEndEvent<Flicking>) => {
     const isFlickingCanceled = !!isCanceledRef.current;
 
-    if (isFlickingCanceled || !e.axesEvent.isTrusted) return;
+    if (isFlickingCanceled) return;
 
-    const direction = flickingPosRef.current > 600 ? 'NEXT' : 'PREV';
+    const idx = e.currentTarget.index;
 
-    if (direction === 'PREV') {
-      dispatch(prev());
-      // const newPrev = addMonths(dates[0], -1);
-      // trigger(
-      //   {
-      //     year: format(newPrev, 'yyyy'),
-      //     month: format(newPrev, 'MM'),
-      //   },
-      //   true,
-      // );
-    } else if (direction === 'NEXT') {
-      dispatch(next());
-      // const newNext = addMonths(dates[2], 1);
-      // trigger(
-      //   {
-      //     year: format(newNext, 'yyyy'),
-      //     month: format(newNext, 'MM'),
-      //   },
-      //   true,
-      // );
+    if (e.direction === 'PREV') {
+      dispatch({ type: 'PREV', idx });
+    } else if (e.direction === 'NEXT') {
+      dispatch({ type: 'NEXT', idx });
     }
-
-    setIsFlicking(true);
   };
 
-  const handleFlicking = (view: Partial<View>) => {
+  //NavBar
+  const handleTodayBtnClick = async () => {
+    await flickingRef.current?.moveTo(1, 0);
+    dispatch({ type: 'TODAY' });
+  };
+
+  const handleMonthBtnClick = () => {
+    handleChangeView('month');
+  };
+
+  const handleArrowBtnClick = async (
+    direction: 'PREV' | 'NEXT',
+    view: View,
+  ) => {
+    switch (view) {
+      case 'month': {
+        if (direction === 'PREV') {
+          await flickingRef.current?.prev();
+        } else if (direction === 'NEXT') {
+          await flickingRef.current?.next();
+        }
+        break;
+      }
+      case 'day': {
+        if (direction === 'PREV') {
+          await flickingRef.current?.prev(0);
+          dispatch({ type: 'PREV', idx: currIdx, view });
+        } else if (direction === 'NEXT') {
+          await flickingRef.current?.next(0);
+          dispatch({ type: 'NEXT', idx: currIdx, view });
+        }
+        break;
+      }
+    }
+  };
+
+  //Calendar
+  const handleFlicking = useCallback((view: Partial<View>) => {
     if (view !== 'month') {
       flickingRef.current?.disableInput();
     } else {
       flickingRef.current?.enableInput();
     }
-  };
+  }, []);
 
-  const moveToInit = async () => {
-    await flickingRef.current
-      ?.moveTo(Nav.curr, 0)
-      .catch((err) => console.error(err));
-  };
+  const handleNavigate = useCallback((date: Date, idx: number, view: View) => {
+    const dateStr = formatISO(date);
+    dispatch({ type: 'INIT', idx, date: dateStr, view });
+  }, []);
 
-  // useEffect(() => {
-  //   console.log('실행');
+  const handleChangeView = useCallback((view: View) => {
+    setView(view);
+  }, []);
 
-  //   const initHolidayData = async () =>
-  //     await Promise.all(initHolidayQueries.map((query) => query()));
+  //useEffect
+  const [trigger] = holidayApi.endpoints.getHoliday.useLazyQuery();
 
-  //   try {
-  //     initHolidayData();
-  //   } catch (err) {
-  //     console.error('Failed to fetch holiday data:', err);
-  //   }
-  // }, []);
-
-  useLayoutEffect(() => {
-    if (isFlicking) {
-      moveToInit();
-    }
-  }, [isFlicking]);
+  const holidayQueries = dates.map((date) => {
+    const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
+    return () => trigger({ year: year, month: month }, true).unwrap();
+  });
 
   useEffect(() => {
-    if (isFlicking) {
-      dispatch(init({ date: dates[Nav.curr], view }));
-      setIsFlicking(false);
-    }
-  }, [isFlicking]);
+    const fetchHolidays = async () => {
+      try {
+        await Promise.all(holidayQueries.map((query) => query()));
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-  // const data = publicHolidayRequest.fetchHoliday('2024', '09');
-
-  // data.then((response) => {
-  //   console.log(response?.data.response.body.items.item);
-  //   // const { data } = response;
-  //   // console.log(data);
-  // });
+    fetchHolidays();
+  }, [dates]);
 
   return (
-    <>
+    <div>
+      <NavBar
+        date={dates[currIdx]}
+        view={view}
+        onTodayBtnClick={handleTodayBtnClick}
+        onMonthBtnClick={handleMonthBtnClick}
+        onArrowBtnClick={handleArrowBtnClick}
+      />
       <Flicking
         ref={flickingRef}
-        bound={true}
         preventDefaultOnDrag={true}
         preventEventsBeforeInit={true}
         renderOnlyVisible={false}
         circular={true}
         duration={300}
         defaultIndex={1}
-        interruptable={false}
-        onMove={(e) => (flickingPosRef.current = e.axesEvent.pos.flick)}
+        interruptable={true}
         onMoveEnd={handleOnMoveEnd}
+        onChanged={(e) => setCurrIdx(e.index)}
         moveType={['strict', { count: 1 }]}
-        changeOnHold={true}
+        changeOnHold={true} //범인?
         threshold={50}
         inputType={['touch', 'mouse', 'pointer']}
-        // onChanged={(e) => {
-        //   setCurrIdx(e.index);
-        // }}
         onWillRestore={() => (isCanceledRef.current = 1)}
         onWillChange={() => (isCanceledRef.current = 0)}
       >
         {dates.map((date, idx) => (
-          <div key={idx} style={{ width: '100%', height: '100%' }}>
+          <S.Main key={idx}>
             <Calendar
               date={date}
-              handleFlicking={handleFlicking}
-              type={Nav[idx]}
+              idx={idx}
+              view={view}
+              onFlicking={handleFlicking}
+              onNavigate={handleNavigate}
+              onChangeView={handleChangeView}
             />
-          </div>
+          </S.Main>
         ))}
       </Flicking>
-    </>
+    </div>
   );
 }
 
 export default CalendarView;
+
+const S = {
+  Main: styled.main`
+    width: 100%;
+  `,
+};
