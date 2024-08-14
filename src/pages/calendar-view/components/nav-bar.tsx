@@ -6,7 +6,6 @@ import useGetHolidayTitle from '@hooks/useGetHolidayTitle';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { View } from 'react-big-calendar';
-
 import styled from 'styled-components';
 
 interface NavBarProps {
@@ -15,6 +14,7 @@ interface NavBarProps {
   onTodayBtnClick: () => void;
   onMonthBtnClick: () => void;
   onArrowBtnClick: (direction: 'PREV' | 'NEXT', view: View) => void;
+  onSideBarBtnClick: (isOpen: boolean) => void;
 }
 
 function NavBar({
@@ -23,6 +23,7 @@ function NavBar({
   onTodayBtnClick: onClickTodayBtn,
   onMonthBtnClick: onClickMonthBtn,
   onArrowBtnClick,
+  onSideBarBtnClick,
 }: NavBarProps) {
   const holidayTitle = useGetHolidayTitle(date);
 
@@ -63,7 +64,7 @@ function NavBar({
         )}
       </S.LeftBox>
       <S.RightBox>
-        <button>
+        <button onClick={() => onSideBarBtnClick(true)}>
           <S.BarImg src={BarIcon} alt="메뉴바" />
         </button>
       </S.RightBox>
