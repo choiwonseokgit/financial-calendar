@@ -4,10 +4,11 @@ import { holidayApi } from '@store/query/holidaySlice';
 import calDateAndMakeStr from '@utils/cal-date-and-make-str';
 import { format, formatISO } from 'date-fns';
 import { View } from 'react-big-calendar';
+import styled from 'styled-components';
 import Calendar from './components/calendar';
 import NavBar from './components/nav-bar';
 import '@egjs/react-flicking/dist/flicking.css';
-import styled from 'styled-components';
+import SideBar from './components/side-bar';
 
 type Dates = string[];
 
@@ -117,6 +118,7 @@ function CalendarView() {
   ]);
   const [view, setView] = useState<View>('month');
   const [currIdx, setCurrIdx] = useState(1);
+  const [isSideBarOpen, setIsSideBarOpen] = useState(false);
   const flickingRef = useRef<Flicking>(null);
   const isCanceledRef = useRef(0);
 
@@ -133,6 +135,11 @@ function CalendarView() {
       dispatch({ type: 'NEXT', idx });
     }
   };
+
+  //SideBar
+  const handleSideBarBtnClick = useCallback((isOpen: boolean) => {
+    setIsSideBarOpen(isOpen);
+  }, []);
 
   //NavBar
   const handleTodayBtnClick = async () => {
@@ -216,7 +223,9 @@ function CalendarView() {
         onTodayBtnClick={handleTodayBtnClick}
         onMonthBtnClick={handleMonthBtnClick}
         onArrowBtnClick={handleArrowBtnClick}
+        onSideBarBtnClick={handleSideBarBtnClick}
       />
+      {isSideBarOpen && <SideBar onSideBarBtnClick={handleSideBarBtnClick} />}
       <Flicking
         ref={flickingRef}
         preventDefaultOnDrag={true}

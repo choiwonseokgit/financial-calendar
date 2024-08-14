@@ -19,7 +19,7 @@ const S = {
     inset: 0px;
     /* pointer-events: none; */
     position: fixed;
-    z-index: 1000000000;
+    z-index: 100;
     ${mobileSize}
   `,
 };
