@@ -1,14 +1,26 @@
 import React from 'react';
 import useGetHolidayTitle from '@hooks/useGetHolidayTitle';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
+import { select } from '@store/selected-date-slice';
+import { format } from 'date-fns';
 import { DateHeaderProps } from 'react-big-calendar';
 import styled from 'styled-components';
 
-function MyDateHeader({ date, label, onDrillDown }: DateHeaderProps) {
+function MyDateHeader({ date, label }: DateHeaderProps) {
   const holidayTitle = useGetHolidayTitle(date);
+  const selectedDate = useAppSelector((state) => state.selectedDate);
+  const dispatch = useAppDispatch();
+  const isSelected = selectedDate === format(date, 'yyyyMMdd');
+
+  const handleDateBtnClick = () => {
+    dispatch(select(format(date, 'yyyyMMdd')));
+  };
 
   return (
     <S.Container $isHoliday={!!holidayTitle}>
-      <button onClick={onDrillDown}>{label.replace(/^0/, '')}</button>
+      <S.DateBtn $isSelected={isSelected} onClick={handleDateBtnClick}>
+        {label.replace(/^0/, '')}
+      </S.DateBtn>
       <S.Holiday $isHoliday={!!holidayTitle}>
         {holidayTitle && holidayTitle}
       </S.Holiday>
@@ -26,6 +38,13 @@ const S = {
     align-items: center; */
     /* background-color: yellow; */
     //position: relative;
+  `,
+  DateBtn: styled.button<{ $isSelected: boolean }>`
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: ${({ $isSelected }) => $isSelected && 'var(--green04)'};
+    color: ${({ $isSelected }) => $isSelected && 'white'};
   `,
   Holiday: styled.p<{ $isHoliday: boolean }>`
     font-size: 11px;
