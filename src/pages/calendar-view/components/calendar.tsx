@@ -73,6 +73,12 @@ function Calendar({
         onView={onChangeView}
         toolbar={false}
         events={EVENTS}
+        // selectable
+        // onSelectSlot={({ start, action }) => {
+        //   if (action === 'click') {
+        //     dispatch(select(format(start, 'yyyyMMdd')));
+        //   } else return;
+        // }}
         components={{
           month: {
             header: MyMonthHeader,
@@ -89,12 +95,13 @@ export default React.memo(Calendar);
 
 const S = {
   Container: styled.div`
-    height: 75%;
     .rbc-calendar {
-      height: 75dvh;
+      height: 73dvh;
       max-height: 800px;
-      /* height: 500px; */
     }
+    /* .rbc-selected-cell {
+      background-color: white;
+    } */
     .rbc-label {
       /* color: #5ca08f; */
     }

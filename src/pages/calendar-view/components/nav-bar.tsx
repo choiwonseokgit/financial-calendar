@@ -68,6 +68,7 @@ function NavBar({
           <S.BarImg src={BarIcon} alt="메뉴바" />
         </button>
       </S.RightBox>
+      <S.Notice>이번 달은 양호 합니다!😀</S.Notice>
     </S.Nav>
   );
 }
@@ -79,11 +80,12 @@ const S = {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 15dvh;
-    /* height: 100px; */
+    height: 12dvh;
+    max-height: 100px;
     /* background-color: #dbede8; */
     background-color: var(--green02);
     color: var(--green04);
+    position: relative;
     /* background-color: #318c74; */
     /* color: white; */
   `,
@@ -147,5 +149,11 @@ const S = {
   BarImg: styled.img`
     width: 20px;
     margin-right: 15px;
+  `,
+  Notice: styled.span`
+    position: absolute;
+    left: 15px;
+    bottom: 5px;
+    font-size: 15px;
   `,
 };

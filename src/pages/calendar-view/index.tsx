@@ -6,6 +6,7 @@ import { format, formatISO } from 'date-fns';
 import { View } from 'react-big-calendar';
 import styled from 'styled-components';
 import Calendar from './components/calendar';
+import Footer from './components/footer';
 import NavBar from './components/nav-bar';
 import '@egjs/react-flicking/dist/flicking.css';
 import SideBar from './components/side-bar';
@@ -257,6 +258,7 @@ function CalendarView() {
           </S.Main>
         ))}
       </Flicking>
+      <Footer date={dates[currIdx]} />
     </div>
   );
 }
