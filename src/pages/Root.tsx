@@ -21,5 +21,6 @@ const S = {
     position: fixed;
     z-index: 100;
     ${mobileSize}
+    overflow: hidden;
   `,
 };

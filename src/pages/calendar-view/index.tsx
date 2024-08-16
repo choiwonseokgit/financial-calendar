@@ -3,6 +3,7 @@ import Flicking, { MoveEndEvent } from '@egjs/react-flicking';
 import { holidayApi } from '@store/query/holidaySlice';
 import calDateAndMakeStr from '@utils/cal-date-and-make-str';
 import { format, formatISO } from 'date-fns';
+import { motion } from 'framer-motion';
 import { View } from 'react-big-calendar';
 import styled from 'styled-components';
 import Calendar from './components/calendar';
@@ -143,7 +144,7 @@ function CalendarView() {
   }, []);
 
   //NavBar
-  const handleTodayBtnClick = async () => {
+  const handleTodayChange = async () => {
     await flickingRef.current?.moveTo(1, 0);
     dispatch({ type: 'TODAY' });
   };
@@ -217,49 +218,60 @@ function CalendarView() {
   }, [dates]);
 
   return (
-    <div>
+    <motion.div
+      initial={{ x: '-100%' }}
+      animate={{ x: 0 }}
+      exit={{ x: '-100%' }}
+      transition={{
+        type: 'spring',
+        duration: 0.5,
+        delay: 0,
+      }}
+    >
       <NavBar
         date={dates[currIdx]}
         view={view}
-        onTodayBtnClick={handleTodayBtnClick}
+        onTodayChange={handleTodayChange}
         onMonthBtnClick={handleMonthBtnClick}
         onArrowBtnClick={handleArrowBtnClick}
         onSideBarBtnClick={handleSideBarBtnClick}
       />
       {isSideBarOpen && <SideBar onSideBarBtnClick={handleSideBarBtnClick} />}
-      <Flicking
-        ref={flickingRef}
-        preventDefaultOnDrag={true}
-        preventEventsBeforeInit={true}
-        renderOnlyVisible={false}
-        circular={true}
-        duration={300}
-        defaultIndex={1}
-        interruptable={true}
-        onMoveEnd={handleOnMoveEnd}
-        onChanged={(e) => setCurrIdx(e.index)}
-        moveType={['strict', { count: 1 }]}
-        changeOnHold={true} //범인?
-        threshold={50}
-        inputType={['touch', 'mouse', 'pointer']}
-        onWillRestore={() => (isCanceledRef.current = 1)}
-        onWillChange={() => (isCanceledRef.current = 0)}
-      >
-        {dates.map((date, idx) => (
-          <S.Main key={idx}>
-            <Calendar
-              date={date}
-              idx={idx}
-              view={view}
-              onFlicking={handleFlicking}
-              onNavigate={handleNavigate}
-              onChangeView={handleChangeView}
-            />
-          </S.Main>
-        ))}
-      </Flicking>
+      <S.Main>
+        <Flicking
+          ref={flickingRef}
+          preventDefaultOnDrag={true}
+          preventEventsBeforeInit={true}
+          renderOnlyVisible={false}
+          circular={true}
+          duration={300}
+          defaultIndex={1}
+          interruptable={true}
+          onMoveEnd={handleOnMoveEnd}
+          onChanged={(e) => setCurrIdx(e.index)}
+          moveType={['strict', { count: 1 }]}
+          changeOnHold={true} //범인?
+          threshold={50}
+          inputType={['touch', 'mouse', 'pointer']}
+          onWillRestore={() => (isCanceledRef.current = 1)}
+          onWillChange={() => (isCanceledRef.current = 0)}
+        >
+          {dates.map((date, idx) => (
+            <S.Section key={idx}>
+              <Calendar
+                date={date}
+                idx={idx}
+                view={view}
+                onFlicking={handleFlicking}
+                onNavigate={handleNavigate}
+                onChangeView={handleChangeView}
+              />
+            </S.Section>
+          ))}
+        </Flicking>
+      </S.Main>
       <Footer date={dates[currIdx]} />
-    </div>
+    </motion.div>
   );
 }
 
@@ -267,6 +279,9 @@ export default CalendarView;
 
 const S = {
   Main: styled.main`
+    width: 100%;
+  `,
+  Section: styled.section`
     width: 100%;
   `,
 };

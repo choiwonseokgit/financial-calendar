@@ -3,6 +3,8 @@ import CalendarIcon from '@assets/icons/calendar-regular.svg';
 import arrowLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
 import arrowRightIcon from '@assets/icons/chevron-right-solid-green.svg';
 import useGetHolidayTitle from '@hooks/useGetHolidayTitle';
+import { useAppDispatch } from '@store/hooks';
+import { select } from '@store/selected-date-slice';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { View } from 'react-big-calendar';
@@ -11,7 +13,7 @@ import styled from 'styled-components';
 interface NavBarProps {
   date: string;
   view: View;
-  onTodayBtnClick: () => void;
+  onTodayChange: () => void;
   onMonthBtnClick: () => void;
   onArrowBtnClick: (direction: 'PREV' | 'NEXT', view: View) => void;
   onSideBarBtnClick: (isOpen: boolean) => void;
@@ -20,12 +22,13 @@ interface NavBarProps {
 function NavBar({
   date,
   view,
-  onTodayBtnClick: onClickTodayBtn,
-  onMonthBtnClick: onClickMonthBtn,
+  onTodayChange,
+  onMonthBtnClick,
   onArrowBtnClick,
   onSideBarBtnClick,
 }: NavBarProps) {
   const holidayTitle = useGetHolidayTitle(date);
+  const dispatch = useAppDispatch();
 
   const formatedDate = format(
     date,
@@ -38,6 +41,11 @@ function NavBar({
   const currDate = format(new Date(), 'M월 d일 EEEE', {
     locale: ko,
   });
+
+  const handleTodayBtnClick = () => {
+    onTodayChange();
+    dispatch(select(format(new Date(), 'yyyyMMdd')));
+  };
 
   return (
     <S.Nav>
@@ -55,10 +63,10 @@ function NavBar({
           </button>
         </S.DateBox>
         {formatedDate !== currDate && (
-          <S.TodayBtn onClick={onClickTodayBtn}>오늘</S.TodayBtn>
+          <S.TodayBtn onClick={handleTodayBtnClick}>오늘</S.TodayBtn>
         )}
         {view === 'day' && (
-          <S.MonthBtn onClick={onClickMonthBtn}>
+          <S.MonthBtn onClick={onMonthBtnClick}>
             <S.Calendarimg src={CalendarIcon} alt="달력" />
           </S.MonthBtn>
         )}
