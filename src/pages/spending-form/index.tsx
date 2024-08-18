@@ -167,7 +167,7 @@ function SpendingForm() {
           </S.FlexMode>
         )}
       </S.CategoryBox>
-      <S.EmptyNotice>아직 쓴 내역이 없어요!</S.EmptyNotice>
+      <S.EmptyNotice>금일 스케줄이 없어요!</S.EmptyNotice>
     </S.Container>
   );
 }

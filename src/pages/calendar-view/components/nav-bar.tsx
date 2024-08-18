@@ -4,7 +4,7 @@ import chevronLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
 import chevronRightIcon from '@assets/icons/chevron-right-solid-green.svg';
 import useGetHolidayTitle from '@hooks/useGetHolidayTitle';
 import { useAppDispatch } from '@store/hooks';
-import { select } from '@store/selected-date-slice';
+import { prevDay, select, nextDay } from '@store/selected-date-slice';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { View } from 'react-big-calendar';
@@ -51,14 +51,24 @@ function NavBar({
     <S.Nav>
       <S.LeftBox>
         <S.DateBox>
-          <button onClick={() => onArrowBtnClick('PREV', view)}>
+          <button
+            onClick={() => {
+              onArrowBtnClick('PREV', view);
+              dispatch(prevDay());
+            }}
+          >
             <S.ChevronImg src={chevronLeftIcon} alt="이전" />
           </button>
           <S.Date>
             <div>{formatedDate}</div>
             <S.Holiday>{view === 'day' && holidayTitle}</S.Holiday>
           </S.Date>
-          <button onClick={() => onArrowBtnClick('NEXT', view)}>
+          <button
+            onClick={() => {
+              onArrowBtnClick('NEXT', view);
+              dispatch(nextDay());
+            }}
+          >
             <S.ChevronImg src={chevronRightIcon} alt="다음" />
           </button>
         </S.DateBox>
