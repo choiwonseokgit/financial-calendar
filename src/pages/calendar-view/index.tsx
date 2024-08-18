@@ -223,8 +223,7 @@ function CalendarView() {
       animate={{ x: 0 }}
       exit={{ x: '-100%' }}
       transition={{
-        type: 'spring',
-        duration: 0.5,
+        duration: 0.3,
         delay: 0,
       }}
     >

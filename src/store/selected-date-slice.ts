@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { format } from 'date-fns';
 import type { RootState } from '@store/index';
 
-const initialState = format(new Date(), 'yyyyMMdd');
+const initialState = format(new Date(), 'yyyy/MM/dd');
 
 export const selectedDateSlice = createSlice({
   name: 'view',

@@ -1,7 +1,7 @@
 import BarIcon from '@assets/icons/bars-solid.svg';
 import CalendarIcon from '@assets/icons/calendar-regular.svg';
-import arrowLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
-import arrowRightIcon from '@assets/icons/chevron-right-solid-green.svg';
+import chevronLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
+import chevronRightIcon from '@assets/icons/chevron-right-solid-green.svg';
 import useGetHolidayTitle from '@hooks/useGetHolidayTitle';
 import { useAppDispatch } from '@store/hooks';
 import { select } from '@store/selected-date-slice';
@@ -44,7 +44,7 @@ function NavBar({
 
   const handleTodayBtnClick = () => {
     onTodayChange();
-    dispatch(select(format(new Date(), 'yyyyMMdd')));
+    dispatch(select(format(new Date(), 'yyyy/MM/dd')));
   };
 
   return (
@@ -52,14 +52,14 @@ function NavBar({
       <S.LeftBox>
         <S.DateBox>
           <button onClick={() => onArrowBtnClick('PREV', view)}>
-            <S.ArrowImg src={arrowLeftIcon} alt="이전" />
+            <S.ChevronImg src={chevronLeftIcon} alt="이전" />
           </button>
           <S.Date>
             <div>{formatedDate}</div>
             <S.Holiday>{view === 'day' && holidayTitle}</S.Holiday>
           </S.Date>
           <button onClick={() => onArrowBtnClick('NEXT', view)}>
-            <S.ArrowImg src={arrowRightIcon} alt="다음" />
+            <S.ChevronImg src={chevronRightIcon} alt="다음" />
           </button>
         </S.DateBox>
         {formatedDate !== currDate && (
@@ -139,7 +139,7 @@ const S = {
     left: 50%;
     transform: translate(-50%, 40%);
   `,
-  ArrowImg: styled.img`
+  ChevronImg: styled.img`
     width: 15px;
     height: 15px;
     opacity: 0;
