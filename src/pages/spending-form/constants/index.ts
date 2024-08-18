@@ -1,10 +1,3 @@
-export const ADD_MONEY_BTNS = [
-  { label: '+50000', val: 50000 },
-  { label: '+10000', val: 10000 },
-  { label: '+1000', val: 1000 },
-  { label: '+100', val: 100 },
-] as const;
-
 export const CATEGORYS = [
   { name: '식사', emoji: '🍽' },
   { name: '교통', emoji: '🚌' },
