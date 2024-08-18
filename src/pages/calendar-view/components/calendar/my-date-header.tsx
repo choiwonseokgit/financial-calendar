@@ -1,5 +1,5 @@
 import React from 'react';
-import useGetHolidayTitle from '@hooks/useGetHolidayTitle';
+import useGetHolidayTitle from '@hooks/use-get-holiday-title';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 import { select } from '@store/selected-date-slice';
 import { format } from 'date-fns';

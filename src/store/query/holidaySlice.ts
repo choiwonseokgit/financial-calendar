@@ -34,27 +34,3 @@ export const holidayApi = createApi({
 });
 
 export const { useGetHolidayQuery } = holidayApi;
-
-//https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=FzYE9rnBSKi%2FeoLVZ%2Fg3UgMnj6xgxeA9C1zuWgNgJXok75LwVrRFJj9aVgZWrAMn07XoPpg%2BBzQPlrczu1UOog%3D%3D
-//&solYear=2024&solMonth=09&_type=json
-
-/**
- * // createApi를 import하기위해 React 엔트리 포인트 사용
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { Pokemon } from './types'
-
-// base URL과 엔드포인트들로 서비스 정의
-export const pokemonApi = createApi({
-  reducerPath: 'pokemonApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://pokeapi.co/api/v2/' }),
-  endpoints: (builder) => ({
-    getPokemonByName: builder.query<Pokemon, string>({
-      query: (name) => `pokemon/${name}`,
-    }),
-  }),
-})
-
-// 정의된 엔드포인트에서 자동으로 생성된 훅을 함수형 컴포넌트에서 사용하기 위해 export
-export const { useGetPokemonByNameQuery } = pokemonApi
- * 
- */
