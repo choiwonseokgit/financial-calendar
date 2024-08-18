@@ -1,8 +1,10 @@
 import BarIcon from '@assets/icons/bars-solid.svg';
 import CalendarIcon from '@assets/icons/calendar-regular.svg';
-import arrowLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
-import arrowRightIcon from '@assets/icons/chevron-right-solid-green.svg';
+import chevronLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
+import chevronRightIcon from '@assets/icons/chevron-right-solid-green.svg';
 import useGetHolidayTitle from '@hooks/useGetHolidayTitle';
+import { useAppDispatch } from '@store/hooks';
+import { select } from '@store/selected-date-slice';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { View } from 'react-big-calendar';
@@ -11,7 +13,7 @@ import styled from 'styled-components';
 interface NavBarProps {
   date: string;
   view: View;
-  onTodayBtnClick: () => void;
+  onTodayChange: () => void;
   onMonthBtnClick: () => void;
   onArrowBtnClick: (direction: 'PREV' | 'NEXT', view: View) => void;
   onSideBarBtnClick: (isOpen: boolean) => void;
@@ -20,12 +22,13 @@ interface NavBarProps {
 function NavBar({
   date,
   view,
-  onTodayBtnClick: onClickTodayBtn,
-  onMonthBtnClick: onClickMonthBtn,
+  onTodayChange,
+  onMonthBtnClick,
   onArrowBtnClick,
   onSideBarBtnClick,
 }: NavBarProps) {
   const holidayTitle = useGetHolidayTitle(date);
+  const dispatch = useAppDispatch();
 
   const formatedDate = format(
     date,
@@ -39,26 +42,31 @@ function NavBar({
     locale: ko,
   });
 
+  const handleTodayBtnClick = () => {
+    onTodayChange();
+    dispatch(select(format(new Date(), 'yyyy/MM/dd')));
+  };
+
   return (
     <S.Nav>
       <S.LeftBox>
         <S.DateBox>
           <button onClick={() => onArrowBtnClick('PREV', view)}>
-            <S.ArrowImg src={arrowLeftIcon} alt="이전" />
+            <S.ChevronImg src={chevronLeftIcon} alt="이전" />
           </button>
           <S.Date>
             <div>{formatedDate}</div>
             <S.Holiday>{view === 'day' && holidayTitle}</S.Holiday>
           </S.Date>
           <button onClick={() => onArrowBtnClick('NEXT', view)}>
-            <S.ArrowImg src={arrowRightIcon} alt="다음" />
+            <S.ChevronImg src={chevronRightIcon} alt="다음" />
           </button>
         </S.DateBox>
         {formatedDate !== currDate && (
-          <S.TodayBtn onClick={onClickTodayBtn}>오늘</S.TodayBtn>
+          <S.TodayBtn onClick={handleTodayBtnClick}>오늘</S.TodayBtn>
         )}
         {view === 'day' && (
-          <S.MonthBtn onClick={onClickMonthBtn}>
+          <S.MonthBtn onClick={onMonthBtnClick}>
             <S.Calendarimg src={CalendarIcon} alt="달력" />
           </S.MonthBtn>
         )}
@@ -131,7 +139,7 @@ const S = {
     left: 50%;
     transform: translate(-50%, 40%);
   `,
-  ArrowImg: styled.img`
+  ChevronImg: styled.img`
     width: 15px;
     height: 15px;
     opacity: 0;

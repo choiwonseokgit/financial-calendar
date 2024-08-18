@@ -10,10 +10,10 @@ function MyDateHeader({ date, label }: DateHeaderProps) {
   const holidayTitle = useGetHolidayTitle(date);
   const selectedDate = useAppSelector((state) => state.selectedDate);
   const dispatch = useAppDispatch();
-  const isSelected = selectedDate === format(date, 'yyyyMMdd');
+  const isSelected = selectedDate === format(date, 'yyyy/MM/dd');
 
   const handleDateBtnClick = () => {
-    dispatch(select(format(date, 'yyyyMMdd')));
+    dispatch(select(format(date, 'yyyy/MM/dd')));
   };
 
   return (

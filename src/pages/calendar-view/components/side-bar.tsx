@@ -94,7 +94,7 @@ const S = {
   SideBarBox: styled.div<{ $isCloseAnimStart: boolean }>`
     position: absolute;
     right: 0;
-    width: 30%;
+    width: 50%;
     height: 100%;
     background-color: green;
     animation: ${({ $isCloseAnimStart }) =>

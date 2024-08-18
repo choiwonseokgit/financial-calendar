@@ -5,6 +5,6 @@ export const mobileSize = css`
   height: 100dvh;
   margin-left: auto;
   margin-right: auto;
-  background-color: #fff;
+  /* background-color: #fff; */
   /* background-color: #f5f8f7; */
 `;

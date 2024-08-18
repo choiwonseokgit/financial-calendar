@@ -95,6 +95,7 @@ export default React.memo(Calendar);
 
 const S = {
   Container: styled.div`
+    background-color: white;
     .rbc-calendar {
       height: 73dvh;
       max-height: 800px;
