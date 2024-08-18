@@ -2,7 +2,7 @@ import BarIcon from '@assets/icons/bars-solid.svg';
 import CalendarIcon from '@assets/icons/calendar-regular.svg';
 import chevronLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
 import chevronRightIcon from '@assets/icons/chevron-right-solid-green.svg';
-import useGetHolidayTitle from '@hooks/useGetHolidayTitle';
+import useGetHolidayTitle from '@hooks/use-get-holiday-title';
 import { useAppDispatch } from '@store/hooks';
 import { prevDay, select, nextDay } from '@store/selected-date-slice';
 import { format } from 'date-fns';
