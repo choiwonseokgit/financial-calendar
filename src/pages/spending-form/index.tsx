@@ -1,16 +1,11 @@
-import {
-  ChangeEvent,
-  FormEvent,
-  TouchEvent,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useEffect, useRef, useState } from 'react';
 import checkIcon from '@assets/icons/check-solid.svg';
 import chevronDownIcon from '@assets/icons/chevron-down-solid.svg';
 import chevronLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
 import chevronUpIcon from '@assets/icons/chevron-up-solid.svg';
+import ConfirmModal from '@components/modal/confirm-modal';
 import Flicking from '@egjs/react-flicking';
+import useModal from '@hooks/use-modal';
 import { useAppSelector } from '@store/hooks';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -29,16 +24,23 @@ function SpendingForm() {
   const inputRef = useRef<HTMLInputElement>(null);
   const selectedDate = useAppSelector((state) => state.selectedDate);
   const [touchX, setTouchX] = useState(0);
+  const {
+    isModalOpen,
+    handleModalOpen,
+    handleModalClose,
+    modalMessage,
+    handleModalMessageChange,
+  } = useModal();
 
   const moveBack = () => {
     navigate(-1);
   };
 
-  const onTouchStart = (e: TouchEvent) => {
+  const onTouchStart = (e: React.TouchEvent) => {
     setTouchX(e.changedTouches[0].pageX);
   };
 
-  const onTouchEnd = (e: TouchEvent) => {
+  const onTouchEnd = (e: React.TouchEvent) => {
     const target = e.target as HTMLElement;
 
     if (target.closest('.flicking-viewport')) return;
@@ -47,11 +49,21 @@ function SpendingForm() {
     if (distanceX > 50) moveBack();
   };
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     //TODO: 콤마 써서 데이터 보낼건지 정하기
-    console.log(spentMoney, selectedCategory);
-    moveBack();
+    switch (true) {
+      case !spentMoney:
+        handleModalMessageChange('moneyInput');
+        break;
+      case !selectedCategory:
+        handleModalMessageChange('category');
+        break;
+      default:
+        moveBack();
+        return;
+    }
+
+    handleModalOpen();
   };
 
   const handleFlickingToggle = () => {
@@ -62,7 +74,7 @@ function SpendingForm() {
     setSelectedCategory(CATEGORYS[idx]);
   };
 
-  const handleInputValChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputValChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { value },
     } = e;
@@ -77,6 +89,10 @@ function SpendingForm() {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') handleSubmit();
+  };
+
   useEffect(() => {
     setTimeout(() => {
       inputRef.current?.focus();
@@ -84,27 +100,24 @@ function SpendingForm() {
   }, []);
 
   return (
-    <S.Container
-      initial={{ x: '100%' }}
-      animate={{ x: 0 }}
-      exit={{ x: '100%' }}
-      transition={{
-        duration: 0.3,
-        delay: 0,
-      }}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
-    >
-      <S.Form
-        onSubmit={handleSubmit}
-        // onClick={() => inputRef.current?.focus()}
+    <>
+      <S.Container
+        initial={{ x: '100%' }}
+        animate={{ x: 0 }}
+        exit={{ x: '100%' }}
+        transition={{
+          duration: 0.3,
+          delay: 0,
+        }}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
       >
         <S.Header>
           <button onClick={moveBack}>
             <S.ChevronImg src={chevronLeftIcon} alt="뒤로" />
           </button>
           <S.Date>{selectedDate}</S.Date>
-          <button type="submit">
+          <button onClick={handleSubmit}>
             <S.CheckImg src={checkIcon} alt="전송" />
           </button>
         </S.Header>
@@ -116,59 +129,62 @@ function SpendingForm() {
             ref={inputRef}
             value={spentMoney}
             onChange={handleInputValChange}
+            onKeyDown={handleKeyDown}
           />
           <S.WonText>원</S.WonText>
         </S.InputBox>
-      </S.Form>
-      <S.CategoryBox>
-        <S.TitleBox onClick={handleFlickingToggle}>
-          <div>카테고리</div>
-          <S.ChevronImg
-            src={isFlicking ? chevronDownIcon : chevronUpIcon}
-            alt="펼치기/축소"
-          />
-        </S.TitleBox>
-        {isFlicking ? (
-          <Flicking
-            moveType="freeScroll"
-            bound={true}
-            inputType={['touch', 'mouse', 'pointer']}
-            duration={300}
-            // horizontal={false}
-          >
-            {CATEGORYS.map((category, idx) => (
-              <div key={idx} style={{ marginRight: '5px' }}>
-                <Category
-                  name={category.name}
-                  emoji={category.emoji}
-                  isSelected={selectedCategory?.name === category.name}
-                  onCategoryClick={() => {
-                    handleCategoryClick(idx);
-                  }}
-                />
-              </div>
-            ))}
-          </Flicking>
-        ) : (
-          <S.FlexMode>
-            {CATEGORYS.map((category, idx) => (
-              <div key={idx}>
-                <Category
-                  key={idx}
-                  name={category.name}
-                  emoji={category.emoji}
-                  isSelected={selectedCategory?.name === category.name}
-                  onCategoryClick={() => {
-                    handleCategoryClick(idx);
-                  }}
-                />
-              </div>
-            ))}
-          </S.FlexMode>
-        )}
-      </S.CategoryBox>
-      <S.EmptyNotice>금일 스케줄이 없어요!</S.EmptyNotice>
-    </S.Container>
+        <S.CategoryBox>
+          <S.TitleBox onClick={handleFlickingToggle}>
+            <div>카테고리</div>
+            <S.ChevronImg
+              src={isFlicking ? chevronDownIcon : chevronUpIcon}
+              alt="펼치기/축소"
+            />
+          </S.TitleBox>
+          {isFlicking ? (
+            <Flicking
+              moveType="freeScroll"
+              bound={true}
+              inputType={['touch', 'mouse']}
+              duration={300}
+            >
+              {CATEGORYS.map((category, idx) => (
+                <div key={idx} style={{ marginRight: '5px' }}>
+                  <Category
+                    name={category.name}
+                    emoji={category.emoji}
+                    isSelected={selectedCategory?.name === category.name}
+                    onCategoryClick={() => {
+                      handleCategoryClick(idx);
+                    }}
+                  />
+                </div>
+              ))}
+            </Flicking>
+          ) : (
+            <S.FlexMode>
+              {CATEGORYS.map((category, idx) => (
+                <div key={idx}>
+                  <Category
+                    key={idx}
+                    name={category.name}
+                    emoji={category.emoji}
+                    isSelected={selectedCategory?.name === category.name}
+                    onCategoryClick={() => {
+                      handleCategoryClick(idx);
+                    }}
+                  />
+                </div>
+              ))}
+            </S.FlexMode>
+          )}
+        </S.CategoryBox>
+        <S.EmptyNotice>금일 스케줄이 없어요!</S.EmptyNotice>
+      </S.Container>
+      {isModalOpen && (
+        <ConfirmModal onClose={handleModalClose} modalMessage={modalMessage} />
+      )}
+    </>
   );
 }
 
@@ -178,7 +194,7 @@ const S = {
   Container: styled(motion.div)`
     height: 100dvh;
     padding: 10px;
-    background-color: white;
+    background-color: var(--white);
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -216,7 +232,7 @@ const S = {
   `,
   Date: styled.div`
     font-size: 20px;
-    color: var(--gray);
+    color: var(--gray02);
   `,
   InputBox: styled.div`
     display: flex;
@@ -242,7 +258,7 @@ const S = {
     padding: 5px;
     display: flex;
     flex-direction: column;
-    color: var(--gray);
+    color: var(--gray02);
     gap: 10px;
     border: 1px solid var(--green04);
     border-radius: 5px;
@@ -264,7 +280,7 @@ const S = {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--gray);
+    color: var(--gray02);
     flex-grow: 1;
   `,
 };

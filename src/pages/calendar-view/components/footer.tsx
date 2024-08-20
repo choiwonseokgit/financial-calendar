@@ -22,10 +22,6 @@ function Footer({ date }: FooterProps) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const moveSpendingForm = () => {
-    navigate('/spending-form');
-  };
-
   useOutSideClick(ref, () => setIsOpen(false));
 
   return (
@@ -62,8 +58,12 @@ function Footer({ date }: FooterProps) {
             //   delay: 0,
             // }}
           >
-            <S.PlusBtn onClick={moveSpendingForm}>스케줄</S.PlusBtn>
-            <S.PlusBtn onClick={moveSpendingForm}>가계부</S.PlusBtn>
+            <S.PlusBtn onClick={() => navigate('/schedule-form')}>
+              스케줄
+            </S.PlusBtn>
+            <S.PlusBtn onClick={() => navigate('/spending-form')}>
+              가계부
+            </S.PlusBtn>
           </S.BtnsBox>
         </div>
       </S.Container>

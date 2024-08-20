@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { eachDayOfInterval, format, parse } from 'date-fns';
 import moment from 'moment';
 import 'moment/locale/ko';
@@ -23,7 +23,7 @@ interface CalendarProps {
   date: Date | string;
   idx: number;
   view: View;
-  onFlicking: (view: View) => void;
+  // onFlicking: (view: View) => void;
   onNavigate: (date: Date, idx: number, view: View) => void;
   onChangeView: (view: View) => void;
 }
@@ -124,7 +124,6 @@ function Calendar({
   date,
   idx,
   view,
-  onFlicking,
   onNavigate,
   onChangeView,
 }: CalendarProps) {
@@ -156,9 +155,9 @@ function Calendar({
     }
   };
 
-  useEffect(() => {
-    onFlicking(view);
-  }, [view]);
+  // useEffect(() => {
+  //   onFlicking(view);
+  // }, [view]);
 
   return (
     <S.Container>
@@ -170,6 +169,7 @@ function Calendar({
         }}
         view={view}
         onView={onChangeView}
+        showAllEvents={true}
         toolbar={false}
         events={view === 'day' ? FILTERED_EVENT : EVENTS}
         onSelectEvent={handleSelectEvent}
@@ -258,6 +258,7 @@ const S = {
 
     .rbc-button-link.rbc-show-more {
       color: var(--green04);
+      position: absolute;
     }
   `,
 };

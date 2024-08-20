@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import CloseIcon from '@assets/icons/xmark-solid.svg';
-import useOutSideClick from '@hooks/use-outside-click';
+import useOutsideClickForAnimation from '@hooks/use-outside-click-for-animation';
 import { CALENDAR_CHECK_LIST } from '@pages/calendar-view/constants';
 import styled, { keyframes } from 'styled-components';
 import CheckList from './check-list';
@@ -10,24 +10,23 @@ interface SideBarProps {
 }
 
 function SideBar({ onSideBarBtnClick }: SideBarProps) {
-  const [isCloseAnimStart, setIsCloseAnimStart] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const { isCloseAnimStart, handleCloseAnimStart } =
+    useOutsideClickForAnimation(ref, () => onSideBarBtnClick(false), 300);
 
-  // const handleBackgroundClick = (e: MouseEvent<HTMLDivElement>) => {
-  //   if (e.target === e.currentTarget) setIsCloseAnimStart(true);
-  // };
+  // const [isCloseAnimStart, setIsCloseAnimStart] = useState(false);
 
-  useOutSideClick(ref, () => setIsCloseAnimStart(true));
+  // useOutSideClick(ref, () => setIsCloseAnimStart(true));
 
-  useEffect(() => {
-    if (isCloseAnimStart) {
-      const timer = setTimeout(() => {
-        onSideBarBtnClick(false);
+  // useEffect(() => {
+  //   if (isCloseAnimStart) {
+  //     const timer = setTimeout(() => {
+  //       onSideBarBtnClick(false);
 
-        return () => clearTimeout(timer);
-      }, 300);
-    }
-  }, [isCloseAnimStart]);
+  //       return () => clearTimeout(timer);
+  //     }, 300);
+  //   }
+  // }, [isCloseAnimStart]);
 
   return (
     <S.Background $isCloseAnimStart={isCloseAnimStart}>
@@ -37,7 +36,7 @@ function SideBar({ onSideBarBtnClick }: SideBarProps) {
             <S.Name>원석초이</S.Name>
             <S.Email>cws0325@naver.com</S.Email>
           </S.UserInfo>
-          <button onClick={() => setIsCloseAnimStart(true)}>
+          <button onClick={handleCloseAnimStart}>
             <S.CloseImg src={CloseIcon} alt="닫기" />
           </button>
         </S.Header>
@@ -142,7 +141,7 @@ const S = {
   `,
   Name: styled.span``,
   Email: styled.span`
-    color: var(--gray);
+    color: var(--gray02);
     font-size: 12px;
   `,
   CloseImg: styled.img`

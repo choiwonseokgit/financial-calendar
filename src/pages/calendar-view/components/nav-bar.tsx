@@ -1,5 +1,5 @@
 import BarIcon from '@assets/icons/bars-solid.svg';
-import CalendarIcon from '@assets/icons/calendar-regular.svg';
+import CalendarIcon from '@assets/icons/calendar-days-solid.svg';
 import chevronLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
 import chevronRightIcon from '@assets/icons/chevron-right-solid-green.svg';
 import useGetHolidayTitle from '@hooks/use-get-holiday-title';

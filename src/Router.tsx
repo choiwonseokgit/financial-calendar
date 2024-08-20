@@ -11,6 +11,7 @@ function AnimatedRoutes() {
         <Route path="/" element={<Page.Root />}>
           <Route index element={<Page.CalendarView />} />
           <Route path="spending-form" element={<Page.SpendingForm />} />
+          <Route path="schedule-form" element={<Page.ScheduleForm />} />
         </Route>
       </Routes>
     </AnimatePresence>

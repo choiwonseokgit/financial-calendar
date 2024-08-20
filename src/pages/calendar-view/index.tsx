@@ -113,7 +113,7 @@ const reducer = (dates: Dates, action: Action) => {
 };
 
 function CalendarView() {
-  const [dates, dispatch] = useReducer(reducer, [
+  const [dates, datesDispatch] = useReducer(reducer, [
     calDateAndMakeStr(new Date(), -1),
     calDateAndMakeStr(new Date()),
     calDateAndMakeStr(new Date(), 1),
@@ -132,9 +132,9 @@ function CalendarView() {
     const idx = e.currentTarget.index;
 
     if (e.direction === 'PREV') {
-      dispatch({ type: 'PREV', idx });
+      datesDispatch({ type: 'PREV', idx, view });
     } else if (e.direction === 'NEXT') {
-      dispatch({ type: 'NEXT', idx });
+      datesDispatch({ type: 'NEXT', idx, view });
     }
   };
 
@@ -146,7 +146,7 @@ function CalendarView() {
   //NavBar
   const handleTodayChange = async () => {
     await flickingRef.current?.moveTo(1, 0);
-    dispatch({ type: 'TODAY' });
+    datesDispatch({ type: 'TODAY' });
   };
 
   const handleMonthBtnClick = () => {
@@ -157,6 +157,8 @@ function CalendarView() {
     direction: 'PREV' | 'NEXT',
     view: View,
   ) => {
+    if (flickingRef.current?.animating) return;
+
     switch (view) {
       case 'month': {
         if (direction === 'PREV') {
@@ -169,10 +171,10 @@ function CalendarView() {
       case 'day': {
         if (direction === 'PREV') {
           await flickingRef.current?.prev(0);
-          dispatch({ type: 'PREV', idx: currIdx, view });
+          datesDispatch({ type: 'PREV', idx: currIdx, view });
         } else if (direction === 'NEXT') {
           await flickingRef.current?.next(0);
-          dispatch({ type: 'NEXT', idx: currIdx, view });
+          datesDispatch({ type: 'NEXT', idx: currIdx, view });
         }
         break;
       }
@@ -180,22 +182,27 @@ function CalendarView() {
   };
 
   //Calendar
-  const handleFlicking = useCallback((view: Partial<View>) => {
-    if (view !== 'month') {
-      flickingRef.current?.disableInput();
-    } else {
-      flickingRef.current?.enableInput();
-    }
-  }, []);
+  // const handleFlicking = useCallback((view: Partial<View>) => {
+  //   if (view !== 'month') {
+  //     console.log('disable');
+  //     flickingRef.current?.disableInput();
+  //   } else {
+  //     console.log('enable');
+  //     flickingRef.current?.enableInput();
+  //   }
+  // }, []);
 
   const handleNavigate = useCallback((date: Date, idx: number, view: View) => {
     const dateStr = formatISO(date);
-    dispatch({ type: 'INIT', idx, date: dateStr, view });
+    datesDispatch({ type: 'INIT', idx, date: dateStr, view });
   }, []);
 
-  const handleChangeView = useCallback((view: View) => {
-    setView(view);
-  }, []);
+  const handleChangeView = useCallback(
+    (view: View) => {
+      setView(view);
+    },
+    [setView],
+  );
 
   //useEffect
   const [trigger] = holidayApi.endpoints.getHoliday.useLazyQuery();
@@ -216,6 +223,14 @@ function CalendarView() {
 
     fetchHolidays();
   }, [dates]);
+
+  useEffect(() => {
+    if (view === 'month') {
+      flickingRef.current?.enableInput();
+    } else {
+      flickingRef.current?.disableInput();
+    }
+  }, [view]);
 
   return (
     <motion.div
@@ -251,7 +266,7 @@ function CalendarView() {
           moveType={['strict', { count: 1 }]}
           changeOnHold={true} //범인?
           threshold={50}
-          inputType={['touch', 'mouse', 'pointer']}
+          inputType={['touch', 'mouse']}
           onWillRestore={() => (isCanceledRef.current = 1)}
           onWillChange={() => (isCanceledRef.current = 0)}
         >
@@ -261,7 +276,7 @@ function CalendarView() {
                 date={date}
                 idx={idx}
                 view={view}
-                onFlicking={handleFlicking}
+                // onFlicking={handleFlicking}
                 onNavigate={handleNavigate}
                 onChangeView={handleChangeView}
               />

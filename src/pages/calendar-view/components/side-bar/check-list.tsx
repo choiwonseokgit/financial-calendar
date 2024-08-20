@@ -15,8 +15,8 @@ function CheckList({ label }: CheckListProps) {
   };
 
   return (
-    <S.Container>
-      <S.CheckImgBox onClick={handleClick}>
+    <S.Container onClick={handleClick}>
+      <S.CheckImgBox>
         {isChecked && <S.Img src={CheckIcon} alt="체크" />}
       </S.CheckImgBox>
       <div>{label}</div>
@@ -31,9 +31,9 @@ const S = {
     display: flex;
     align-items: center;
     gap: 10px;
+    cursor: pointer;
   `,
   CheckImgBox: styled.div`
-    cursor: pointer;
     position: relative;
     width: 20px;
     height: 20px;
@@ -42,7 +42,8 @@ const S = {
   `,
   Img: styled.img`
     position: absolute;
-    width: 15px;
+    width: 12px;
+    height: 12px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
