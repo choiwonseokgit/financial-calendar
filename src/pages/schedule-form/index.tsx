@@ -5,8 +5,8 @@ import memoIcon from '@assets/icons/newspaper-solid.svg';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
+import Title from './components/title';
 import { TPastelColors } from './constants';
-import Title from './title';
 import { Schedule, Action } from './types';
 
 const reducer = (schedule: Schedule, action: Action) => {
