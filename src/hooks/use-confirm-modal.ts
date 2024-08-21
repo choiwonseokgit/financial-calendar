@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TConfirmModalContents } from '@constants/modal';
 
-const useModal = () => {
+const useConfirmModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] =
     useState<keyof TConfirmModalContents>('moneyInput');
@@ -23,4 +23,4 @@ const useModal = () => {
   };
 };
 
-export default useModal;
+export default useConfirmModal;

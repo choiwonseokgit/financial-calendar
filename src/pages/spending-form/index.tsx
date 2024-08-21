@@ -5,7 +5,7 @@ import chevronLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
 import chevronUpIcon from '@assets/icons/chevron-up-solid.svg';
 import ConfirmModal from '@components/modal/confirm-modal';
 import Flicking from '@egjs/react-flicking';
-import useModal from '@hooks/use-modal';
+import useConfirmModal from '@hooks/use-confirm-modal';
 import { useAppSelector } from '@store/hooks';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -30,7 +30,7 @@ function SpendingForm() {
     handleModalClose,
     modalMessage,
     handleModalMessageChange,
-  } = useModal();
+  } = useConfirmModal();
 
   const moveBack = () => {
     navigate(-1);
@@ -142,10 +142,7 @@ function SpendingForm() {
             />
           </S.TitleBox>
           {isFlicking ? (
-            <Flicking
-              bound={true}
-              inputType={['touch', 'mouse']}
-            >
+            <Flicking bound={true} inputType={['touch', 'mouse']}>
               {CATEGORYS.map((category, idx) => (
                 <div key={idx} style={{ marginRight: '5px' }}>
                   <Category
