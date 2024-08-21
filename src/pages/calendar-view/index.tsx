@@ -20,7 +20,7 @@ import NavBar from './components/nav-bar';
 import SideBar from './components/side-bar/index';
 import '@egjs/react-flicking/dist/flicking.css';
 
-type Dates = string[];
+type TCalendarDates = string[];
 
 interface Action {
   type: 'TODAY' | 'PREV' | 'NEXT' | 'INIT';
@@ -29,7 +29,7 @@ interface Action {
   date?: string;
 }
 
-const reducer = (dates: Dates, action: Action) => {
+const reducer = (calendarDates: TCalendarDates, action: Action) => {
   switch (action.type) {
     case 'TODAY':
       return [
@@ -43,24 +43,24 @@ const reducer = (dates: Dates, action: Action) => {
       switch (idx) {
         case 0:
           return [
-            dates[0],
-            calDateAndMakeStr(dates[0], -2, view),
-            calDateAndMakeStr(dates[0], -1, view),
+            calendarDates[0],
+            calDateAndMakeStr(calendarDates[0], -2, view),
+            calDateAndMakeStr(calendarDates[0], -1, view),
           ];
         case 1:
           return [
-            calDateAndMakeStr(dates[1], -1, view),
-            dates[1],
-            calDateAndMakeStr(dates[1], -2, view),
+            calDateAndMakeStr(calendarDates[1], -1, view),
+            calendarDates[1],
+            calDateAndMakeStr(calendarDates[1], -2, view),
           ];
         case 2:
           return [
-            calDateAndMakeStr(dates[2], -2, view),
-            calDateAndMakeStr(dates[2], -1, view),
-            dates[2],
+            calDateAndMakeStr(calendarDates[2], -2, view),
+            calDateAndMakeStr(calendarDates[2], -1, view),
+            calendarDates[2],
           ];
         default:
-          return dates;
+          return calendarDates;
       }
     }
     case 'NEXT': {
@@ -69,24 +69,24 @@ const reducer = (dates: Dates, action: Action) => {
       switch (idx) {
         case 0:
           return [
-            dates[0],
-            calDateAndMakeStr(dates[0], 1, view),
-            calDateAndMakeStr(dates[0], 2, view),
+            calendarDates[0],
+            calDateAndMakeStr(calendarDates[0], 1, view),
+            calDateAndMakeStr(calendarDates[0], 2, view),
           ];
         case 1:
           return [
-            calDateAndMakeStr(dates[1], 2, view),
-            dates[1],
-            calDateAndMakeStr(dates[1], 1, view),
+            calDateAndMakeStr(calendarDates[1], 2, view),
+            calendarDates[1],
+            calDateAndMakeStr(calendarDates[1], 1, view),
           ];
         case 2:
           return [
-            calDateAndMakeStr(dates[2], 1, view),
-            calDateAndMakeStr(dates[2], 2, view),
-            dates[2],
+            calDateAndMakeStr(calendarDates[2], 1, view),
+            calDateAndMakeStr(calendarDates[2], 2, view),
+            calendarDates[2],
           ];
         default:
-          return dates;
+          return calendarDates;
       }
     }
     case 'INIT': {
@@ -113,15 +113,15 @@ const reducer = (dates: Dates, action: Action) => {
               date,
             ];
         }
-      return dates;
+      return calendarDates;
     }
     default:
-      return dates;
+      return calendarDates;
   }
 };
 
 function CalendarView() {
-  const [dates, datesDispatch] = useReducer(reducer, [
+  const [calendarDates, calendarDatesDispatch] = useReducer(reducer, [
     calDateAndMakeStr(new Date(), -1),
     calDateAndMakeStr(new Date()),
     calDateAndMakeStr(new Date(), 1),
@@ -142,10 +142,10 @@ function CalendarView() {
     const idx = e.currentTarget.index;
 
     if (e.direction === 'PREV') {
-      datesDispatch({ type: 'PREV', idx, view });
+      calendarDatesDispatch({ type: 'PREV', idx, view });
       dispatch(view === 'month' ? prevMonth() : prevDay());
     } else if (e.direction === 'NEXT') {
-      datesDispatch({ type: 'NEXT', idx, view });
+      calendarDatesDispatch({ type: 'NEXT', idx, view });
       dispatch(view === 'month' ? nextMonth() : nextDay());
     }
   };
@@ -158,7 +158,7 @@ function CalendarView() {
   //NavBar
   const handleTodayChange = async () => {
     await flickingRef.current?.moveTo(1, 0);
-    datesDispatch({ type: 'TODAY' });
+    calendarDatesDispatch({ type: 'TODAY' });
   };
 
   const handleMonthBtnClick = () => {
@@ -204,7 +204,7 @@ function CalendarView() {
 
   const handleNavigate = useCallback((date: Date, idx: number, view: View) => {
     const dateStr = formatISO(date);
-    datesDispatch({ type: 'INIT', idx, date: dateStr, view });
+    calendarDatesDispatch({ type: 'INIT', idx, date: dateStr, view });
   }, []);
 
   const handleChangeView = useCallback(
@@ -217,7 +217,7 @@ function CalendarView() {
   //useEffect
   const [trigger] = holidayApi.endpoints.getHoliday.useLazyQuery();
 
-  const holidayQueries = dates.map((date) => {
+  const holidayQueries = calendarDates.map((date) => {
     const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
     return () => trigger({ year: year, month: month }, true).unwrap();
   });
@@ -233,7 +233,7 @@ function CalendarView() {
     };
 
     fetchHolidays();
-  }, [dates]);
+  }, [calendarDates]);
 
   //view change
   useEffect(() => {
@@ -249,7 +249,7 @@ function CalendarView() {
     const currSelectDate = calDateAndMakeStr(
       parse(selectedDates, 'yyyy/MM/dd', new Date()),
     );
-    datesDispatch({ type: 'INIT', date: currSelectDate, idx: 1, view: view });
+    calendarDatesDispatch({ type: 'INIT', date: currSelectDate, idx: 1, view: view });
   }, []);
 
   return (
@@ -263,7 +263,7 @@ function CalendarView() {
       }}
     >
       <NavBar
-        date={dates[currIdx]}
+        date={calendarDates[currIdx]}
         view={view}
         onTodayChange={handleTodayChange}
         onMonthBtnClick={handleMonthBtnClick}
@@ -290,7 +290,7 @@ function CalendarView() {
           onWillRestore={() => (isCanceledRef.current = 1)}
           onWillChange={() => (isCanceledRef.current = 0)}
         >
-          {dates.map((date, idx) => (
+          {calendarDates.map((date, idx) => (
             <S.Section key={idx}>
               <Calendar
                 date={date}
@@ -304,7 +304,7 @@ function CalendarView() {
           ))}
         </Flicking>
       </S.Main>
-      <Footer date={dates[currIdx]} />
+      <Footer date={calendarDates[currIdx]} />
     </motion.div>
   );
 }
