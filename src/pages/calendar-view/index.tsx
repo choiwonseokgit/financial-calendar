@@ -1,16 +1,24 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import Flicking, { MoveEndEvent } from '@egjs/react-flicking';
+import { useAppSelector } from '@store/hooks';
 import { holidayApi } from '@store/query/holidaySlice';
+import {
+  nextDay,
+  nextMonth,
+  prevDay,
+  prevMonth,
+} from '@store/selected-date-slice';
 import calDateAndMakeStr from '@utils/cal-date-and-make-str';
-import { format, formatISO } from 'date-fns';
+import { format, formatISO, parse } from 'date-fns';
 import { motion } from 'framer-motion';
 import { View } from 'react-big-calendar';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import Calendar from './components/calendar/index';
 import Footer from './components/footer';
 import NavBar from './components/nav-bar';
-import '@egjs/react-flicking/dist/flicking.css';
 import SideBar from './components/side-bar/index';
+import '@egjs/react-flicking/dist/flicking.css';
 
 type Dates = string[];
 
@@ -100,8 +108,8 @@ const reducer = (dates: Dates, action: Action) => {
             ];
           case 2:
             return [
-              calDateAndMakeStr(date, 1),
-              calDateAndMakeStr(date, -1),
+              calDateAndMakeStr(date, 1, view),
+              calDateAndMakeStr(date, -1, view),
               date,
             ];
         }
@@ -118,6 +126,8 @@ function CalendarView() {
     calDateAndMakeStr(new Date()),
     calDateAndMakeStr(new Date(), 1),
   ]);
+  const selectedDates = useAppSelector((state) => state.selectedDate);
+  const dispatch = useDispatch();
   const [view, setView] = useState<View>('month');
   const [currIdx, setCurrIdx] = useState(1);
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
@@ -133,8 +143,10 @@ function CalendarView() {
 
     if (e.direction === 'PREV') {
       datesDispatch({ type: 'PREV', idx, view });
+      dispatch(view === 'month' ? prevMonth() : prevDay());
     } else if (e.direction === 'NEXT') {
       datesDispatch({ type: 'NEXT', idx, view });
+      dispatch(view === 'month' ? nextMonth() : nextDay());
     }
   };
 
@@ -171,10 +183,8 @@ function CalendarView() {
       case 'day': {
         if (direction === 'PREV') {
           await flickingRef.current?.prev(0);
-          datesDispatch({ type: 'PREV', idx: currIdx, view });
         } else if (direction === 'NEXT') {
           await flickingRef.current?.next(0);
-          datesDispatch({ type: 'NEXT', idx: currIdx, view });
         }
         break;
       }
@@ -212,6 +222,7 @@ function CalendarView() {
     return () => trigger({ year: year, month: month }, true).unwrap();
   });
 
+  //공휴일 api fetch
   useEffect(() => {
     const fetchHolidays = async () => {
       try {
@@ -224,6 +235,7 @@ function CalendarView() {
     fetchHolidays();
   }, [dates]);
 
+  //view change
   useEffect(() => {
     if (view === 'month') {
       flickingRef.current?.enableInput();
@@ -231,6 +243,14 @@ function CalendarView() {
       flickingRef.current?.disableInput();
     }
   }, [view]);
+
+  //초기화
+  useEffect(() => {
+    const currSelectDate = calDateAndMakeStr(
+      parse(selectedDates, 'yyyy/MM/dd', new Date()),
+    );
+    datesDispatch({ type: 'INIT', date: currSelectDate, idx: 1, view: view });
+  }, []);
 
   return (
     <motion.div

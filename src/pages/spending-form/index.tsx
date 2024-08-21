@@ -143,10 +143,8 @@ function SpendingForm() {
           </S.TitleBox>
           {isFlicking ? (
             <Flicking
-              moveType="freeScroll"
               bound={true}
               inputType={['touch', 'mouse']}
-              duration={300}
             >
               {CATEGORYS.map((category, idx) => (
                 <div key={idx} style={{ marginRight: '5px' }}>

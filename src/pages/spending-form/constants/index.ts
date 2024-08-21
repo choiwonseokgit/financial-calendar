@@ -14,6 +14,7 @@ export const CATEGORYS = [
   { name: '운동', emoji: '🏋️‍♂️' },
   { name: '마트', emoji: '🛒' },
   { name: '야식', emoji: '🍕' },
+  { name: '경조사', emoji: '🙏' },
 ] as const;
 
 export type TCategory = (typeof CATEGORYS)[number];

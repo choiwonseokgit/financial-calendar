@@ -132,7 +132,7 @@ const S = {
   TextArea: styled.textarea`
     width: 80%;
     height: 80px;
-    font-size: 15px;
+    font-size: 16px;
     border: none; /* 테두리 없애기 */
     resize: none; /* 크기 조절 기능 없애기 */
     //outline: none; /* 포커스 시 생기는 외곽선 없애기 */
