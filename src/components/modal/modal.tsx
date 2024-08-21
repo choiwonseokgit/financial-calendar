@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { TModal } from '@constants/modal';
 import useOutsideClickForAnimation from '@hooks/use-outside-click-for-animation';
 import { mobileSize } from '@styles/mobile';
 import styled, { keyframes } from 'styled-components';
@@ -7,7 +8,7 @@ import ModalPortal from './modal-portal';
 
 interface ModalProps extends React.PropsWithChildren {
   onClose: () => void;
-  type: 'confirm' | 'form';
+  type: TModal;
 }
 
 function Modal({ children, onClose, type }: ModalProps) {

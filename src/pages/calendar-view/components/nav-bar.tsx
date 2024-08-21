@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import BarIcon from '@assets/icons/bars-solid.svg';
 import CalendarIcon from '@assets/icons/calendar-days-solid.svg';
 import chevronLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
 import chevronRightIcon from '@assets/icons/chevron-right-solid-green.svg';
+import DateSelectModal from '@components/modal/date-select-modal';
 import useGetHolidayTitle from '@hooks/use-get-holiday-title';
 import { useAppDispatch } from '@store/hooks';
-import { prevDay, select, nextDay } from '@store/selected-date-slice';
+import { select } from '@store/selected-date-slice';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { View } from 'react-big-calendar';
@@ -29,6 +31,7 @@ function NavBar({
 }: NavBarProps) {
   const holidayTitle = useGetHolidayTitle(date);
   const dispatch = useAppDispatch();
+  const [isDateSelectModalOpen, setIsDateSelectModalOpen] = useState(false);
 
   const formatedDate = format(
     date,
@@ -47,26 +50,33 @@ function NavBar({
     dispatch(select(format(new Date(), 'yyyy/MM/dd')));
   };
 
+  //TODO: 모달로 날짜 확인 하면 onInit으로 바꿔주기~~~
+
   return (
     <S.Nav>
+      {isDateSelectModalOpen && (
+        <DateSelectModal onClose={() => setIsDateSelectModalOpen(false)} />
+      )}
       <S.LeftBox>
         <S.DateBox>
           <button
             onClick={() => {
               onArrowBtnClick('PREV', view);
-              dispatch(prevDay());
+              //dispatch(prevDay());
             }}
           >
             <S.ChevronImg src={chevronLeftIcon} alt="이전" />
           </button>
           <S.Date>
-            <div>{formatedDate}</div>
+            <div onClick={() => setIsDateSelectModalOpen(true)}>
+              {formatedDate}
+            </div>
             <S.Holiday>{view === 'day' && holidayTitle}</S.Holiday>
           </S.Date>
           <button
             onClick={() => {
               onArrowBtnClick('NEXT', view);
-              dispatch(nextDay());
+              //dispatch(nextDay());
             }}
           >
             <S.ChevronImg src={chevronRightIcon} alt="다음" />

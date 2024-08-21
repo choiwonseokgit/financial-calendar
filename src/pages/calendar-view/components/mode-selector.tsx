@@ -4,6 +4,7 @@ import Flicking, {
   ReadyEvent,
   ViewportSlot,
 } from '@egjs/react-flicking';
+import '@egjs/react-flicking/dist/flicking.css';
 
 function ModeSelector() {
   const updateTransform = (e: ReadyEvent<Flicking> | MoveEvent<Flicking>) => {

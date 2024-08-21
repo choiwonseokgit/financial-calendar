@@ -1,6 +1,9 @@
+export type TModal = 'confirm' | 'form' | 'date';
+
 export const MODAL_TITLE = {
   confirm: '확인',
   form: '스케줄 작성',
+  date: '날짜 선택',
 } as const;
 
 export type TModalTitle = typeof MODAL_TITLE;
