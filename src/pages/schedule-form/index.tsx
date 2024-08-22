@@ -15,6 +15,8 @@ import TimeSelect from './components/time-select';
 import Title from './components/title';
 import { TPastelColors } from './constants';
 import { Schedule, Action } from './types';
+import combineDateTimeToIso from './utils/combine-date-time-to-iso';
+import validateDateOrder from './utils/validate-date-order';
 
 const reducer = (schedule: Schedule, action: Action) => {
   switch (action.type) {
@@ -67,12 +69,22 @@ function ScheduleForm() {
   };
 
   const handleSubmit = () => {
-    const { title } = schedule;
-    //TODO: 모달 에러 마저 작성 sameDate, overDate
-    //parse 써서 Date객체로 만들수 있을듯?? -> Date or DateISO
+    const { title, isAllDay, startDate, startTime, endDate, endTime } =
+      schedule;
+    const start = combineDateTimeToIso(startDate, startTime, isAllDay);
+    const end = combineDateTimeToIso(endDate, endTime, isAllDay);
+    const isSameDate = start === end;
+    const isValidateDateOrder = validateDateOrder(start, end);
+
     switch (true) {
       case !title:
         handleModalMessageChange('titleEmpty');
+        break;
+      case isSameDate:
+        handleModalMessageChange('sameDate');
+        break;
+      case !isValidateDateOrder:
+        handleModalMessageChange('overDate');
         break;
       default: //전송
         moveBack();
