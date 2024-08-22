@@ -191,6 +191,15 @@ function CalendarView() {
     }
   };
 
+  const handleCalendarDatesInit = (newDate: string) => {
+    calendarDatesDispatch({
+      type: 'INIT',
+      date: newDate,
+      idx: currIdx,
+      view: view,
+    });
+  };
+
   //Calendar
   // const handleFlicking = useCallback((view: Partial<View>) => {
   //   if (view !== 'month') {
@@ -249,7 +258,12 @@ function CalendarView() {
     const currSelectDate = calDateAndMakeStr(
       parse(selectedDates, 'yyyy/MM/dd', new Date()),
     );
-    calendarDatesDispatch({ type: 'INIT', date: currSelectDate, idx: 1, view: view });
+    calendarDatesDispatch({
+      type: 'INIT',
+      date: currSelectDate,
+      idx: 1,
+      view: view,
+    });
   }, []);
 
   return (
@@ -269,6 +283,7 @@ function CalendarView() {
         onMonthBtnClick={handleMonthBtnClick}
         onArrowBtnClick={handleArrowBtnClick}
         onSideBarBtnClick={handleSideBarBtnClick}
+        onCalendarDatesInit={handleCalendarDatesInit}
       />
       {isSideBarOpen && <SideBar onSideBarBtnClick={handleSideBarBtnClick} />}
       <S.Main>

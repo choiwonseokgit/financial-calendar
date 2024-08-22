@@ -11,8 +11,7 @@ export default React.memo(MyMonthHeader);
 const S = {
   Container: styled.div<{ $label: string }>`
     color: ${({ $label }) =>
-      $label === '토' ? 'blue' : $label === '일' ? 'red' : '#9e9e9e'};
-    /* color: #5ca08f; */
+      $label === '토' ? 'blue' : $label === '일' ? 'red' : 'var(--gray02)'};
     font-weight: 500;
   `,
 };

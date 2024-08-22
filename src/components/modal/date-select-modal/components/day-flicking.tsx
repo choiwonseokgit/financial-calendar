@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getDaysInMonth } from 'date-fns';
-import FlickingContainer from './flicking-container';
+import FlickingContainer from '../../flicking-container';
 
 interface DayFlickingProps {
   currSelectYear: string;
@@ -8,7 +8,7 @@ interface DayFlickingProps {
   currSelectDay: string;
   selectingYear: string;
   selectingMonth: string;
-  onDayChange: (dateUnit: string) => void;
+  onDayChange: (newDay: string) => void;
 }
 
 function DayFlicking({
@@ -34,16 +34,7 @@ function DayFlicking({
     setCurrIdx(idx);
   };
 
-  // const days = Array.from({ length: daysInMonth }, (_, idx) =>
-  //   (idx + 1).toString().padStart(2, '0'),
-  // );
-
-  //console.log(currSelectMonth, daysInMonth);
-
-  console.log(currSelectDay, onDayChange);
-
   useEffect(() => {
-    console.log('발생');
     const newDaysInMonth = getDaysInMonth(
       new Date(+selectingYear, +selectingMonth - 1),
     );
@@ -56,7 +47,6 @@ function DayFlicking({
   return (
     <FlickingContainer
       defaultIdx={defaultIdx}
-      dateUnits={days}
       currIdx={currIdx}
       onDateUnitChange={(idx: number) => {
         handleCurrIdxChange(idx);

@@ -4,6 +4,11 @@ export type Schedule = {
   title: string;
   color: TPastelColors['color'];
   memo: string;
+  startDate: string;
+  endDate: string;
+  startTime: string;
+  endTime: string;
+  isAllDay: boolean;
 };
 
 type TitleAction = {
@@ -21,4 +26,36 @@ type MemoAction = {
   memo: string;
 };
 
-export type Action = TitleAction | ColorAction | MemoAction;
+type StartDateAction = {
+  type: 'START_DATE';
+  startDate: string;
+};
+
+type EndDateAction = {
+  type: 'END_DATE';
+  endDate: string;
+};
+
+type StartTimeAction = {
+  type: 'START_TIME';
+  startTime: string;
+};
+
+type EndTimeAction = {
+  type: 'END_TIME';
+  endTime: string;
+};
+
+type isAllDayAction = {
+  type: 'IS_ALLDAY_TOGGLE';
+};
+
+export type Action =
+  | TitleAction
+  | ColorAction
+  | MemoAction
+  | StartDateAction
+  | EndDateAction
+  | StartTimeAction
+  | EndTimeAction
+  | isAllDayAction;

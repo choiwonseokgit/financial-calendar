@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import FlickingContainer from './flicking-container';
+import FlickingContainer from '../../flicking-container';
 
 interface MonthFlickingProps {
   currSelectMonth: string;
-  onMonthChange: (dateUnit: string) => void;
+  onMonthChange: (newMonth: string) => void;
 }
 
 function MonthFlicking({ currSelectMonth, onMonthChange }: MonthFlickingProps) {
@@ -12,26 +12,14 @@ function MonthFlicking({ currSelectMonth, onMonthChange }: MonthFlickingProps) {
   );
   const defaultIdx = months.findIndex((month) => month === currSelectMonth);
   const [currIdx, setCurrIdx] = useState(defaultIdx);
-  // const [defaultIdx, setDefaultIdx] = useState<number | null>(null);
 
   const handleCurrIdxChange = (idx: number) => {
     setCurrIdx(idx);
   };
 
-  console.log(currIdx, currSelectMonth, onMonthChange);
-
-  // useEffect(() => {
-  //   const newIdx = months.findIndex((month) => month === currSelectMonth);
-  //   // setDefaultIdx(newIdx);
-  //   setCurrIdx(newIdx);
-  // }, []);
-
-  // if (defaultIdx === null) return null;
-
   return (
     <FlickingContainer
-      defaultIdx={months.findIndex((month) => month === currSelectMonth)}
-      dateUnits={months}
+      defaultIdx={defaultIdx}
       currIdx={currIdx}
       onDateUnitChange={(idx: number) => {
         handleCurrIdxChange(idx);

@@ -9,9 +9,9 @@ import {
 } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import styled from 'styled-components';
-import MyDateHeader from './my-date-header';
-import MyEvent from './my-event';
-import MyMonthHeader from './my-month-header';
+import MyDateHeader from './components/my-date-header';
+import MyEvent from './components/my-event';
+import MyMonthHeader from './components/my-month-header';
 import calDateAndMakeStr from '@utils/cal-date-and-make-str';
 import { useAppDispatch } from '@store/hooks';
 import { select } from '@store/selected-date-slice';
