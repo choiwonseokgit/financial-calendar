@@ -19,6 +19,7 @@ interface NavBarProps {
   onMonthBtnClick: () => void;
   onArrowBtnClick: (direction: 'PREV' | 'NEXT', view: View) => void;
   onSideBarBtnClick: (isOpen: boolean) => void;
+  onCalendarDatesInit: (newDate: string) => void;
 }
 
 function NavBar({
@@ -28,6 +29,7 @@ function NavBar({
   onMonthBtnClick,
   onArrowBtnClick,
   onSideBarBtnClick,
+  onCalendarDatesInit,
 }: NavBarProps) {
   const holidayTitle = useGetHolidayTitle(date);
   const dispatch = useAppDispatch();
@@ -55,7 +57,13 @@ function NavBar({
   return (
     <S.Nav>
       {isDateSelectModalOpen && (
-        <DateSelectModal onClose={() => setIsDateSelectModalOpen(false)} />
+        <DateSelectModal
+          onClose={() => setIsDateSelectModalOpen(false)}
+          cb={{
+            type: 'CALENDAR_VIEW',
+            onCalendarDatesInit,
+          }}
+        />
       )}
       <S.LeftBox>
         <S.DateBox>
@@ -135,6 +143,7 @@ const S = {
     position: relative;
     font-size: 25px;
     font-weight: bold;
+    cursor: pointer;
   `,
   TodayBtn: styled.button`
     position: absolute;

@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import FlickingContainer from './flicking-container';
+import FlickingContainer from '../../flicking-container';
 
 interface YearFlickingProps {
   currSelectYear: string;
-  onYearChange: (dateUnit: string) => void;
+  onYearChange: (newYear: string) => void;
 }
 
 function YearFlicking({ currSelectYear, onYearChange }: YearFlickingProps) {
@@ -21,12 +21,9 @@ function YearFlicking({ currSelectYear, onYearChange }: YearFlickingProps) {
   };
   //TODO: useEffect 써서 deafultIndex 찾아서 FlickingContainer Props 로 넣어주기
 
-  console.log(defaultIdx, currSelectYear, onYearChange);
-
   return (
     <FlickingContainer
       defaultIdx={defaultIdx}
-      dateUnits={years}
       currIdx={currIdx}
       onDateUnitChange={(idx: number) => {
         handleCurrIdxChange(idx);

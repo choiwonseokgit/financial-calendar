@@ -1,20 +1,19 @@
 import {
   CONFIRM_MODAL_MESSAGES,
-  TConfirmModalContents,
+  TConfirmModalMessages,
 } from '@constants/modal';
 import styled from 'styled-components';
 import Modal from '../modal';
 
 interface ConfirmModalProps {
   onClose: () => void;
-  modalMessage: keyof TConfirmModalContents;
+  modalMessageType: keyof TConfirmModalMessages;
 }
 
-function ConfirmModal({ onClose, modalMessage }: ConfirmModalProps) {
+function ConfirmModal({ onClose, modalMessageType }: ConfirmModalProps) {
   return (
     <Modal onClose={onClose} type="confirm">
-      <S.Contents>{CONFIRM_MODAL_MESSAGES[modalMessage]}</S.Contents>
-      {/* <button>닫기</button> */}
+      <S.Contents>{CONFIRM_MODAL_MESSAGES[modalMessageType]}</S.Contents>
     </Modal>
   );
 }

@@ -4,8 +4,9 @@ import chevronDownIcon from '@assets/icons/chevron-down-solid.svg';
 import chevronLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
 import chevronUpIcon from '@assets/icons/chevron-up-solid.svg';
 import ConfirmModal from '@components/modal/confirm-modal';
+import DateSelectModal from '@components/modal/date-select-modal';
 import Flicking from '@egjs/react-flicking';
-import useModal from '@hooks/use-modal';
+import useConfirmModal from '@hooks/use-confirm-modal';
 import { useAppSelector } from '@store/hooks';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -28,9 +29,10 @@ function SpendingForm() {
     isModalOpen,
     handleModalOpen,
     handleModalClose,
-    modalMessage,
+    modalMessageType,
     handleModalMessageChange,
-  } = useModal();
+  } = useConfirmModal();
+  const [isDateSelectModalOpen, setIsDateSelectModalOpen] = useState(false);
 
   const moveBack = () => {
     navigate(-1);
@@ -58,7 +60,7 @@ function SpendingForm() {
       case !selectedCategory:
         handleModalMessageChange('category');
         break;
-      default:
+      default: //전송
         moveBack();
         return;
     }
@@ -81,10 +83,10 @@ function SpendingForm() {
     const money = Number(value.replaceAll(',', ''));
 
     if (isNaN(money) || !money) {
-      // 숫자가 아닐 경우 true를 반환
+      // 숫자가 아닐 경우 or 0원 일때 emptyString으로 setting
       setSpentMoney('');
     } else {
-      // 숫자인 경우 false를 반환
+      // 숫자인 경우 toLacaleString 적용
       setSpentMoney(money.toLocaleString('ko-KR'));
     }
   };
@@ -116,7 +118,9 @@ function SpendingForm() {
           <button onClick={moveBack}>
             <S.ChevronImg src={chevronLeftIcon} alt="뒤로" />
           </button>
-          <S.Date>{selectedDate}</S.Date>
+          <button onClick={() => setIsDateSelectModalOpen(true)}>
+            <S.Date>{selectedDate}</S.Date>
+          </button>
           <button onClick={handleSubmit}>
             <S.CheckImg src={checkIcon} alt="전송" />
           </button>
@@ -142,19 +146,15 @@ function SpendingForm() {
             />
           </S.TitleBox>
           {isFlicking ? (
-            <Flicking
-              bound={true}
-              inputType={['touch', 'mouse']}
-            >
+            <Flicking bound={true} inputType={['touch', 'mouse']}>
               {CATEGORYS.map((category, idx) => (
                 <div key={idx} style={{ marginRight: '5px' }}>
                   <Category
-                    name={category.name}
-                    emoji={category.emoji}
                     isSelected={selectedCategory?.name === category.name}
                     onCategoryClick={() => {
                       handleCategoryClick(idx);
                     }}
+                    {...category}
                   />
                 </div>
               ))}
@@ -164,13 +164,11 @@ function SpendingForm() {
               {CATEGORYS.map((category, idx) => (
                 <div key={idx}>
                   <Category
-                    key={idx}
-                    name={category.name}
-                    emoji={category.emoji}
                     isSelected={selectedCategory?.name === category.name}
                     onCategoryClick={() => {
                       handleCategoryClick(idx);
                     }}
+                    {...category}
                   />
                 </div>
               ))}
@@ -180,7 +178,13 @@ function SpendingForm() {
         <S.EmptyNotice>금일 스케줄이 없어요!</S.EmptyNotice>
       </S.Container>
       {isModalOpen && (
-        <ConfirmModal onClose={handleModalClose} modalMessage={modalMessage} />
+        <ConfirmModal
+          onClose={handleModalClose}
+          modalMessageType={modalMessageType}
+        />
+      )}
+      {isDateSelectModalOpen && (
+        <DateSelectModal onClose={() => setIsDateSelectModalOpen(false)} />
       )}
     </>
   );

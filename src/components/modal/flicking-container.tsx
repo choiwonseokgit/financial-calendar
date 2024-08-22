@@ -1,11 +1,10 @@
 import { PropsWithChildren, useRef } from 'react';
 import Flicking, { ViewportSlot } from '@egjs/react-flicking';
 import styled from 'styled-components';
-import useScrollEvent from '../hooks/use-scroll-event';
-import updateFlickingTransform from '../utils/update-flicking-transform';
+import useScrollEvent from './hooks/use-scroll-event';
+import updateFlickingTransform from './utils/update-flicking-transform';
 
 interface FlickingContainerProps extends PropsWithChildren {
-  dateUnits?: string[];
   defaultIdx: number;
   currIdx: number;
   onDateUnitChange: (idx: number) => void;
@@ -18,38 +17,9 @@ function FlickingContainer({
   onDateUnitChange,
   endIdx,
 }: FlickingContainerProps) {
-  // const [currIdx, setCurrIdx] = useState(defaultIdx);
   const flickingRef = useRef<Flicking>(null);
 
   useScrollEvent(flickingRef, endIdx);
-
-  // console.log(currIdx);
-  // console.log(defaultIdx);
-
-  // useEffect(() => {
-  //   const flicking = flickingRef.current;
-
-  //   if (!flicking) return;
-
-  //   const handleIndexChange = () => {
-  //     const panels = document.querySelectorAll('.date-panel');
-
-  //     panels.forEach((panel, idx) => {
-  //       if (idx === currIdx) {
-  //         (panel as HTMLElement).classList.add('selected');
-  //       } else {
-  //         (panel as HTMLElement).classList.remove('selected');
-  //       }
-  //     });
-  //   };
-
-  //   handleIndexChange(); // 초기 로드 시 색상 업데이트
-  //   flicking.on('changed', handleIndexChange);
-
-  //   return () => {
-  //     flicking.off('changed', handleIndexChange);
-  //   };
-  // }, [currIdx]);
 
   return (
     <S.FlickingBox>
@@ -111,7 +81,7 @@ const S = {
       height: 40px;
       margin-bottom: 10px;
       color: var(--gray01);
-      transition: color 0.1s;
+      transition: color 0.2s;
 
       &.selected {
         color: black;

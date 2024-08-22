@@ -104,6 +104,7 @@ const S = {
     align-items: center;
     border: 1px solid var(--green04);
     border-radius: 50%;
+    font-weight: bold;
   `,
   PlusImg: styled.img`
     width: 20px;

@@ -3,7 +3,7 @@ import CloseIcon from '@assets/icons/xmark-solid.svg';
 import useOutsideClickForAnimation from '@hooks/use-outside-click-for-animation';
 import { CALENDAR_CHECK_LIST } from '@pages/calendar-view/constants';
 import styled, { keyframes } from 'styled-components';
-import CheckList from './check-list';
+import CheckList from './components/check-list';
 
 interface SideBarProps {
   onSideBarBtnClick: (isOpen: boolean) => void;

@@ -30,7 +30,7 @@ const useScrollEvent = (
     return () => {
       flickingElement?.removeEventListener('wheel', handleWheel);
     };
-  }, []);
+  }, [endIdx]);
 };
 
 export default useScrollEvent;

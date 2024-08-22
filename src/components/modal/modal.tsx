@@ -9,12 +9,19 @@ import ModalPortal from './modal-portal';
 interface ModalProps extends React.PropsWithChildren {
   onClose: () => void;
   type: TModal;
+  submitCb?: () => void;
 }
 
-function Modal({ children, onClose, type }: ModalProps) {
+function Modal({ children, onClose, type, submitCb }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
+  const isDateSelectingModal = type === 'date' || type === 'time';
   const { isCloseAnimStart, handleCloseAnimStart } =
     useOutsideClickForAnimation(modalRef, onClose, 300);
+
+  const handleSubmitBtnClick = () => {
+    if (submitCb) submitCb();
+    handleCloseAnimStart();
+  };
 
   return (
     <ModalPortal>
@@ -22,6 +29,9 @@ function Modal({ children, onClose, type }: ModalProps) {
         <S.ModalBox ref={modalRef}>
           <ModalHeader type={type} onClose={handleCloseAnimStart} />
           {children}
+          {isDateSelectingModal && (
+            <S.SubmitBtn onClick={handleSubmitBtnClick}>확인</S.SubmitBtn>
+          )}
         </S.ModalBox>
       </S.ModalBackground>
     </ModalPortal>
@@ -83,5 +93,13 @@ const S = {
     border-radius: 10px;
     /* background: ${(props) => props.theme.modalBg}; */
     /* box-shadow: 0px 4px 16px 0px ${(props) => props.theme.modalShadow}; */
+  `,
+
+  SubmitBtn: styled.button`
+    /* align-self: flex-end; */
+    border-radius: 10px;
+    padding: 10px 30px;
+    color: var(--white);
+    background-color: var(--green04);
   `,
 };
