@@ -1,7 +1,7 @@
 import React from 'react';
 import useGetHolidayTitle from '@hooks/use-get-holiday-title';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
-import { select } from '@store/selected-date-slice';
+import { select } from '@store/slices/selected-date-slice';
 import { format } from 'date-fns';
 import { DateHeaderProps } from 'react-big-calendar';
 import styled from 'styled-components';

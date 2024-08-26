@@ -1,23 +1,26 @@
-import { useState } from 'react';
 import CheckIcon from '@assets/icons/check-solid.svg';
 import { TCalendarCheckList } from '@pages/calendar-view/constants';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
+import { toggleOption } from '@store/slices/calendar-option-slice';
 import styled from 'styled-components';
 
 interface CheckListProps {
+  type: TCalendarCheckList['type'];
   label: TCalendarCheckList['label'];
 }
 
-function CheckList({ label }: CheckListProps) {
-  const [isChecked, setIsChecked] = useState(true);
+function CheckList({ type, label }: CheckListProps) {
+  const isOptionChecked = useAppSelector((state) => state.calendarOption[type]);
+  const dispatch = useAppDispatch();
 
-  const handleClick = () => {
-    setIsChecked(!isChecked);
+  const handleToggleClick = () => {
+    dispatch(toggleOption(type));
   };
 
   return (
-    <S.Container onClick={handleClick}>
+    <S.Container onClick={handleToggleClick}>
       <S.CheckImgBox>
-        {isChecked && <S.Img src={CheckIcon} alt="체크" />}
+        {isOptionChecked && <S.Img src={CheckIcon} alt="체크" />}
       </S.CheckImgBox>
       <div>{label}</div>
     </S.Container>

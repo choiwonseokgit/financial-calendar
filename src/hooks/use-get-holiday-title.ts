@@ -1,5 +1,5 @@
 import { useAppSelector } from '@store/hooks';
-import { holidayApi } from '@store/query/holidaySlice';
+import { holidayApi } from '@store/query/holiday-query';
 import { format } from 'date-fns';
 
 const useGetHolidayTitle = (date: Date | string) => {

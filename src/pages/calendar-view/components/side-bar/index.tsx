@@ -2,6 +2,12 @@ import { useRef } from 'react';
 import CloseIcon from '@assets/icons/xmark-solid.svg';
 import useOutsideClickForAnimation from '@hooks/use-outside-click-for-animation';
 import { CALENDAR_CHECK_LIST } from '@pages/calendar-view/constants';
+// import { useAppSelector } from '@store/hooks';
+// import { userApi } from '@store/query/user-query';
+import { useAppDispatch } from '@store/hooks';
+import { useGetUserQuery } from '@store/query/user-query';
+import { logout } from '@store/slices/login-slice';
+import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import CheckList from './components/check-list';
 
@@ -10,31 +16,28 @@ interface SideBarProps {
 }
 
 function SideBar({ onSideBarBtnClick }: SideBarProps) {
+  const { data: user } = useGetUserQuery(); //TODO: refetch 조건 달기
+  // const user = useAppSelector(
+  //   (state) => userApi.endpoints.getUser.select()(state).data![0],
+  // );
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
   const { isCloseAnimStart, handleCloseAnimStart } =
     useOutsideClickForAnimation(ref, () => onSideBarBtnClick(false), 300);
 
-  // const [isCloseAnimStart, setIsCloseAnimStart] = useState(false);
-
-  // useOutSideClick(ref, () => setIsCloseAnimStart(true));
-
-  // useEffect(() => {
-  //   if (isCloseAnimStart) {
-  //     const timer = setTimeout(() => {
-  //       onSideBarBtnClick(false);
-
-  //       return () => clearTimeout(timer);
-  //     }, 300);
-  //   }
-  // }, [isCloseAnimStart]);
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/login');
+  };
 
   return (
     <S.Background $isCloseAnimStart={isCloseAnimStart}>
       <S.SideBarBox $isCloseAnimStart={isCloseAnimStart} ref={ref}>
         <S.Header>
           <S.UserInfo>
-            <S.Name>원석초이</S.Name>
-            <S.Email>cws0325@naver.com</S.Email>
+            <S.ProfileImg src={user?.profileImage} alt="profileImage" />
+            <S.Name>{user?.nickname}</S.Name>
           </S.UserInfo>
           <button onClick={handleCloseAnimStart}>
             <S.CloseImg src={CloseIcon} alt="닫기" />
@@ -43,14 +46,14 @@ function SideBar({ onSideBarBtnClick }: SideBarProps) {
         <S.CalendarSetting>
           <S.Title>내 캘린더</S.Title>
           {CALENDAR_CHECK_LIST.map((checkList) => (
-            <CheckList key={checkList.label} label={checkList.label} />
+            <CheckList key={checkList.label} {...checkList} />
           ))}
         </S.CalendarSetting>
-        <S.MoreInfo>더 보기</S.MoreInfo>
-        <S.Logout>
+        {/* <S.MoreInfo>더 보기</S.MoreInfo> */}
+        <S.LogoutBtn onClick={handleLogout}>
           <div>로그아웃</div>
-          <S.Email>cws0325@naver.com</S.Email>
-        </S.Logout>
+          <S.Email>{user?.nickname}</S.Email>
+        </S.LogoutBtn>
       </S.SideBarBox>
     </S.Background>
   );
@@ -137,9 +140,15 @@ const S = {
   `,
   UserInfo: styled.div`
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: 5px;
   `,
   Name: styled.span``,
+  ProfileImg: styled.img`
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  `,
   Email: styled.span`
     color: var(--gray02);
     font-size: 12px;
@@ -161,7 +170,7 @@ const S = {
     background-color: var(--white);
     padding: 10px;
   `,
-  Logout: styled.div`
+  LogoutBtn: styled.button`
     background-color: var(--white);
     padding: 10px;
     display: flex;

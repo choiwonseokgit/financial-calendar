@@ -6,7 +6,7 @@ import chevronRightIcon from '@assets/icons/chevron-right-solid-green.svg';
 import DateSelectModal from '@components/modal/date-select-modal';
 import useGetHolidayTitle from '@hooks/use-get-holiday-title';
 import { useAppDispatch } from '@store/hooks';
-import { select } from '@store/selected-date-slice';
+import { select } from '@store/slices/selected-date-slice';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { View } from 'react-big-calendar';

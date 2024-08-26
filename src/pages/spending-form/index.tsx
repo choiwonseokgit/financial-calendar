@@ -14,6 +14,8 @@ import styled from 'styled-components';
 import Category from './components/category';
 import { CATEGORYS, TCategory } from './constants';
 import '@egjs/react-flicking/dist/flicking.css';
+import { usePostSpendingMoneyMutation } from '@store/query/spending-money-query';
+import { formatISO, parse } from 'date-fns';
 
 function SpendingForm() {
   const navigate = useNavigate();
@@ -21,9 +23,9 @@ function SpendingForm() {
   const [selectedCategory, setSelectedCategory] = useState<TCategory | null>(
     null,
   );
+  const selectedDate = useAppSelector((state) => state.selectedDate);
   const [isFlicking, setIsFlicking] = useState(true);
   const inputRef = useRef<HTMLInputElement>(null);
-  const selectedDate = useAppSelector((state) => state.selectedDate);
   const [touchX, setTouchX] = useState(0);
   const {
     isModalOpen,
@@ -33,6 +35,7 @@ function SpendingForm() {
     handleModalMessageChange,
   } = useConfirmModal();
   const [isDateSelectModalOpen, setIsDateSelectModalOpen] = useState(false);
+  const [postSpendingMoney] = usePostSpendingMoneyMutation();
 
   const moveBack = () => {
     navigate(-1);
@@ -51,8 +54,7 @@ function SpendingForm() {
     if (distanceX > 50) moveBack();
   };
 
-  const handleSubmit = () => {
-    //TODO: 콤마 써서 데이터 보낼건지 정하기
+  const handleSubmit = async () => {
     switch (true) {
       case !spentMoney:
         handleModalMessageChange('moneyInput');
@@ -61,6 +63,11 @@ function SpendingForm() {
         handleModalMessageChange('category');
         break;
       default: //전송
+        await postSpendingMoney({
+          spentMoney: spentMoney.replaceAll(',', ''),
+          category: (selectedCategory as TCategory).name,
+          date: formatISO(parse(selectedDate, 'yyyy/MM/dd', new Date())),
+        });
         moveBack();
         return;
     }
@@ -130,6 +137,7 @@ function SpendingForm() {
             type="text"
             inputMode="numeric"
             placeholder="0"
+            maxLength={10}
             ref={inputRef}
             value={spentMoney}
             onChange={handleInputValChange}

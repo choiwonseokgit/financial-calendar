@@ -20,6 +20,7 @@ const reset = css`
       'Apple Color Emoji',
       'Segoe UI Emoji',
       'Segoe UI Symbol',
+      'New Amsterdam',
       sans-serif;
   }
 
