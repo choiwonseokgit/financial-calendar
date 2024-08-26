@@ -1,29 +1,30 @@
-import { useEffect, useRef } from 'react';
+// import { useRef } from 'react';
+import { TSpendingMoney } from '@store/query/spending-money-query';
 import { EventProps } from 'react-big-calendar';
 import styled from 'styled-components';
 
-function MyEvent({ title, event }: EventProps) {
-  const {
-    resource: { type, color },
-  } = event;
-  const ref = useRef<HTMLDivElement>(null);
+function MyEvent({ event }: EventProps<TSpendingMoney>) {
+  // const ref = useRef<HTMLDivElement>(null);
+  const { spentMoney } = event;
 
   //console.log(resource);
   // console.log(color);
 
-  useEffect(() => {
-    const element = ref.current;
-    if (element && color) {
-      const targetElement = element.closest('.rbc-event');
-      (targetElement as HTMLElement).style.backgroundColor = `${color}`;
-    }
-  }, [color]);
+  // useEffect(() => {
+  //   const element = ref.current;
+  //   if (element && color) {
+  //     const targetElement = element.closest('.rbc-event');
+  //     (targetElement as HTMLElement).style.backgroundColor = `${color}`;
+  //   }
+  // }, [color]);
 
-  if (type === 'financial') {
-    return <S.Financial>-{title}원</S.Financial>;
-  }
+  // if (type === 'financial') {
+  //   return <S.Financial>-{title}원</S.Financial>;
+  // }
 
-  return <S.Schedule ref={ref}>{title}</S.Schedule>;
+  // return <S.Schedule ref={ref}>{title}</S.Schedule>;
+
+  return <S.Financial>-{spentMoney}원</S.Financial>;
 }
 
 export default MyEvent;

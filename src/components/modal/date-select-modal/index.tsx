@@ -1,6 +1,6 @@
 import { useReducer } from 'react';
 import { useAppSelector } from '@store/hooks';
-import { select } from '@store/selected-date-slice';
+import { select } from '@store/slices/selected-date-slice';
 import calDateAndMakeStr from '@utils/cal-date-and-make-str';
 import { parse } from 'date-fns';
 import { useDispatch } from 'react-redux';

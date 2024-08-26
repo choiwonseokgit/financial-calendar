@@ -1,5 +1,5 @@
 import React from 'react';
-import { eachDayOfInterval, format, parse } from 'date-fns';
+import { format } from 'date-fns';
 import moment from 'moment';
 import 'moment/locale/ko';
 import {
@@ -12,9 +12,108 @@ import styled from 'styled-components';
 import MyDateHeader from './components/my-date-header';
 import MyEvent from './components/my-event';
 import MyMonthHeader from './components/my-month-header';
-import calDateAndMakeStr from '@utils/cal-date-and-make-str';
-import { useAppDispatch } from '@store/hooks';
-import { select } from '@store/selected-date-slice';
+// import calDateAndMakeStr from '@utils/cal-date-and-make-str';
+import { useAppSelector } from '@store/hooks';
+// import { select } from '@store/slices/selected-date-slice';
+import {
+  TSpendingMoney,
+  spendingMoneyApi,
+} from '@store/query/spending-money-query';
+// import { TSpendingMoney } from '@store/query/spending-money-query';
+
+// const EVENTS = [
+//   {
+//     title: '26000',
+//     start: new Date(),
+//     end: new Date(),
+//     resource: {
+//       type: 'financial',
+//     },
+//   },
+//   {
+//     title: '46000',
+//     start: parse('20240815', 'yyyyMMdd', new Date()),
+//     end: parse('20240815', 'yyyyMMdd', new Date()),
+//     resource: {
+//       type: 'financial',
+//     },
+//   },
+//   {
+//     title: '56000',
+//     start: parse('20240801', 'yyyyMMdd', new Date()),
+//     end: parse('20240801', 'yyyyMMdd', new Date()),
+//     resource: {
+//       type: 'financial',
+//     },
+//   },
+// {
+//   title: '캠핑',
+//   start: parse('20240813', 'yyyyMMdd', new Date()),
+//   end: parse('20240815', 'yyyyMMdd', new Date()),
+//   resource: {
+//     type: 'schedule',
+//     color: 'blue',
+//   },
+// },
+// {
+//   title: '2800',
+//   start: parse('20240820', 'yyyyMMdd', new Date()),
+//   end: parse('20240820', 'yyyyMMdd', new Date()),
+//   resource: {
+//     type: 'financial',
+//   },
+// },
+// {
+//   title: '공부 하기',
+//   start: parse('20240820', 'yyyyMMdd', new Date()),
+//   end: parse('20240820', 'yyyyMMdd', new Date()),
+//   resource: {
+//     type: 'schedule',
+//     color: 'red',
+//   },
+// },
+// {
+//   title: '영화 보기',
+//   start: parse('20240820', 'yyyyMMdd', new Date()),
+//   end: parse('20240820', 'yyyyMMdd', new Date()),
+//   resource: {
+//     type: 'schedule',
+//     color: 'purple',
+//   },
+// },
+// {
+//   title: '공부 하기',
+//   start: parse('20240820', 'yyyyMMdd', new Date()),
+//   end: parse('20240820', 'yyyyMMdd', new Date()),
+//   resource: {
+//     type: 'schedule',
+//     color: 'red',
+//   },
+// },
+// {
+//   title: '영화 보기',
+//   start: parse('20240820', 'yyyyMMdd', new Date()),
+//   end: parse('20240820', 'yyyyMMdd', new Date()),
+//   resource: {
+//     type: 'schedule',
+//     color: 'purple',
+//   },
+// },
+// {
+//   title: '개발 하기',
+//   start: new Date('2024-08-01T15:00:00.000Z'),
+//   end: new Date('2024-08-01T20:00:00.000Z'),
+//   allDay: false,
+//   resource: {
+//     type: 'schedule',
+//     color: 'purple',
+//   },
+// },
+// ];
+
+// type TEvents = TSpendingMoney[];
+
+// const FILTERED_EVENT = EVENTS.filter((e) => e.resource.type === 'schedule');
 
 moment.locale('ko-KR');
 const localizer = momentLocalizer(moment);
@@ -28,98 +127,6 @@ interface CalendarProps {
   onChangeView: (view: View) => void;
 }
 
-const EVENTS = [
-  {
-    title: '26000',
-    start: new Date(),
-    end: new Date(),
-    resource: {
-      type: 'financial',
-    },
-  },
-  {
-    title: '46000',
-    start: parse('20240815', 'yyyyMMdd', new Date()),
-    end: parse('20240815', 'yyyyMMdd', new Date()),
-    resource: {
-      type: 'financial',
-    },
-  },
-  {
-    title: '56000',
-    start: parse('20240801', 'yyyyMMdd', new Date()),
-    end: parse('20240801', 'yyyyMMdd', new Date()),
-    resource: {
-      type: 'financial',
-    },
-  },
-  {
-    title: '캠핑',
-    start: parse('20240813', 'yyyyMMdd', new Date()),
-    end: parse('20240815', 'yyyyMMdd', new Date()),
-    resource: {
-      type: 'schedule',
-      color: 'blue',
-    },
-  },
-  {
-    title: '2800',
-    start: parse('20240820', 'yyyyMMdd', new Date()),
-    end: parse('20240820', 'yyyyMMdd', new Date()),
-    resource: {
-      type: 'financial',
-    },
-  },
-  {
-    title: '공부 하기',
-    start: parse('20240820', 'yyyyMMdd', new Date()),
-    end: parse('20240820', 'yyyyMMdd', new Date()),
-    resource: {
-      type: 'schedule',
-      color: 'red',
-    },
-  },
-  {
-    title: '영화 보기',
-    start: parse('20240820', 'yyyyMMdd', new Date()),
-    end: parse('20240820', 'yyyyMMdd', new Date()),
-    resource: {
-      type: 'schedule',
-      color: 'purple',
-    },
-  },
-  {
-    title: '공부 하기',
-    start: parse('20240820', 'yyyyMMdd', new Date()),
-    end: parse('20240820', 'yyyyMMdd', new Date()),
-    resource: {
-      type: 'schedule',
-      color: 'red',
-    },
-  },
-  {
-    title: '영화 보기',
-    start: parse('20240820', 'yyyyMMdd', new Date()),
-    end: parse('20240820', 'yyyyMMdd', new Date()),
-    resource: {
-      type: 'schedule',
-      color: 'purple',
-    },
-  },
-  {
-    title: '개발 하기',
-    start: new Date('2024-08-01T15:00:00.000Z'),
-    end: new Date('2024-08-01T20:00:00.000Z'),
-    allDay: false,
-    resource: {
-      type: 'schedule',
-      color: 'purple',
-    },
-  },
-];
-
-const FILTERED_EVENT = EVENTS.filter((e) => e.resource.type === 'schedule');
-
 function Calendar({
   date,
   idx,
@@ -129,39 +136,51 @@ function Calendar({
 }: CalendarProps) {
   // TODO: 렌더링 개선하기, 렌더링 많이 일어남
   // console.log('렌더링');
-  const dispatch = useAppDispatch();
+  const spendingMoneyEvents = useAppSelector((state) => {
+    const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
+    const events = spendingMoneyApi.endpoints.getSpendingMoney.select({
+      year,
+      month,
+    })(state);
 
-  const handleSelectEvent = (event: (typeof EVENTS)[0]) => {
-    const {
-      start,
-      end,
-      resource: { type },
-    } = event;
-    if (start && end) {
-      if (calDateAndMakeStr(start) !== calDateAndMakeStr(end)) {
-        const dates = eachDayOfInterval({ start, end }).map((date) =>
-          calDateAndMakeStr(date),
-        );
-        // console.log(start, end);
-        console.log(dates);
-      }
-    }
+    return events.data;
+  });
+  console.log(spendingMoneyEvents);
+  // const dispatch = useAppDispatch();
 
-    if (type === 'schedule' && view === 'month') {
-      onNavigate(event.start, idx, view);
-      dispatch(select(format(event.start, 'yyyy/MM/dd')));
-      onChangeView('day');
-      //TODO: day 뷰에서 선택하면 삭제하거나 편집할 수 있게끔하기
-    }
-  };
+  // const handleSelectEvent = (event: (typeof EVENTS)[0]) => {
+  //   const {
+  //     start,
+  //     end,
+  //     resource: { type },
+  //   } = event;
+  //   if (start && end) {
+  //     if (calDateAndMakeStr(start) !== calDateAndMakeStr(end)) {
+  //       const dates = eachDayOfInterval({ start, end }).map((date) =>
+  //         calDateAndMakeStr(date),
+  //       );
+  //       // console.log(start, end);
+  //       console.log(dates);
+  //     }
+  //   }
+
+  //   if (type === 'schedule' && view === 'month') {
+  //     onNavigate(event.start, idx, view);
+  //     dispatch(select(format(event.start, 'yyyy/MM/dd')));
+  //     onChangeView('day');
+  //     //TODO: day 뷰에서 선택하면 삭제하거나 편집할 수 있게끔하기
+  //   }
+  // };
 
   // useEffect(() => {
   //   onFlicking(view);
   // }, [view]);
 
+  //BigCalendar<CustomEvent> TODO: 이벤트 타입 맞춰서 제네릭 적용하기
+
   return (
     <S.Container>
-      <BigCalendar
+      <BigCalendar<TSpendingMoney>
         localizer={localizer}
         date={date}
         onNavigate={(date, view) => {
@@ -171,18 +190,22 @@ function Calendar({
         onView={onChangeView}
         showAllEvents={true}
         toolbar={false}
-        events={view === 'day' ? FILTERED_EVENT : EVENTS}
-        onSelectEvent={handleSelectEvent}
-        onShowMore={(dates) => {
-          //console.log(dates);
-          dispatch(select(format(dates[0].start, 'yyyy/MM/dd')));
-        }}
+        // events={view === 'day' ? FILTERED_EVENT : EVENTS}
+        events={spendingMoneyEvents?.targetDateSpendingMoney}
+        // onSelectEvent={handleSelectEvent}
+        // onShowMore={(dates) => {
+        //   console.log(dates);
+        //   dispatch(select(format(dates[0].start, 'yyyy/MM/dd')));
+        // }}
         // selectable
         // onSelectSlot={({ start, action }) => {
         //   if (action === 'click') {
         //     dispatch(select(format(start, 'yyyyMMdd')));
         //   } else return;
         // }}
+        titleAccessor={'spentMoney'}
+        startAccessor={'date'}
+        endAccessor={'date'}
         components={{
           month: {
             header: MyMonthHeader,

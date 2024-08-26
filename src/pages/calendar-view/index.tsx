@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import Flicking, { MoveEndEvent } from '@egjs/react-flicking';
 import { useAppSelector } from '@store/hooks';
-import { holidayApi } from '@store/query/holidaySlice';
+import { useLazyGetHolidayQuery } from '@store/query/holiday-query';
+import { useLazyGetSpendingMoneyQuery } from '@store/query/spending-money-query';
 import {
   nextDay,
   nextMonth,
   prevDay,
   prevMonth,
-} from '@store/selected-date-slice';
+} from '@store/slices/selected-date-slice';
 import calDateAndMakeStr from '@utils/cal-date-and-make-str';
 import { format, formatISO, parse } from 'date-fns';
 import { motion } from 'framer-motion';
@@ -224,24 +225,35 @@ function CalendarView() {
   );
 
   //useEffect
-  const [trigger] = holidayApi.endpoints.getHoliday.useLazyQuery();
+  const [spendingMoneyTrigger] = useLazyGetSpendingMoneyQuery();
+  const [holidayTrigger] = useLazyGetHolidayQuery();
 
   const holidayQueries = calendarDates.map((date) => {
     const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
-    return () => trigger({ year: year, month: month }, true).unwrap();
+    return () => holidayTrigger({ year: year, month: month }, true).unwrap();
   });
 
-  //공휴일 api fetch
+  const spendingMoneyQueries = calendarDates.map((date) => {
+    const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
+    return () =>
+      spendingMoneyTrigger({ year: year, month: month }, true).unwrap();
+  });
+
+  // 공휴일 및 지출금액 API fetch
   useEffect(() => {
-    const fetchHolidays = async () => {
+    const fetchData = async () => {
       try {
-        await Promise.all(holidayQueries.map((query) => query()));
+        // 공휴일과 지출금액 쿼리를 모두 결합하여 실행
+        await Promise.all([
+          ...holidayQueries.map((query) => query()),
+          ...spendingMoneyQueries.map((query) => query()),
+        ]);
       } catch (err) {
         console.error(err);
       }
     };
 
-    fetchHolidays();
+    fetchData();
   }, [calendarDates]);
 
   //view change

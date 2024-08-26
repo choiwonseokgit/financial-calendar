@@ -1,11 +1,14 @@
-import { store } from '@store/index';
+import { persistor, store } from '@store/index';
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import Router from '@/Router';
 
 function App() {
   return (
     <Provider store={store}>
-      <Router />
+      <PersistGate loading={null} persistor={persistor}>
+        <Router />
+      </PersistGate>
     </Provider>
   );
 }
