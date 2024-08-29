@@ -11,26 +11,37 @@ export interface TSpendingMoney {
   userId: number;
 }
 
-interface spendingMoneyApiResponse {
+export interface TTargetMonthSpending {
+  id: number;
+  targetDate: string;
+  targetMoney: string;
+  userId: number;
+}
+
+export interface spendingMoneyApiResponse {
+  targetMonthSpending: TTargetMonthSpending | null;
   targetDateSpendingMoney: TSpendingMoney[];
   total: number;
 }
 
 export const spendingMoneyApi = createApi({
   reducerPath: 'spendingMoneyApi',
-  baseQuery: axiosBaseQuery({ baseUrl: '/spending-moneys' }),
+  baseQuery: axiosBaseQuery({ baseUrl: '' }),
   tagTypes: ['SpendingMoney'],
   endpoints: (builder) => ({
+    /****************spending-money*******************/
     getSpendingMoney: builder.query<
       spendingMoneyApiResponse,
       { year: string; month: string }
     >({
       query: ({ month, year }) => ({
-        url: `?month=${month}&year=${year}`,
+        url: `/spending-moneys?month=${month}&year=${year}`,
         method: 'get',
       }),
-      providesTags: ['SpendingMoney'],
-      keepUnusedDataFor: 300,
+      providesTags: (result, error, { year, month }) => [
+        { type: 'SpendingMoney', id: `${year}/${month}` },
+      ],
+      keepUnusedDataFor: Infinity,
     }),
 
     postSpendingMoney: builder.mutation<
@@ -38,14 +49,73 @@ export const spendingMoneyApi = createApi({
       Partial<TSpendingMoney>
     >({
       query: (newSpendingMoney) => ({
-        url: '',
+        url: '/spending-moneys',
         method: 'post',
         data: newSpendingMoney,
       }),
       invalidatesTags: ['SpendingMoney'],
     }),
+
+    /****************tartget-month-spending*******************/
+    postTargetMonthSpending: builder.mutation<
+      TTargetMonthSpending,
+      {
+        year: string;
+        month: string;
+        targetMoney: string;
+      }
+    >({
+      query: ({ year, month, targetMoney }) => ({
+        url: `/target-month-spending?month=${month}&year=${year}`,
+        method: 'post',
+        data: { targetMoney },
+      }),
+      invalidatesTags: (result, error, { year, month }) => [
+        { type: 'SpendingMoney', id: `${year}/${month}` },
+      ],
+    }),
+
+    updateTargetMonthSpending: builder.mutation<
+      TTargetMonthSpending,
+      {
+        year: string;
+        month: string;
+        targetMoney: string;
+      }
+    >({
+      query: ({ year, month, targetMoney }) => ({
+        url: `/target-month-spending?month=${month}&year=${year}`,
+        method: 'patch',
+        data: { targetMoney },
+      }),
+      invalidatesTags: (result, error, { year, month }) => [
+        { type: 'SpendingMoney', id: `${year}/${month}` },
+      ],
+    }),
+
+    deleteTargetMonthSpending: builder.mutation<
+      void,
+      {
+        year: string;
+        month: string;
+      }
+    >({
+      query: ({ year, month }) => ({
+        url: `/target-month-spending?month=${month}&year=${year}`,
+        method: 'delete',
+      }),
+      invalidatesTags: (result, error, { year, month }) => [
+        { type: 'SpendingMoney', id: `${year}/${month}` },
+      ],
+    }),
   }),
 });
 
-export const { useLazyGetSpendingMoneyQuery, usePostSpendingMoneyMutation } =
-  spendingMoneyApi;
+export const {
+  useGetSpendingMoneyQuery,
+  useLazyGetSpendingMoneyQuery,
+  usePostSpendingMoneyMutation,
+  usePostTargetMonthSpendingMutation,
+  useUpdateTargetMonthSpendingMutation,
+  useDeleteTargetMonthSpendingMutation,
+} = spendingMoneyApi;

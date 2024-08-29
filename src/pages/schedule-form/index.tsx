@@ -4,7 +4,9 @@ import chevronLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
 import memoIcon from '@assets/icons/newspaper-solid.svg';
 import ConfirmModal from '@components/modal/confirm-modal';
 import useConfirmModal from '@hooks/use-confirm-modal';
-import { useAppSelector } from '@store/hooks';
+import usePageTransition from '@hooks/use-page-transition';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
+import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { motion } from 'framer-motion';
@@ -45,6 +47,8 @@ function ScheduleForm() {
   const navigate = useNavigate();
   const selectedDate = useAppSelector((state) => state.selectedDate);
   const defaultTime = format(new Date(), 'a hh:mm', { locale: ko });
+  const dispatch = useAppDispatch();
+  const pageTransition = usePageTransition();
   // console.log(defaultTime);
   const [schedule, scheduleDispatch] = useReducer(reducer, {
     title: '',
@@ -65,6 +69,7 @@ function ScheduleForm() {
   } = useConfirmModal();
 
   const moveBack = () => {
+    dispatch(changeTransitionDirection('prev'));
     navigate(-1);
   };
 
@@ -97,13 +102,14 @@ function ScheduleForm() {
   return (
     <>
       <S.Container
-        initial={{ x: '100%' }}
-        animate={{ x: 0 }}
-        exit={{ x: '100%' }}
-        transition={{
-          duration: 0.3,
-          delay: 0,
-        }}
+        // initial={{ x: '100%' }}
+        // animate={{ x: 0 }}
+        // exit={{ x: '100%' }}
+        // transition={{
+        //   duration: 0.3,
+        //   delay: 0,
+        // }}
+        {...pageTransition}
       >
         <S.Header>
           <button onClick={moveBack}>

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import usePageTransition from '@hooks/use-page-transition';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 import { login } from '@store/slices/login-slice';
 import { motion } from 'framer-motion';
@@ -9,6 +10,7 @@ function Auth() {
   const navigate = useNavigate();
   const isLogin = useAppSelector((state) => state.login.userId);
   const dispatch = useAppDispatch();
+  const pageTransition = usePageTransition();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -23,12 +25,13 @@ function Auth() {
 
   return (
     <S.Container
-      animate={{ x: 0 }}
-      exit={{ x: '100%' }}
-      transition={{
-        duration: 0.3,
-        delay: 0,
-      }}
+      // animate={{ x: 0 }}
+      // exit={{ x: '100%' }}
+      // transition={{
+      //   duration: 0.3,
+      //   delay: 0,
+      // }}
+      {...pageTransition}
     >
       💸Loading...📆
     </S.Container>

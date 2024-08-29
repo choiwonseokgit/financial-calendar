@@ -22,6 +22,7 @@ export const userApi = createApi({
       }),
       transformResponse: (data: UserResponse[]) => data[0],
       providesTags: ['User'],
+      keepUnusedDataFor: Infinity,
     }),
   }),
 });

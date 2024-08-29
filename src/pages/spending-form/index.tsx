@@ -1,24 +1,29 @@
-import { useEffect, useRef, useState } from 'react';
-import checkIcon from '@assets/icons/check-solid.svg';
+import { useRef, useState } from 'react';
 import chevronDownIcon from '@assets/icons/chevron-down-solid.svg';
-import chevronLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
 import chevronUpIcon from '@assets/icons/chevron-up-solid.svg';
 import ConfirmModal from '@components/modal/confirm-modal';
 import DateSelectModal from '@components/modal/date-select-modal';
+import MoneyInput from '@components/money-input';
+import SpendingPageContainer from '@components/spending-page-container';
 import Flicking from '@egjs/react-flicking';
 import useConfirmModal from '@hooks/use-confirm-modal';
 import { useAppSelector } from '@store/hooks';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { usePostSpendingMoneyMutation } from '@store/query/spending-money-query';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Category from './components/category';
-import { CATEGORYS, TCategory } from './constants';
 import '@egjs/react-flicking/dist/flicking.css';
-import { usePostSpendingMoneyMutation } from '@store/query/spending-money-query';
 import { formatISO, parse } from 'date-fns';
+import { CATEGORYS, TCategory } from './constants/index';
 
 function SpendingForm() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const prevSpending = location.state ?? {};
+  console.log(prevSpending);
+  const queryParams = new URLSearchParams(location.search);
+  const isEditPage = queryParams.get('type') === 'edit';
+  console.log(isEditPage);
   const [spentMoney, setSpentMoney] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<TCategory | null>(
     null,
@@ -26,7 +31,6 @@ function SpendingForm() {
   const selectedDate = useAppSelector((state) => state.selectedDate);
   const [isFlicking, setIsFlicking] = useState(true);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [touchX, setTouchX] = useState(0);
   const {
     isModalOpen,
     handleModalOpen,
@@ -41,19 +45,6 @@ function SpendingForm() {
     navigate(-1);
   };
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchX(e.changedTouches[0].pageX);
-  };
-
-  const onTouchEnd = (e: React.TouchEvent) => {
-    const target = e.target as HTMLElement;
-
-    if (target.closest('.flicking-viewport')) return;
-
-    const distanceX = e.changedTouches[0].pageX - touchX;
-    if (distanceX > 50) moveBack();
-  };
-
   const handleSubmit = async () => {
     switch (true) {
       case !spentMoney:
@@ -65,7 +56,7 @@ function SpendingForm() {
       default: //전송
         await postSpendingMoney({
           spentMoney: spentMoney.replaceAll(',', ''),
-          category: (selectedCategory as TCategory).name,
+          category: `${(selectedCategory as TCategory).emoji} ${(selectedCategory as TCategory).name}`,
           date: formatISO(parse(selectedDate, 'yyyy/MM/dd', new Date())),
         });
         moveBack();
@@ -83,68 +74,26 @@ function SpendingForm() {
     setSelectedCategory(CATEGORYS[idx]);
   };
 
-  const handleInputValChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      target: { value },
-    } = e;
-    const money = Number(value.replaceAll(',', ''));
-
-    if (isNaN(money) || !money) {
-      // 숫자가 아닐 경우 or 0원 일때 emptyString으로 setting
-      setSpentMoney('');
-    } else {
-      // 숫자인 경우 toLacaleString 적용
-      setSpentMoney(money.toLocaleString('ko-KR'));
-    }
+  const handleSpentMoneyChange = (money: string) => {
+    setSpentMoney(money);
   };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') handleSubmit();
-  };
-
-  useEffect(() => {
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 300);
-  }, []);
 
   return (
     <>
-      <S.Container
-        initial={{ x: '100%' }}
-        animate={{ x: 0 }}
-        exit={{ x: '100%' }}
-        transition={{
-          duration: 0.3,
-          delay: 0,
-        }}
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
+      <SpendingPageContainer
+        type="SpendingForm"
+        date={selectedDate}
+        onDateClick={() => setIsDateSelectModalOpen(true)}
+        onSubmit={handleSubmit}
+        isEdit={isEditPage}
       >
-        <S.Header>
-          <button onClick={moveBack}>
-            <S.ChevronImg src={chevronLeftIcon} alt="뒤로" />
-          </button>
-          <button onClick={() => setIsDateSelectModalOpen(true)}>
-            <S.Date>{selectedDate}</S.Date>
-          </button>
-          <button onClick={handleSubmit}>
-            <S.CheckImg src={checkIcon} alt="전송" />
-          </button>
-        </S.Header>
-        <S.InputBox>
-          <S.Input
-            type="text"
-            inputMode="numeric"
-            placeholder="0"
-            maxLength={10}
-            ref={inputRef}
-            value={spentMoney}
-            onChange={handleInputValChange}
-            onKeyDown={handleKeyDown}
-          />
-          <S.WonText>원</S.WonText>
-        </S.InputBox>
+        <MoneyInput
+          ref={inputRef}
+          money={spentMoney}
+          onMoneyChange={handleSpentMoneyChange}
+          onSubmit={handleSubmit}
+          size="big"
+        />
         <S.CategoryBox>
           <S.TitleBox onClick={handleFlickingToggle}>
             <div>카테고리</div>
@@ -183,8 +132,11 @@ function SpendingForm() {
             </S.FlexMode>
           )}
         </S.CategoryBox>
-        <S.EmptyNotice>금일 스케줄이 없어요!</S.EmptyNotice>
-      </S.Container>
+        <S.EmptyNotice>
+          <div>금일 스케줄이 없어요!</div>
+          <button>스케줄 생성하기</button>
+        </S.EmptyNotice>
+      </SpendingPageContainer>
       {isModalOpen && (
         <ConfirmModal
           onClose={handleModalClose}
@@ -201,68 +153,8 @@ function SpendingForm() {
 export default SpendingForm;
 
 const S = {
-  Container: styled(motion.div)`
-    height: 100dvh;
-    padding: 10px;
-    background-color: var(--white);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    top: 0;
-    right: 0;
-    overflow-y: hidden;
-
-    /* Chrome, Safari, Edge, Opera */
-    /* input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    } */
-
-    /* Firefox  */
-    /* input[type='number'] {
-      -moz-appearance: textfield;
-    } */
-  `,
-  Form: styled.form`
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  `,
-  Header: styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  `,
   ChevronImg: styled.img`
     width: 15px;
-  `,
-  CheckImg: styled.img`
-    width: 20px;
-  `,
-  Date: styled.div`
-    font-size: 20px;
-    color: var(--gray02);
-  `,
-  InputBox: styled.div`
-    display: flex;
-    align-items: center;
-  `,
-  Input: styled.input`
-    max-width: 90%;
-    /* background-color: red; */
-    text-align: right;
-    font-size: 50px;
-    flex-grow: 1;
-    color: var(--green04);
-
-    &::placeholder {
-      color: var(--green04);
-    }
-  `,
-  WonText: styled.span`
-    font-size: 50px;
-    color: var(--green05);
   `,
   CategoryBox: styled.div`
     padding: 5px;
@@ -288,6 +180,7 @@ const S = {
     border: 1px solid var(--green04);
     border-radius: 5px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     color: var(--gray02);

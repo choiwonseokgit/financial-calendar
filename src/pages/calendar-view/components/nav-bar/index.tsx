@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { View } from 'react-big-calendar';
 import styled from 'styled-components';
+import Notice from './components/notice';
 
 interface NavBarProps {
   date: string;
@@ -52,8 +53,6 @@ function NavBar({
     dispatch(select(format(new Date(), 'yyyy/MM/dd')));
   };
 
-  //TODO: 모달로 날짜 확인 하면 onInit으로 바꿔주기~~~
-
   return (
     <S.Nav>
       {isDateSelectModalOpen && (
@@ -79,6 +78,7 @@ function NavBar({
             <div onClick={() => setIsDateSelectModalOpen(true)}>
               {formatedDate}
             </div>
+            <Notice date={date} />
             <S.Holiday>{view === 'day' && holidayTitle}</S.Holiday>
           </S.Date>
           <button
@@ -104,7 +104,7 @@ function NavBar({
           <S.BarImg src={BarIcon} alt="메뉴바" />
         </button>
       </S.RightBox>
-      <S.Notice>이번 달은 양호 합니다!😀</S.Notice>
+      {/* <S.Notice>이번 달은 양호 합니다!😀</S.Notice> */}
     </S.Nav>
   );
 }
@@ -140,6 +140,7 @@ const S = {
     gap: 5px;
   `,
   Date: styled.div`
+    /* background-color: green; */
     position: relative;
     font-size: 25px;
     font-weight: bold;

@@ -1,5 +1,4 @@
 import React from 'react';
-import { format } from 'date-fns';
 import moment from 'moment';
 import 'moment/locale/ko';
 import {
@@ -8,18 +7,20 @@ import {
   momentLocalizer,
 } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import MyDateHeader from './components/my-date-header';
 import MyEvent from './components/my-event';
 import MyMonthHeader from './components/my-month-header';
 // import calDateAndMakeStr from '@utils/cal-date-and-make-str';
-import { useAppSelector } from '@store/hooks';
+
 // import { select } from '@store/slices/selected-date-slice';
-import {
-  TSpendingMoney,
-  spendingMoneyApi,
-} from '@store/query/spending-money-query';
+
+import useFormatSpendingMoneyEvents from './hooks/use-format-spending-money-events';
 // import { TSpendingMoney } from '@store/query/spending-money-query';
+import { TFormatSpendingMoneyEvents } from './hooks/use-format-spending-money-events';
+import { useAppDispatch } from '@store/hooks';
+import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
 
 // const EVENTS = [
 //   {
@@ -136,16 +137,19 @@ function Calendar({
 }: CalendarProps) {
   // TODO: 렌더링 개선하기, 렌더링 많이 일어남
   // console.log('렌더링');
-  const spendingMoneyEvents = useAppSelector((state) => {
-    const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
-    const events = spendingMoneyApi.endpoints.getSpendingMoney.select({
-      year,
-      month,
-    })(state);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const formatSpendingMoneyEvents = useFormatSpendingMoneyEvents(date);
 
-    return events.data;
-  });
-  console.log(spendingMoneyEvents);
+  const handleSelectEvent = (event: TFormatSpendingMoneyEvents) => {
+    console.log(event);
+    dispatch(changeTransitionDirection('next'));
+    navigate('/spending-detail', { state: event });
+  };
+  //console.log(formatSpendingMoneyEvents);
+
+  // console.log(spendingMoneyEvents);
+
   // const dispatch = useAppDispatch();
 
   // const handleSelectEvent = (event: (typeof EVENTS)[0]) => {
@@ -176,11 +180,9 @@ function Calendar({
   //   onFlicking(view);
   // }, [view]);
 
-  //BigCalendar<CustomEvent> TODO: 이벤트 타입 맞춰서 제네릭 적용하기
-
   return (
     <S.Container>
-      <BigCalendar<TSpendingMoney>
+      <BigCalendar<TFormatSpendingMoneyEvents>
         localizer={localizer}
         date={date}
         onNavigate={(date, view) => {
@@ -191,8 +193,8 @@ function Calendar({
         showAllEvents={true}
         toolbar={false}
         // events={view === 'day' ? FILTERED_EVENT : EVENTS}
-        events={spendingMoneyEvents?.targetDateSpendingMoney}
-        // onSelectEvent={handleSelectEvent}
+        events={formatSpendingMoneyEvents}
+        onSelectEvent={handleSelectEvent}
         // onShowMore={(dates) => {
         //   console.log(dates);
         //   dispatch(select(format(dates[0].start, 'yyyy/MM/dd')));
@@ -203,9 +205,9 @@ function Calendar({
         //     dispatch(select(format(start, 'yyyyMMdd')));
         //   } else return;
         // }}
-        titleAccessor={'spentMoney'}
-        startAccessor={'date'}
-        endAccessor={'date'}
+        // titleAccessor={'spentMoney'}
+        startAccessor={'startDate'}
+        endAccessor={'endDate'}
         components={{
           month: {
             header: MyMonthHeader,

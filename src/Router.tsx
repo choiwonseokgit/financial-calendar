@@ -31,6 +31,7 @@ function AnimatedRoutes() {
           <Route path="login" element={<Page.Login />} />
           <Route path="auth" element={<Page.Auth />} />
           <Route path="spending-form" element={<Page.SpendingForm />} />
+          <Route path="spending-detail" element={<Page.SpendingDetail />} />
           <Route path="schedule-form" element={<Page.ScheduleForm />} />
         </Route>
       </Routes>

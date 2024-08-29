@@ -28,7 +28,7 @@ export const holidayApi = createApi({
       query: ({ year, month }) =>
         `&solYear=${year}&solMonth=${month}&_type=json`,
       transformResponse: (data: any) => data.response.body.items,
-      keepUnusedDataFor: 300, //기본 60초
+      keepUnusedDataFor: Infinity, //기본 60초
     }),
   }),
 });
