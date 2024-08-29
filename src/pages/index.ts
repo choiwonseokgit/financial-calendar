@@ -4,5 +4,14 @@ import SpendingForm from '@pages/spending-form';
 import Auth from './auth';
 import Login from './login';
 import ScheduleForm from './schedule-form';
+import SpendingDetail from './spending-detail';
 
-export { Root, Login, CalendarView, SpendingForm, ScheduleForm, Auth };
+export {
+  Root,
+  Login,
+  CalendarView,
+  SpendingForm,
+  ScheduleForm,
+  Auth,
+  SpendingDetail,
+};

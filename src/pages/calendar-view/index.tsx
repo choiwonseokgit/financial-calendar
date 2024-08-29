@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import Flicking, { MoveEndEvent } from '@egjs/react-flicking';
+import usePageTransition from '@hooks/use-page-transition';
 import { useAppSelector } from '@store/hooks';
 import { useLazyGetHolidayQuery } from '@store/query/holiday-query';
 import { useLazyGetSpendingMoneyQuery } from '@store/query/spending-money-query';
@@ -134,6 +135,7 @@ function CalendarView() {
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
   const flickingRef = useRef<Flicking>(null);
   const isCanceledRef = useRef(0);
+  const pageTransition = usePageTransition();
 
   const handleOnMoveEnd = (e: MoveEndEvent<Flicking>) => {
     const isFlickingCanceled = !!isCanceledRef.current;
@@ -280,13 +282,14 @@ function CalendarView() {
 
   return (
     <motion.div
-      initial={{ x: '-100%' }}
-      animate={{ x: 0 }}
-      exit={{ x: '-100%' }}
-      transition={{
-        duration: 0.3,
-        delay: 0,
-      }}
+      // initial={{ x: '-100%' }}
+      // animate={{ x: 0 }}
+      // exit={{ x: '-100%' }}
+      // transition={{
+      //   duration: 0.3,
+      //   delay: 0,
+      // }}
+      {...pageTransition}
     >
       <NavBar
         date={calendarDates[currIdx]}

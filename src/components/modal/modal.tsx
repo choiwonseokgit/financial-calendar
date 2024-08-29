@@ -10,11 +10,12 @@ interface ModalProps extends React.PropsWithChildren {
   onClose: () => void;
   type: TModal;
   submitCb?: () => void;
+  isDisabled?: boolean;
 }
 
-function Modal({ children, onClose, type, submitCb }: ModalProps) {
+function Modal({ children, onClose, type, submitCb, isDisabled }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
-  const isDateSelectingModal = type === 'date' || type === 'time';
+  const isSubmitModal = type !== 'confirm';
   const { isCloseAnimStart, handleCloseAnimStart } =
     useOutsideClickForAnimation(modalRef, onClose, 300);
 
@@ -29,8 +30,14 @@ function Modal({ children, onClose, type, submitCb }: ModalProps) {
         <S.ModalBox ref={modalRef}>
           <ModalHeader type={type} onClose={handleCloseAnimStart} />
           {children}
-          {isDateSelectingModal && (
-            <S.SubmitBtn onClick={handleSubmitBtnClick}>확인</S.SubmitBtn>
+          {isSubmitModal && (
+            <S.SubmitBtn
+              disabled={isDisabled}
+              $isDisabled={isDisabled}
+              onClick={handleSubmitBtnClick}
+            >
+              확인
+            </S.SubmitBtn>
           )}
         </S.ModalBox>
       </S.ModalBackground>
@@ -95,11 +102,13 @@ const S = {
     /* box-shadow: 0px 4px 16px 0px ${(props) => props.theme.modalShadow}; */
   `,
 
-  SubmitBtn: styled.button`
+  SubmitBtn: styled.button<{ $isDisabled?: boolean }>`
     /* align-self: flex-end; */
     border-radius: 10px;
     padding: 10px 30px;
     color: var(--white);
-    background-color: var(--green04);
+    background-color: ${({ $isDisabled }) =>
+      $isDisabled ? 'var(--gray02)' : 'var(--green04)'};
+    cursor: ${({ $isDisabled }) => $isDisabled && 'not-allowed'};
   `,
 };

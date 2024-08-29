@@ -5,6 +5,7 @@ import { CALENDAR_CHECK_LIST } from '@pages/calendar-view/constants';
 // import { useAppSelector } from '@store/hooks';
 // import { userApi } from '@store/query/user-query';
 import { useAppDispatch } from '@store/hooks';
+import { useLogoutMutation } from '@store/query/logout-query';
 import { useGetUserQuery } from '@store/query/user-query';
 import { logout } from '@store/slices/login-slice';
 import { useNavigate } from 'react-router-dom';
@@ -25,8 +26,10 @@ function SideBar({ onSideBarBtnClick }: SideBarProps) {
   const ref = useRef<HTMLDivElement>(null);
   const { isCloseAnimStart, handleCloseAnimStart } =
     useOutsideClickForAnimation(ref, () => onSideBarBtnClick(false), 300);
+  const [postLogout] = useLogoutMutation();
 
   const handleLogout = () => {
+    postLogout();
     dispatch(logout());
     navigate('/login');
   };

@@ -1,11 +1,12 @@
 // import { useRef } from 'react';
-import { TSpendingMoney } from '@store/query/spending-money-query';
+// import { TSpendingMoney } from '@store/query/spending-money-query';
 import { EventProps } from 'react-big-calendar';
 import styled from 'styled-components';
+import { TFormatSpendingMoneyEvents } from '../hooks/use-format-spending-money-events';
 
-function MyEvent({ event }: EventProps<TSpendingMoney>) {
+function MyEvent({ event }: EventProps<TFormatSpendingMoneyEvents>) {
   // const ref = useRef<HTMLDivElement>(null);
-  const { spentMoney } = event;
+  const { total } = event;
 
   //console.log(resource);
   // console.log(color);
@@ -24,7 +25,7 @@ function MyEvent({ event }: EventProps<TSpendingMoney>) {
 
   // return <S.Schedule ref={ref}>{title}</S.Schedule>;
 
-  return <S.Financial>-{spentMoney}원</S.Financial>;
+  return <S.Financial>-{parseInt(total).toLocaleString('ko-KR')}</S.Financial>;
 }
 
 export default MyEvent;
