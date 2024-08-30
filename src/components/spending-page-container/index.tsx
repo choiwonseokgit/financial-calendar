@@ -1,6 +1,9 @@
 import { PropsWithChildren, useState } from 'react';
 import checkIcon from '@assets/icons/check-solid.svg';
 import chevronLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
+import trashIcon from '@assets/icons/trash-solid.svg';
+import ConfirmModal from '@components/modal/confirm-modal';
+import useConfirmModal from '@hooks/use-confirm-modal';
 import usePageTransition from '@hooks/use-page-transition';
 import { useAppDispatch } from '@store/hooks';
 import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
@@ -14,6 +17,7 @@ interface SpendingFormProps extends PropsWithChildren {
   onDateClick: () => void;
   onSubmit: () => void;
   isEdit: boolean;
+  onDelete?: () => void;
 }
 
 interface SpendingDetailProps extends PropsWithChildren {
@@ -48,47 +52,78 @@ function SpendingPageContainer(props: SpendingPageContainerProps) {
     if (distanceX > 50) moveBack();
   };
 
+  const { isModalOpen, handleModalOpen, handleModalClose } = useConfirmModal();
+
+  const handleSubmit = () => {
+    if (props.type === 'SpendingForm' && props.onDelete) {
+      props.onDelete();
+      moveBack();
+    }
+  };
+
   return (
-    <S.Container
-      // initial={
-      //   props.type === 'SpendingForm' && props.isEdit
-      //     ? undefined
-      //     : { x: '100%' }
-      // }
-      // animate={
-      //   props.type === 'SpendingForm' && props.isEdit ? undefined : { x: 0 }
-      // }
-      // exit={
-      //   props.type === 'SpendingForm' && props.isEdit
-      //     ? undefined
-      //     : { x: '100%' }
-      // }
-      // transition={{
-      //   duration: 0.3,
-      //   delay: 0,
-      // }}
-      {...pageTransition}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
-    >
-      <S.Header>
-        <button onClick={moveBack}>
-          <S.ChevronImg src={chevronLeftIcon} alt="뒤로" />
-        </button>
-        <S.DateBtn
-          $type={props.type}
-          onClick={isSpendingFormType ? props.onDateClick : undefined}
-        >
-          <S.Date>{props.date}</S.Date>
-        </S.DateBtn>
-        {isSpendingFormType && (
-          <button onClick={props.onSubmit}>
-            <S.CheckImg src={checkIcon} alt="전송" />
+    <>
+      <S.Container
+        // initial={
+        //   props.type === 'SpendingForm' && props.isEdit
+        //     ? undefined
+        //     : { x: '100%' }
+        // }
+        // animate={
+        //   props.type === 'SpendingForm' && props.isEdit ? undefined : { x: 0 }
+        // }
+        // exit={
+        //   props.type === 'SpendingForm' && props.isEdit
+        //     ? undefined
+        //     : { x: '100%' }
+        // }
+        // transition={{
+        //   duration: 0.3,
+        //   delay: 0,
+        // }}
+        {...pageTransition}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
+        <S.Header>
+          <button onClick={moveBack}>
+            <S.ChevronImg src={chevronLeftIcon} alt="뒤로" />
           </button>
-        )}
-      </S.Header>
-      {props.children}
-    </S.Container>
+          <S.DateBtn
+            $type={props.type}
+            $isEdit={props.type === 'SpendingForm' && props.isEdit}
+            onClick={
+              isSpendingFormType && !props.isEdit
+                ? props.onDateClick
+                : undefined
+            }
+          >
+            <S.Date>{props.date}</S.Date>
+          </S.DateBtn>
+          <S.SubmitBtnBox>
+            {isSpendingFormType && (
+              <button onClick={props.onSubmit}>
+                <S.BtnImg src={checkIcon} alt="전송" />
+              </button>
+            )}
+            {isSpendingFormType && props.isEdit && (
+              <button onClick={handleModalOpen}>
+                <S.BtnImg src={trashIcon} alt="삭제" />
+              </button>
+            )}
+          </S.SubmitBtnBox>
+        </S.Header>
+        {props.children}
+      </S.Container>
+      {isModalOpen && (
+        <ConfirmModal
+          onClose={handleModalClose}
+          modalMessageType={'delete'}
+          isSubmit={true}
+          onSubmit={handleSubmit}
+        />
+      )}
+    </>
   );
 }
 
@@ -127,19 +162,37 @@ const S = {
   ChevronImg: styled.img`
     width: 15px;
   `,
-  CheckImg: styled.img`
+  SubmitBtnBox: styled.div`
+    display: flex;
+    gap: 10px;
+  `,
+  BtnImg: styled.img`
     width: 20px;
   `,
-  DateBtn: styled.button<{ $type: 'SpendingForm' | 'SpendingDetail' }>`
-    ${({ $type }) =>
-      $type === 'SpendingDetail' &&
+  DateBtn: styled.button<{
+    $type: 'SpendingForm' | 'SpendingDetail';
+    $isEdit: boolean;
+  }>`
+    ${({ $isEdit }) =>
+      $isEdit &&
       `
-    position: absolute;
+     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     cursor: default
   `}
+    ${({ $type, $isEdit }) =>
+      $type === 'SpendingDetail' || $isEdit
+        ? `
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          cursor: default;
+          pointer-events: none;
+        `
+        : ''}
   `,
   Date: styled.div`
     font-size: 20px;

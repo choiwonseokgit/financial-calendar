@@ -1,5 +1,5 @@
 import { useAppSelector } from '@store/hooks';
-import { spendingMoneyApiResponse } from '@store/query/spending-money-query';
+import { spendingMoneyApiResponse } from '@store/query/calendar-query';
 import { format } from 'date-fns';
 import styled from 'styled-components';
 
@@ -12,7 +12,7 @@ function Notice({ date }: NoticeProps) {
 
   const spendingMoneyData = useAppSelector(
     (state) =>
-      state.spendingMoneyApi.queries[
+      state.calendarApi.queries[
         `getSpendingMoney({"month":"${month}","year":"${year}"})`
       ]?.data as spendingMoneyApiResponse | undefined,
   );

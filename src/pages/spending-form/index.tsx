@@ -8,28 +8,44 @@ import SpendingPageContainer from '@components/spending-page-container';
 import Flicking from '@egjs/react-flicking';
 import useConfirmModal from '@hooks/use-confirm-modal';
 import { useAppSelector } from '@store/hooks';
-import { usePostSpendingMoneyMutation } from '@store/query/spending-money-query';
+import {
+  TSpendingMoney,
+  useDeleteSpendingMoneyMutation,
+  usePostSpendingMoneyMutation,
+  useUpdateSpendingMoneyMutation,
+} from '@store/query/calendar-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Category from './components/category';
 import '@egjs/react-flicking/dist/flicking.css';
-import { formatISO, parse } from 'date-fns';
+import { format, formatISO, parse, parseISO } from 'date-fns';
 import { CATEGORYS, TCategory } from './constants/index';
+import parseIntAndMakeLocaleKR from '@utils/parse-Int-and-make-locale-kr';
 
 function SpendingForm() {
   const navigate = useNavigate();
   const location = useLocation();
-  const prevSpending = location.state ?? {};
-  console.log(prevSpending);
+  const {
+    id,
+    date: prevDate,
+    category: prevCategory,
+    spentMoney: prevSpentMoney,
+  }: TSpendingMoney = location.state ?? {};
   const queryParams = new URLSearchParams(location.search);
   const isEditPage = queryParams.get('type') === 'edit';
-  console.log(isEditPage);
-  const [spentMoney, setSpentMoney] = useState('');
+  const [spentMoney, setSpentMoney] = useState(
+    isEditPage ? parseIntAndMakeLocaleKR(prevSpentMoney) : '',
+  );
   const [selectedCategory, setSelectedCategory] = useState<TCategory | null>(
-    null,
+    isEditPage
+      ? ({
+          name: prevCategory.split(' ')[1],
+          emoji: prevCategory.split(' ')[0],
+        } as TCategory)
+      : null,
   );
   const selectedDate = useAppSelector((state) => state.selectedDate);
-  const [isFlicking, setIsFlicking] = useState(true);
+  const [isFlicking, setIsFlicking] = useState(!isEditPage);
   const inputRef = useRef<HTMLInputElement>(null);
   const {
     isModalOpen,
@@ -39,7 +55,10 @@ function SpendingForm() {
     handleModalMessageChange,
   } = useConfirmModal();
   const [isDateSelectModalOpen, setIsDateSelectModalOpen] = useState(false);
+
   const [postSpendingMoney] = usePostSpendingMoneyMutation();
+  const [updateSpendingMoney] = useUpdateSpendingMoneyMutation();
+  const [deleteSpendingMoney] = useDeleteSpendingMoneyMutation();
 
   const moveBack = () => {
     navigate(-1);
@@ -66,6 +85,23 @@ function SpendingForm() {
     handleModalOpen();
   };
 
+  const handleEdit = async () => {
+    const newSpentMoney = spentMoney.replaceAll(',', '');
+    const newCategory = `${(selectedCategory as TCategory).emoji} ${(selectedCategory as TCategory).name}`;
+
+    if (newSpentMoney !== prevSpentMoney || newCategory !== prevCategory)
+      await updateSpendingMoney({
+        id,
+        spentMoney: newSpentMoney,
+        category: newCategory,
+      });
+    moveBack();
+  };
+
+  const handleDelete = () => {
+    deleteSpendingMoney({ date: prevDate, id });
+  };
+
   const handleFlickingToggle = () => {
     setIsFlicking(!isFlicking);
   };
@@ -82,10 +118,13 @@ function SpendingForm() {
     <>
       <SpendingPageContainer
         type="SpendingForm"
-        date={selectedDate}
+        date={
+          isEditPage ? format(parseISO(prevDate), 'yyyy/MM/dd') : selectedDate
+        }
         onDateClick={() => setIsDateSelectModalOpen(true)}
-        onSubmit={handleSubmit}
+        onSubmit={isEditPage ? handleEdit : handleSubmit}
         isEdit={isEditPage}
+        onDelete={handleDelete}
       >
         <MoneyInput
           ref={inputRef}

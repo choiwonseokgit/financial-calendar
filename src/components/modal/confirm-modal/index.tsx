@@ -8,11 +8,22 @@ import Modal from '../modal';
 interface ConfirmModalProps {
   onClose: () => void;
   modalMessageType: keyof TConfirmModalMessages;
+  isSubmit?: boolean;
+  onSubmit?: () => void;
 }
 
-function ConfirmModal({ onClose, modalMessageType }: ConfirmModalProps) {
+function ConfirmModal({
+  onClose,
+  modalMessageType,
+  isSubmit = false,
+  onSubmit,
+}: ConfirmModalProps) {
   return (
-    <Modal onClose={onClose} type="confirm">
+    <Modal
+      onClose={onClose}
+      type={isSubmit ? 'delete' : 'confirm'}
+      submitCb={onSubmit}
+    >
       <S.Contents>{CONFIRM_MODAL_MESSAGES[modalMessageType]}</S.Contents>
     </Modal>
   );

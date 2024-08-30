@@ -4,8 +4,9 @@ import SetTargetMonthSpendingModal from '@components/modal/set-target-month-spen
 import { TSetTargetSpendingModal } from '@constants/modal';
 import useOutSideClick from '@hooks/use-outside-click';
 import { useAppDispatch } from '@store/hooks';
-import { useGetSpendingMoneyQuery } from '@store/query/spending-money-query';
+import { useGetSpendingMoneyQuery } from '@store/query/calendar-query';
 import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
+import parseIntAndMakeLocaleKR from '@utils/parse-Int-and-make-locale-kr';
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -132,9 +133,9 @@ function Footer({ date }: FooterProps) {
           date={date}
           onClose={() => setIsSetTargetSpendingModalOpen(false)}
           type={modalType}
-          targetMonthSpending={parseInt(
+          targetMonthSpending={parseIntAndMakeLocaleKR(
             targetMonthSpending as string,
-          ).toLocaleString('ko-KR')}
+          )}
         />
       )}
     </>

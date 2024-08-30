@@ -5,7 +5,7 @@ import { CALENDAR_CHECK_LIST } from '@pages/calendar-view/constants';
 // import { useAppSelector } from '@store/hooks';
 // import { userApi } from '@store/query/user-query';
 import { useAppDispatch } from '@store/hooks';
-import { useLogoutMutation } from '@store/query/logout-query';
+import { useLogoutMutation } from '@store/query/user-query';
 import { useGetUserQuery } from '@store/query/user-query';
 import { logout } from '@store/slices/login-slice';
 import { useNavigate } from 'react-router-dom';

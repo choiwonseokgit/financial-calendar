@@ -6,7 +6,9 @@ import ConfirmModal from '@components/modal/confirm-modal';
 import useConfirmModal from '@hooks/use-confirm-modal';
 import usePageTransition from '@hooks/use-page-transition';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
+import { usePostScheduleMutation } from '@store/query/calendar-query';
 import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
+// import getYearMonthFromISO from '@utils/get-year-month-from-iso';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { motion } from 'framer-motion';
@@ -67,19 +69,29 @@ function ScheduleForm() {
     modalMessageType,
     handleModalMessageChange,
   } = useConfirmModal();
+  const [postSchedule] = usePostScheduleMutation();
 
   const moveBack = () => {
     dispatch(changeTransitionDirection('prev'));
     navigate(-1);
   };
 
-  const handleSubmit = () => {
-    const { title, isAllDay, startDate, startTime, endDate, endTime } =
-      schedule;
+  const handleSubmit = async () => {
+    const {
+      title,
+      color,
+      memo,
+      isAllDay,
+      startDate,
+      startTime,
+      endDate,
+      endTime,
+    } = schedule;
     const start = combineDateTimeToIso(startDate, startTime, isAllDay);
     const end = combineDateTimeToIso(endDate, endTime, isAllDay);
     const isSameDate = start === end;
     const isValidateDateOrder = validateDateOrder(start, end);
+    // const { year, month } = getYearMonthFromISO(startDate);
 
     switch (true) {
       case !title:
@@ -92,6 +104,14 @@ function ScheduleForm() {
         handleModalMessageChange('overDate');
         break;
       default: //전송
+        await postSchedule({
+          title,
+          color,
+          memo,
+          isAllDay,
+          startDate: start,
+          endDate: end,
+        });
         moveBack();
         return;
     }

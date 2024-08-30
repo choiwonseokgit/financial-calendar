@@ -1,6 +1,7 @@
 import { useAppDispatch } from '@store/hooks';
-import { TSpendingMoney } from '@store/query/spending-money-query';
+import { TSpendingMoney } from '@store/query/calendar-query';
 import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
+import parseIntAndMakeLocaleKR from '@utils/parse-Int-and-make-locale-kr';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -13,12 +14,12 @@ function InitialSpending({ spendingEvent }: InitialSpendingProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const formatSpentMoney = parseInt(spentMoney).toLocaleString('ko-KR');
+  const formatSpentMoney = parseIntAndMakeLocaleKR(spentMoney);
 
   const moveToEditPage = () => {
     dispatch(changeTransitionDirection('next'));
     navigate('/spending-form?type=edit', {
-      state: { spendingEvent },
+      state: spendingEvent,
     });
   };
 

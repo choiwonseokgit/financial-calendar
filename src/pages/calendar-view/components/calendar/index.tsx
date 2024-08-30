@@ -16,9 +16,9 @@ import MyMonthHeader from './components/my-month-header';
 
 // import { select } from '@store/slices/selected-date-slice';
 
-import useFormatSpendingMoneyEvents from './hooks/use-format-spending-money-events';
+import useCalendarEvents from './hooks/use-calendar-events';
 // import { TSpendingMoney } from '@store/query/spending-money-query';
-import { TFormatSpendingMoneyEvents } from './hooks/use-format-spending-money-events';
+import { TFormatCalendarEvents } from './hooks/use-calendar-events';
 import { useAppDispatch } from '@store/hooks';
 import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
 
@@ -139,10 +139,10 @@ function Calendar({
   // console.log('렌더링');
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const formatSpendingMoneyEvents = useFormatSpendingMoneyEvents(date);
+  const formatSpendingMoneyEvents = useCalendarEvents(date);
 
-  const handleSelectEvent = (event: TFormatSpendingMoneyEvents) => {
-    console.log(event);
+  const handleSelectEvent = (event: TFormatCalendarEvents) => {
+    // console.log(event);
     dispatch(changeTransitionDirection('next'));
     navigate('/spending-detail', { state: event });
   };
@@ -180,9 +180,11 @@ function Calendar({
   //   onFlicking(view);
   // }, [view]);
 
+  //TODO: useEffect 써서 filtering 하기
+
   return (
     <S.Container>
-      <BigCalendar<TFormatSpendingMoneyEvents>
+      <BigCalendar<TFormatCalendarEvents>
         localizer={localizer}
         date={date}
         onNavigate={(date, view) => {

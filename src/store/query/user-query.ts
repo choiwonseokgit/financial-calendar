@@ -24,7 +24,23 @@ export const userApi = createApi({
       providesTags: ['User'],
       keepUnusedDataFor: Infinity,
     }),
+
+    logout: builder.mutation<void, void>({
+      query: () => ({
+        url: '/logout',
+        method: 'post',
+      }),
+      onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+          dispatch(userApi.util.resetApiState());
+        } catch (err) {
+          console.error(err);
+        }
+      },
+    }),
   }),
 });
 
-export const { useGetUserQuery, useLazyGetUserQuery } = userApi;
+export const { useGetUserQuery, useLazyGetUserQuery, useLogoutMutation } =
+  userApi;
