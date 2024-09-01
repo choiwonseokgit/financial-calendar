@@ -7,7 +7,7 @@ interface NoticeProps {
   date: string;
 }
 
-function Notice({ date }: NoticeProps) {
+function SpendingNotice({ date }: NoticeProps) {
   const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
 
   const spendingMoneyData = useAppSelector(
@@ -26,14 +26,26 @@ function Notice({ date }: NoticeProps) {
     spendingMoneyData.total;
 
   const message =
-    remainSpending < 0
-      ? '이번 달은 비상 입니다!🚨'
-      : '이번 달은 양호 합니다!😀';
+    remainSpending < 0 ? (
+      <>
+        이번 달은 <S.Notice $color="red">비상</S.Notice>
+        입니다!🚨
+      </>
+    ) : (
+      <>
+        이번 달은 <S.Notice $color="blue">양호</S.Notice>
+        합니다!😀
+      </>
+    );
 
-  return <S.Container>{message}</S.Container>;
+  return (
+    <S.Container>
+      <div>{message}</div>
+    </S.Container>
+  );
 }
 
-export default Notice;
+export default SpendingNotice;
 
 const S = {
   Container: styled.div`
@@ -48,5 +60,9 @@ const S = {
     left: 50%;
     transform: translate(-50%);
     white-space: nowrap;
+  `,
+  Notice: styled.span<{ $color: string }>`
+    color: ${({ $color }) => $color};
+    font-weight: bold;
   `,
 };

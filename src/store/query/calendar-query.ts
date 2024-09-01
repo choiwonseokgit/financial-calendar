@@ -7,6 +7,7 @@ export interface TSpendingMoney {
   spentMoney: string;
   category: string;
   date: string;
+  memo?: string;
   createdAt: string;
   updatedAt: string;
   userId: number;

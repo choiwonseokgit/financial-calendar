@@ -1,12 +1,9 @@
-import { useGetUserQuery } from '@store/query/user-query';
 import GlobalStyle from '@styles/global';
 import { mobileSize } from '@styles/mobile';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 
 function Root() {
-  useGetUserQuery();
-
   return (
     <S.Container>
       <GlobalStyle />

@@ -1,8 +1,12 @@
 export const CALENDAR_CHECK_LIST = [
+  {
+    type: 'holiday',
+    label: '공휴일 리스트 보기',
+  },
   { type: 'spendingMoney', label: '가계부 리스트 보기' },
   {
     type: 'schedule',
-    label: '스케줄 리스트 보기',
+    label: '스케쥴 리스트 보기',
   },
 ] as const;
 

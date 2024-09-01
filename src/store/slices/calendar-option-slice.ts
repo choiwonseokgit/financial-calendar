@@ -3,11 +3,13 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 interface TCalendarOption {
   spendingMoney: boolean;
   schedule: boolean;
+  holiday: boolean;
 }
 
 const initialState: TCalendarOption = {
   spendingMoney: true,
   schedule: true,
+  holiday: true,
 };
 
 export const calendarOptionSlice = createSlice({

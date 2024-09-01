@@ -15,6 +15,9 @@ const colors = css`
     --green03: #dbede8;
     --green04: #5ca08f;
     --green05: #2a695c;
+
+    //pink
+    --pink01: #ff3366;
   }
 `;
 export default colors;

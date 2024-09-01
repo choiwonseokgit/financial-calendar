@@ -1,27 +1,19 @@
 import { useEffect } from 'react';
 import usePageTransition from '@hooks/use-page-transition';
-import { useAppDispatch, useAppSelector } from '@store/hooks';
-import { login } from '@store/slices/login-slice';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 function Auth() {
   const navigate = useNavigate();
-  const isLogin = useAppSelector((state) => state.login.userId);
-  const dispatch = useAppDispatch();
   const pageTransition = usePageTransition();
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const userId = urlParams.get('userId');
+  const isLogin = userId !== 'null';
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('userId');
-
-    if (userId) {
-      dispatch(login(userId));
-    }
-
     navigate(isLogin ? '/' : '/login');
-  }, [navigate, isLogin]);
+  }, []);
 
   return (
     <S.Container

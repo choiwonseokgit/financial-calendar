@@ -7,7 +7,10 @@ import {
   // spendingMoneyApi,
   useGetSpendingMoneyQuery,
 } from '@store/query/calendar-query';
-import { isSpendingEvent } from '@utils/calendar-event-type-guard';
+import {
+  isScheduleEvent,
+  isSpendingEvent,
+} from '@utils/calendar-event-type-guard';
 import { format, parseISO } from 'date-fns';
 
 export interface TFormatSpendingMoneyEvents {
@@ -53,11 +56,7 @@ const useCalendarEvents: TCalendarEvents = (date) => {
     month,
   });
 
-  console.log(scheduleEvents);
-
   const calendarOption = useAppSelector((state) => state.calendarOption);
-
-  //console.log(calendarOption);
 
   const map = new Map();
 
@@ -98,9 +97,14 @@ const useCalendarEvents: TCalendarEvents = (date) => {
   const allEvents = [...formatedSpendingMoneyEvents, ...formatedScheudleEvents];
 
   const calendarEvents = allEvents.filter((event) => {
-    const { spendingMoney: isSpendingEventsVisible } = calendarOption;
+    const {
+      spendingMoney: isSpendingEventsVisible,
+      schedule: isScheduleEventVisible,
+    } = calendarOption;
     switch (true) {
       case !isSpendingEventsVisible && isSpendingEvent(event):
+        return false;
+      case !isScheduleEventVisible && isScheduleEvent(event):
         return false;
       default:
         return true;

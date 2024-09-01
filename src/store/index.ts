@@ -7,7 +7,6 @@ import { holidayApi } from './query/holiday-query';
 import { userApi } from './query/user-query';
 import calendarOptionReducer from './slices/calendar-option-slice';
 import datesReducer from './slices/datesSlice';
-import loginReducer from './slices/login-slice';
 import selectedDateReducer from './slices/selected-date-slice';
 import transitionDirectionReducer from './slices/transition-direction-slice';
 import viewReducer from './slices/viewSlice';
@@ -15,14 +14,13 @@ import viewReducer from './slices/viewSlice';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['login', 'calendarOption'],
+  whitelist: ['calendarOption'],
 };
 
 const rootReducer = combineReducers({
   dates: datesReducer,
   view: viewReducer,
   selectedDate: selectedDateReducer,
-  login: loginReducer,
   calendarOption: calendarOptionReducer,
   transitionDirection: transitionDirectionReducer,
   [holidayApi.reducerPath]: holidayApi.reducer,

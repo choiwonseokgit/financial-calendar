@@ -3,7 +3,7 @@ import plusIcon from '@assets/icons/plus-solid.svg';
 import SetTargetMonthSpendingModal from '@components/modal/set-target-month-spending-modal';
 import { TSetTargetSpendingModal } from '@constants/modal';
 import useOutSideClick from '@hooks/use-outside-click';
-import { useAppDispatch } from '@store/hooks';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
 import { useGetSpendingMoneyQuery } from '@store/query/calendar-query';
 import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
 import parseIntAndMakeLocaleKR from '@utils/parse-Int-and-make-locale-kr';
@@ -52,6 +52,12 @@ function Footer({ date }: FooterProps) {
 
   useOutSideClick(ref, () => setIsOpen(false));
 
+  const { spendingMoney: isSpendingMoneyVisible } = useAppSelector(
+    (state) => state.calendarOption,
+  );
+
+  if (!isSpendingMoneyVisible) return null;
+
   return (
     <>
       <S.Footer>
@@ -73,7 +79,7 @@ function Footer({ date }: FooterProps) {
                     setIsSetTargetSpendingModalOpen(true);
                   }}
                 >
-                  목표 지출 설정
+                  📝목표 지출 설정
                 </S.SetTargetSpendBtn>
               )}
             </div>
@@ -96,7 +102,7 @@ function Footer({ date }: FooterProps) {
                   setIsSetTargetSpendingModalOpen(true);
                 }}
               >
-                목표 수정
+                ✏️목표 수정
               </S.SetTargetSpendBtn>
               <S.SetTargetSpendBtn
                 onClick={() => {
@@ -104,7 +110,7 @@ function Footer({ date }: FooterProps) {
                   setIsSetTargetSpendingModalOpen(true);
                 }}
               >
-                목표 삭제
+                ❌목표 삭제
               </S.SetTargetSpendBtn>
             </S.EditDeleteBtnBox>
           )}
