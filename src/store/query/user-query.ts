@@ -20,7 +20,6 @@ export const userApi = createApi({
         url: '/users',
         method: 'get',
       }),
-      transformResponse: (data: UserResponse[]) => data[0],
       providesTags: ['User'],
       keepUnusedDataFor: Infinity,
     }),

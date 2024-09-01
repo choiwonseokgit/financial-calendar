@@ -2,13 +2,7 @@ import { useRef } from 'react';
 import CloseIcon from '@assets/icons/xmark-solid.svg';
 import useOutsideClickForAnimation from '@hooks/use-outside-click-for-animation';
 import { CALENDAR_CHECK_LIST } from '@pages/calendar-view/constants';
-// import { useAppSelector } from '@store/hooks';
-// import { userApi } from '@store/query/user-query';
-import { useAppDispatch } from '@store/hooks';
-import { useLogoutMutation } from '@store/query/logout-query';
 import { useGetUserQuery } from '@store/query/user-query';
-import { logout } from '@store/slices/login-slice';
-import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import CheckList from './components/check-list';
 
@@ -17,21 +11,17 @@ interface SideBarProps {
 }
 
 function SideBar({ onSideBarBtnClick }: SideBarProps) {
-  const { data: user } = useGetUserQuery(); //TODO: refetch 조건 달기
-  // const user = useAppSelector(
-  //   (state) => userApi.endpoints.getUser.select()(state).data![0],
-  // );
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const { data: user } = useGetUserQuery();
   const ref = useRef<HTMLDivElement>(null);
   const { isCloseAnimStart, handleCloseAnimStart } =
     useOutsideClickForAnimation(ref, () => onSideBarBtnClick(false), 300);
-  const [postLogout] = useLogoutMutation();
 
   const handleLogout = () => {
-    postLogout();
-    dispatch(logout());
-    navigate('/login');
+    window.location.href =
+      'https://kauth.kakao.com/oauth/logout?client_id=' +
+      process.env.REACT_APP_KAKAO_LOGIN_CLIENT_ID +
+      '&logout_redirect_uri=' +
+      encodeURIComponent('http://localhost:4000/oauth/kakao/logout');
   };
 
   return (
@@ -146,7 +136,9 @@ const S = {
     align-items: center;
     gap: 5px;
   `,
-  Name: styled.span``,
+  Name: styled.span`
+    color: var(--green05);
+  `,
   ProfileImg: styled.img`
     width: 40px;
     height: 40px;

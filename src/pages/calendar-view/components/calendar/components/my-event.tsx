@@ -1,31 +1,22 @@
-// import { useRef } from 'react';
-// import { TSpendingMoney } from '@store/query/spending-money-query';
+import { useRef } from 'react';
+import {
+  // isScheduleEvent,
+  isSpendingEvent,
+} from '@utils/calendar-event-type-guard';
+import parseIntAndMakeLocaleKR from '@utils/parse-Int-and-make-locale-kr';
 import { EventProps } from 'react-big-calendar';
 import styled from 'styled-components';
-import { TFormatSpendingMoneyEvents } from '../hooks/use-format-spending-money-events';
+import { TFormatCalendarEvents } from '../hooks/use-calendar-events';
 
-function MyEvent({ event }: EventProps<TFormatSpendingMoneyEvents>) {
-  // const ref = useRef<HTMLDivElement>(null);
-  const { total } = event;
+function MyEvent({ event }: EventProps<TFormatCalendarEvents>) {
+  const ref = useRef<HTMLDivElement>(null);
 
-  //console.log(resource);
-  // console.log(color);
+  if (isSpendingEvent(event)) {
+    const { total } = event;
+    return <S.Financial>-{parseIntAndMakeLocaleKR(total)}</S.Financial>;
+  }
 
-  // useEffect(() => {
-  //   const element = ref.current;
-  //   if (element && color) {
-  //     const targetElement = element.closest('.rbc-event');
-  //     (targetElement as HTMLElement).style.backgroundColor = `${color}`;
-  //   }
-  // }, [color]);
-
-  // if (type === 'financial') {
-  //   return <S.Financial>-{title}원</S.Financial>;
-  // }
-
-  // return <S.Schedule ref={ref}>{title}</S.Schedule>;
-
-  return <S.Financial>-{parseInt(total).toLocaleString('ko-KR')}</S.Financial>;
+  return <S.Schedule ref={ref}>{event.title}</S.Schedule>;
 }
 
 export default MyEvent;
@@ -35,7 +26,7 @@ const S = {
     display: flex;
     justify-content: center;
     font-size: 10px;
-    background-color: var(--green04);
+    /* background-color: var(--green04); */
     border-radius: 10%;
   `,
   Schedule: styled.div`

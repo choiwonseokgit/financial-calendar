@@ -9,8 +9,11 @@ import styled from 'styled-components';
 function MyDateHeader({ date, label }: DateHeaderProps) {
   const holidayTitle = useGetHolidayTitle(date);
   const selectedDate = useAppSelector((state) => state.selectedDate);
+  const calendarOption = useAppSelector((state) => state.calendarOption);
+  const { holiday: isHolidayVisible } = calendarOption;
   const dispatch = useAppDispatch();
-  const isSelected = selectedDate === format(date, 'yyyy/MM/dd');
+  const fullDate = format(date, 'yyyy/MM/dd');
+  const isSelected = selectedDate === fullDate;
 
   const handleDateBtnClick = () => {
     dispatch(select(format(date, 'yyyy/MM/dd')));
@@ -22,7 +25,7 @@ function MyDateHeader({ date, label }: DateHeaderProps) {
         {label.replace(/^0/, '')}
       </S.DateBtn>
       <S.Holiday $isHoliday={!!holidayTitle}>
-        {holidayTitle && holidayTitle}
+        {isHolidayVisible && holidayTitle && holidayTitle}
       </S.Holiday>
     </S.Container>
   );
@@ -38,6 +41,7 @@ const S = {
     align-items: center; */
     /* background-color: yellow; */
     //position: relative;
+    /* margin-inline: 1px; */
   `,
   DateBtn: styled.button<{ $isSelected: boolean }>`
     width: 18px;
@@ -48,6 +52,7 @@ const S = {
   `,
   Holiday: styled.p<{ $isHoliday: boolean }>`
     font-size: 11px;
+    /* font-weight: bold; */
     /* width: 100%;
     position: absolute;
     top: 50%;

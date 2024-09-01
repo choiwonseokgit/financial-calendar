@@ -5,13 +5,13 @@ import chevronLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
 import chevronRightIcon from '@assets/icons/chevron-right-solid-green.svg';
 import DateSelectModal from '@components/modal/date-select-modal';
 import useGetHolidayTitle from '@hooks/use-get-holiday-title';
-import { useAppDispatch } from '@store/hooks';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
 import { select } from '@store/slices/selected-date-slice';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { View } from 'react-big-calendar';
 import styled from 'styled-components';
-import Notice from './components/notice';
+import SpendingNotice from './components/spending-notice';
 
 interface NavBarProps {
   date: string;
@@ -35,6 +35,9 @@ function NavBar({
   const holidayTitle = useGetHolidayTitle(date);
   const dispatch = useAppDispatch();
   const [isDateSelectModalOpen, setIsDateSelectModalOpen] = useState(false);
+  const { spendingMoney: isSpendingMoneyVisible } = useAppSelector(
+    (state) => state.calendarOption,
+  );
 
   const formatedDate = format(
     date,
@@ -78,7 +81,7 @@ function NavBar({
             <div onClick={() => setIsDateSelectModalOpen(true)}>
               {formatedDate}
             </div>
-            <Notice date={date} />
+            {isSpendingMoneyVisible && <SpendingNotice date={date} />}
             <S.Holiday>{view === 'day' && holidayTitle}</S.Holiday>
           </S.Date>
           <button
@@ -104,7 +107,6 @@ function NavBar({
           <S.BarImg src={BarIcon} alt="메뉴바" />
         </button>
       </S.RightBox>
-      {/* <S.Notice>이번 달은 양호 합니다!😀</S.Notice> */}
     </S.Nav>
   );
 }
@@ -124,6 +126,7 @@ const S = {
     position: relative;
     /* background-color: #318c74; */
     /* color: white; */
+    padding-right: 15px;
   `,
   LeftBox: styled.div`
     flex-grow: 1;
@@ -186,12 +189,5 @@ const S = {
   `,
   BarImg: styled.img`
     width: 20px;
-    margin-right: 15px;
-  `,
-  Notice: styled.span`
-    position: absolute;
-    left: 15px;
-    bottom: 5px;
-    font-size: 15px;
   `,
 };

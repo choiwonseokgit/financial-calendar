@@ -1,120 +1,26 @@
 import React from 'react';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
+import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
+import {
+  isScheduleEvent,
+  isSpendingEvent,
+} from '@utils/calendar-event-type-guard';
 import moment from 'moment';
-import 'moment/locale/ko';
 import {
   Calendar as BigCalendar,
+  EventPropGetter,
   View,
   momentLocalizer,
 } from 'react-big-calendar';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import MyDateHeader from './components/my-date-header';
 import MyEvent from './components/my-event';
 import MyMonthHeader from './components/my-month-header';
-// import calDateAndMakeStr from '@utils/cal-date-and-make-str';
-
-// import { select } from '@store/slices/selected-date-slice';
-
-import useFormatSpendingMoneyEvents from './hooks/use-format-spending-money-events';
-// import { TSpendingMoney } from '@store/query/spending-money-query';
-import { TFormatSpendingMoneyEvents } from './hooks/use-format-spending-money-events';
-import { useAppDispatch } from '@store/hooks';
-import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
-
-// const EVENTS = [
-//   {
-//     title: '26000',
-//     start: new Date(),
-//     end: new Date(),
-//     resource: {
-//       type: 'financial',
-//     },
-//   },
-//   {
-//     title: '46000',
-//     start: parse('20240815', 'yyyyMMdd', new Date()),
-//     end: parse('20240815', 'yyyyMMdd', new Date()),
-//     resource: {
-//       type: 'financial',
-//     },
-//   },
-//   {
-//     title: '56000',
-//     start: parse('20240801', 'yyyyMMdd', new Date()),
-//     end: parse('20240801', 'yyyyMMdd', new Date()),
-//     resource: {
-//       type: 'financial',
-//     },
-//   },
-// {
-//   title: '캠핑',
-//   start: parse('20240813', 'yyyyMMdd', new Date()),
-//   end: parse('20240815', 'yyyyMMdd', new Date()),
-//   resource: {
-//     type: 'schedule',
-//     color: 'blue',
-//   },
-// },
-// {
-//   title: '2800',
-//   start: parse('20240820', 'yyyyMMdd', new Date()),
-//   end: parse('20240820', 'yyyyMMdd', new Date()),
-//   resource: {
-//     type: 'financial',
-//   },
-// },
-// {
-//   title: '공부 하기',
-//   start: parse('20240820', 'yyyyMMdd', new Date()),
-//   end: parse('20240820', 'yyyyMMdd', new Date()),
-//   resource: {
-//     type: 'schedule',
-//     color: 'red',
-//   },
-// },
-// {
-//   title: '영화 보기',
-//   start: parse('20240820', 'yyyyMMdd', new Date()),
-//   end: parse('20240820', 'yyyyMMdd', new Date()),
-//   resource: {
-//     type: 'schedule',
-//     color: 'purple',
-//   },
-// },
-// {
-//   title: '공부 하기',
-//   start: parse('20240820', 'yyyyMMdd', new Date()),
-//   end: parse('20240820', 'yyyyMMdd', new Date()),
-//   resource: {
-//     type: 'schedule',
-//     color: 'red',
-//   },
-// },
-// {
-//   title: '영화 보기',
-//   start: parse('20240820', 'yyyyMMdd', new Date()),
-//   end: parse('20240820', 'yyyyMMdd', new Date()),
-//   resource: {
-//     type: 'schedule',
-//     color: 'purple',
-//   },
-// },
-// {
-//   title: '개발 하기',
-//   start: new Date('2024-08-01T15:00:00.000Z'),
-//   end: new Date('2024-08-01T20:00:00.000Z'),
-//   allDay: false,
-//   resource: {
-//     type: 'schedule',
-//     color: 'purple',
-//   },
-// },
-// ];
-
-// type TEvents = TSpendingMoney[];
-
-// const FILTERED_EVENT = EVENTS.filter((e) => e.resource.type === 'schedule');
+import useCalendarEvents from './hooks/use-calendar-events';
+import { TFormatCalendarEvents } from './hooks/use-calendar-events';
+import 'moment/locale/ko';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 moment.locale('ko-KR');
 const localizer = momentLocalizer(moment);
@@ -123,7 +29,6 @@ interface CalendarProps {
   date: Date | string;
   idx: number;
   view: View;
-  // onFlicking: (view: View) => void;
   onNavigate: (date: Date, idx: number, view: View) => void;
   onChangeView: (view: View) => void;
 }
@@ -139,18 +44,32 @@ function Calendar({
   // console.log('렌더링');
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const formatSpendingMoneyEvents = useFormatSpendingMoneyEvents(date);
+  const formatSpendingMoneyEvents = useCalendarEvents(date);
 
-  const handleSelectEvent = (event: TFormatSpendingMoneyEvents) => {
-    console.log(event);
+  const eventPropGetter: EventPropGetter<TFormatCalendarEvents> = (event) => ({
+    ...(isSpendingEvent(event) && {
+      style: {
+        backgroundColor: 'inherit',
+        color: 'var(--pink01)',
+        fontWeight: 'bold',
+      },
+    }),
+    ...(isScheduleEvent(event) && {
+      style: {
+        backgroundColor: event.color,
+      },
+    }),
+  });
+
+  const handleSelectEvent = (event: TFormatCalendarEvents) => {
+    // console.log(event);
     dispatch(changeTransitionDirection('next'));
     navigate('/spending-detail', { state: event });
   };
-  //console.log(formatSpendingMoneyEvents);
 
-  // console.log(spendingMoneyEvents);
-
-  // const dispatch = useAppDispatch();
+  const { spendingMoney: isSpendingMoneyVisible } = useAppSelector(
+    (state) => state.calendarOption,
+  );
 
   // const handleSelectEvent = (event: (typeof EVENTS)[0]) => {
   //   const {
@@ -180,9 +99,11 @@ function Calendar({
   //   onFlicking(view);
   // }, [view]);
 
+  //TODO: useEffect 써서 filtering 하기
+
   return (
-    <S.Container>
-      <BigCalendar<TFormatSpendingMoneyEvents>
+    <S.Container $isSpendingMoneyVisible={isSpendingMoneyVisible}>
+      <BigCalendar<TFormatCalendarEvents>
         localizer={localizer}
         date={date}
         onNavigate={(date, view) => {
@@ -194,6 +115,7 @@ function Calendar({
         toolbar={false}
         // events={view === 'day' ? FILTERED_EVENT : EVENTS}
         events={formatSpendingMoneyEvents}
+        eventPropGetter={eventPropGetter}
         onSelectEvent={handleSelectEvent}
         // onShowMore={(dates) => {
         //   console.log(dates);
@@ -223,10 +145,13 @@ function Calendar({
 export default React.memo(Calendar);
 
 const S = {
-  Container: styled.div`
+  Container: styled.div<{ $isSpendingMoneyVisible: boolean }>`
     background-color: white;
     .rbc-calendar {
-      height: 73dvh;
+      height: 88dvh;
+      height: ${({ $isSpendingMoneyVisible }) =>
+        $isSpendingMoneyVisible ? '73dvh' : '88dvh'};
+      /* max-height: 88dvh; */
       max-height: 800px;
     }
     /* .rbc-selected-cell {
@@ -275,10 +200,6 @@ const S = {
 
     .rbc-today {
       background-color: var(--green02);
-    }
-
-    .rbc-event {
-      background-color: var(--green04);
     }
 
     .rbc-button-link.rbc-show-more {

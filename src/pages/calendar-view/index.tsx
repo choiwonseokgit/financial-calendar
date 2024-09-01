@@ -2,8 +2,6 @@ import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import Flicking, { MoveEndEvent } from '@egjs/react-flicking';
 import usePageTransition from '@hooks/use-page-transition';
 import { useAppSelector } from '@store/hooks';
-import { useLazyGetHolidayQuery } from '@store/query/holiday-query';
-import { useLazyGetSpendingMoneyQuery } from '@store/query/spending-money-query';
 import {
   nextDay,
   nextMonth,
@@ -11,7 +9,7 @@ import {
   prevMonth,
 } from '@store/slices/selected-date-slice';
 import calDateAndMakeStr from '@utils/cal-date-and-make-str';
-import { format, formatISO, parse } from 'date-fns';
+import { formatISO, parse } from 'date-fns';
 import { motion } from 'framer-motion';
 import { View } from 'react-big-calendar';
 import { useDispatch } from 'react-redux';
@@ -21,6 +19,7 @@ import Footer from './components/footer';
 import NavBar from './components/nav-bar';
 import SideBar from './components/side-bar/index';
 import '@egjs/react-flicking/dist/flicking.css';
+import useQuriesForDates from './hooks/use-quries-for-dates';
 
 type TCalendarDates = string[];
 
@@ -227,19 +226,8 @@ function CalendarView() {
   );
 
   //useEffect
-  const [spendingMoneyTrigger] = useLazyGetSpendingMoneyQuery();
-  const [holidayTrigger] = useLazyGetHolidayQuery();
-
-  const holidayQueries = calendarDates.map((date) => {
-    const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
-    return () => holidayTrigger({ year: year, month: month }, true).unwrap();
-  });
-
-  const spendingMoneyQueries = calendarDates.map((date) => {
-    const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
-    return () =>
-      spendingMoneyTrigger({ year: year, month: month }, true).unwrap();
-  });
+  const { holidayQueries, spendingMoneyQueries, scheduelQueries } =
+    useQuriesForDates(calendarDates);
 
   // 공휴일 및 지출금액 API fetch
   useEffect(() => {
@@ -249,6 +237,7 @@ function CalendarView() {
         await Promise.all([
           ...holidayQueries.map((query) => query()),
           ...spendingMoneyQueries.map((query) => query()),
+          ...scheduelQueries.map((query) => query()),
         ]);
       } catch (err) {
         console.error(err);

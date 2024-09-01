@@ -1,12 +1,9 @@
-import { useEffect } from 'react';
 import KakaoIcon from '@assets/icons/kakao.svg';
-import { useAppSelector } from '@store/hooks';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 function Login() {
-  const navigate = useNavigate();
-  const isLogin = useAppSelector((state) => state.login.userId);
+  // const navigate = useNavigate();
+  // const isLogin = useAppSelector((state) => state.login.userId);
 
   const handleLoginBtnClick = () => {
     window.location.href =
@@ -16,10 +13,6 @@ function Login() {
       encodeURIComponent('http://localhost:4000/oauth/kakao') +
       '&response_type=code';
   };
-
-  useEffect(() => {
-    navigate(isLogin ? '/' : '/login');
-  }, []);
 
   return (
     <S.Container>
