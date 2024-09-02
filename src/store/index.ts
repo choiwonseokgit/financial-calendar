@@ -15,7 +15,7 @@ import viewReducer from './slices/viewSlice';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['calendarOption'],
+  whitelist: ['loginCheck', 'calendarOption'],
 };
 
 const rootReducer = combineReducers({
