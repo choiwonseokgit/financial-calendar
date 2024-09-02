@@ -71,7 +71,7 @@ function SetTargetMonthSpendingModal({
     type === 'setTargetSpending'
       ? !targetSpending
       : type === 'editTargetSpending'
-        ? targetMonthSpending === targetSpending
+        ? targetMonthSpending === targetSpending || !targetSpending
         : false;
 
   return (
