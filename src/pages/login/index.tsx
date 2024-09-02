@@ -2,20 +2,12 @@ import KakaoIcon from '@assets/icons/kakao.svg';
 import styled from 'styled-components';
 
 function Login() {
-  // const navigate = useNavigate();
-  // const isLogin = useAppSelector((state) => state.login.userId);
-
   const handleLoginBtnClick = () => {
     window.location.href =
       'https://kauth.kakao.com/oauth/authorize?client_id=' +
       process.env.REACT_APP_KAKAO_LOGIN_CLIENT_ID +
       '&redirect_uri=' +
-      // encodeURIComponent('http://localhost:4000/oauth/kakao') +
-      // '&response_type=code';
-
-      encodeURIComponent(
-        'https://financial-calendar-server.onrender.com/oauth/kakao',
-      ) +
+      encodeURIComponent(`${process.env.REACT_APP_SERVER}/oauth/kakao`) +
       '&response_type=code';
   };
 

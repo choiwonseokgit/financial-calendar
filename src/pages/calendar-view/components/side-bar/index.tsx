@@ -25,10 +25,7 @@ function SideBar({ onSideBarBtnClick }: SideBarProps) {
       'https://kauth.kakao.com/oauth/logout?client_id=' +
       process.env.REACT_APP_KAKAO_LOGIN_CLIENT_ID +
       '&logout_redirect_uri=' +
-      encodeURIComponent(
-        'https://financial-calendar-server.onrender.com/oauth/kakao/logout',
-      );
-    //  encodeURIComponent('http://localhost:4000/oauth/kakao/logout');
+      encodeURIComponent(`${process.env.REACT_APP_SERVER}/oauth/kakao/logout`);
   };
 
   return (

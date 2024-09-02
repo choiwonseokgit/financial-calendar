@@ -1,11 +1,9 @@
 import axios from 'axios';
-// 'http://localhost:4000'
-// 'https://financial-calendar-server.onrender.com'
 
 const Axios = axios.create({
-  baseURL: 'https://financial-calendar-server.onrender.com',
+  baseURL: process.env.REACT_APP_SERVER,
   timeout: 5000,
-  withCredentials: true, // 쿠키를 요청에 포함시킵니다.
+  withCredentials: true, // 쿠키를 요청에 포함
 });
 
 Axios.interceptors.response.use(
