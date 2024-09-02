@@ -16,7 +16,11 @@ function AnimatedRoutes() {
   const { userId } = useAppSelector((state) => state.loginCheck);
 
   useEffect(() => {
-    if (location.pathname !== '/auth' && !userId) {
+    if (
+      location.pathname !== '/auth' &&
+      location.pathname !== '/login' &&
+      !userId
+    ) {
       navigate('/login');
     }
   }, [location.pathname]);
