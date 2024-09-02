@@ -1,33 +1,25 @@
 import { useEffect } from 'react';
 import usePageTransition from '@hooks/use-page-transition';
+import { useAppDispatch } from '@store/hooks';
+import { login } from '@store/slices/login-check-slice';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 function Auth() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const pageTransition = usePageTransition();
-
   const urlParams = new URLSearchParams(window.location.search);
   const userId = urlParams.get('userId');
   const isLogin = userId !== 'null';
+
   useEffect(() => {
+    dispatch(login({ userId: isLogin ? userId : null }));
     navigate(isLogin ? '/' : '/login');
   }, []);
 
-  return (
-    <S.Container
-      // animate={{ x: 0 }}
-      // exit={{ x: '100%' }}
-      // transition={{
-      //   duration: 0.3,
-      //   delay: 0,
-      // }}
-      {...pageTransition}
-    >
-      💸Loading...📆
-    </S.Container>
-  );
+  return <S.Container {...pageTransition}>💸Loading...📆</S.Container>;
 }
 
 export default Auth;
