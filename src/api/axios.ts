@@ -14,7 +14,8 @@ Axios.interceptors.response.use(
   (error) => {
     if (error.response.status === 401) {
       // 토큰이 없는 경우
-      window.location.href = '/login';
+      console.log(error);
+      // window.location.href = '/login';
     } else if (error.response.status === 403) {
       // 토큰이 유효하지 않은 경우
       window.location.href = '/404';
