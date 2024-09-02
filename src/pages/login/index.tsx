@@ -10,7 +10,12 @@ function Login() {
       'https://kauth.kakao.com/oauth/authorize?client_id=' +
       process.env.REACT_APP_KAKAO_LOGIN_CLIENT_ID +
       '&redirect_uri=' +
-      encodeURIComponent('http://localhost:4000/oauth/kakao') +
+      // encodeURIComponent('http://localhost:4000/oauth/kakao') +
+      // '&response_type=code';
+
+      encodeURIComponent(
+        'https://financial-calendar-server.onrender.com/oauth/kakao',
+      ) +
       '&response_type=code';
   };
 

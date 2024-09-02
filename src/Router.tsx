@@ -1,9 +1,25 @@
+import { useEffect } from 'react';
 import * as Page from '@pages/index';
+import { useAppSelector } from '@store/hooks';
 import { AnimatePresence } from 'framer-motion';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 
 function AnimatedRoutes() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { userId } = useAppSelector((state) => state.loginCheck);
+
+  useEffect(() => {
+    if (location.pathname !== '/auth' && !userId) {
+      navigate('/login');
+    }
+  }, [location.pathname]);
 
   return (
     <AnimatePresence initial={false}>

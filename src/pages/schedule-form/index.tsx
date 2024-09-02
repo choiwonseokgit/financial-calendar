@@ -121,16 +121,7 @@ function ScheduleForm() {
 
   return (
     <>
-      <S.Container
-        // initial={{ x: '100%' }}
-        // animate={{ x: 0 }}
-        // exit={{ x: '100%' }}
-        // transition={{
-        //   duration: 0.3,
-        //   delay: 0,
-        // }}
-        {...pageTransition}
-      >
+      <S.Container {...pageTransition}>
         <S.Header>
           <button onClick={moveBack}>
             <S.ChevronImg src={chevronLeftIcon} alt="뒤로" />
