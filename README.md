@@ -22,7 +22,6 @@
 ✅ `소셜 로그인/로그아웃` - 카카오 로그인을 활용하여 소셜 로그인/로그아웃을 할 수 있습니다.
 
 
-![Financial-Calendar-Chrome-ezgif com-resize](https://github.com/user-attachments/assets/b84c06e3-b2bd-4c49-a144-a5b4b59bc585)
 
 https://github.com/user-attachments/assets/44328f34-0540-4c9d-8247-0ce7db03e140
 
