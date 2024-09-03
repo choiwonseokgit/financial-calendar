@@ -14,7 +14,7 @@ function Login() {
   return (
     <S.Container>
       <S.Title>💸financial-calendar📆</S.Title>
-      <S.Description>목표를 설정하고 꾸준하게 기록해 보세요!</S.Description>
+      <S.Description>목표금액을 설정하고 꾸준하게 기록해 보세요!</S.Description>
       <S.KakaoBtn onClick={handleLoginBtnClick}>
         <S.Img src={KakaoIcon} alt="카카오" />
         <S.Label>카카오로 시작하기</S.Label>
