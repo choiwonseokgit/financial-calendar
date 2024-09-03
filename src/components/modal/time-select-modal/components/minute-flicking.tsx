@@ -14,7 +14,6 @@ function MinuteFlicking({
     idx.toString().padStart(2, '0'),
   );
 
-  console.log(minutes);
   const defaultIdx = minutes.findIndex((minute) => minute === currSelectMinute);
   const [currIdx, setCurrIdx] = useState(defaultIdx);
 

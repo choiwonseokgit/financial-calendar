@@ -1,4 +1,5 @@
 import KakaoIcon from '@assets/icons/kakao.svg';
+import { SERVER_URL } from '@constants/url';
 import styled from 'styled-components';
 
 function Login() {
@@ -7,7 +8,7 @@ function Login() {
       'https://kauth.kakao.com/oauth/authorize?client_id=' +
       process.env.REACT_APP_KAKAO_LOGIN_CLIENT_ID +
       '&redirect_uri=' +
-      encodeURIComponent(`${process.env.REACT_APP_SERVER}/oauth/kakao`) +
+      encodeURIComponent(`${SERVER_URL}/oauth/kakao`) +
       '&response_type=code';
   };
 

@@ -1,7 +1,6 @@
 import { useReducer, useRef, useState } from 'react';
 import chevronDownIcon from '@assets/icons/chevron-down-solid.svg';
 import chevronUpIcon from '@assets/icons/chevron-up-solid.svg';
-// import memoIcon from '@assets/icons/newspaper-solid.svg';
 import ConfirmModal from '@components/modal/confirm-modal';
 import DateSelectModal from '@components/modal/date-select-modal';
 import MoneyInput from '@components/money-input';
@@ -82,17 +81,6 @@ function SpendingForm() {
       : null,
     memo: isEditPage ? prevMemo : '',
   });
-  // const [spentMoney, setSpentMoney] = useState(
-  //   isEditPage ? parseIntAndMakeLocaleKR(prevSpentMoney) : '',
-  // );
-  // const [selectedCategory, setSelectedCategory] = useState<TCategory | null>(
-  //   isEditPage
-  //     ? ({
-  //         name: prevCategory.split(' ')[1],
-  //         emoji: prevCategory.split(' ')[0],
-  //       } as TCategory)
-  //     : null,
-  // );
   const selectedDate = useAppSelector((state) => state.selectedDate);
   const [isFlicking, setIsFlicking] = useState(!isEditPage);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -167,12 +155,10 @@ function SpendingForm() {
 
   const handleCategoryClick = (idx: number) => {
     spendingDispatch({ type: 'CATEGORY', category: CATEGORYS[idx] });
-    // setSelectedCategory(CATEGORYS[idx]);
   };
 
   const handleSpentMoneyChange = (money: string) => {
     spendingDispatch({ type: 'SPENT_MONEY', spentMoney: money });
-    // setSpentMoney(money);
   };
 
   return (

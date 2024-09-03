@@ -36,12 +36,6 @@ export default React.memo(MyDateHeader);
 const S = {
   Container: styled.div<{ $isHoliday: boolean }>`
     color: ${({ $isHoliday }) => ($isHoliday ? 'red' : 'inherit')};
-    /* display: 'flex';
-    justify-content: space-around;
-    align-items: center; */
-    /* background-color: yellow; */
-    //position: relative;
-    /* margin-inline: 1px; */
   `,
   DateBtn: styled.button<{ $isSelected: boolean }>`
     width: 18px;
@@ -52,12 +46,5 @@ const S = {
   `,
   Holiday: styled.p<{ $isHoliday: boolean }>`
     font-size: 11px;
-    /* font-weight: bold; */
-    /* width: 100%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, 60%);*/
-    /* display: ${({ $isHoliday }) => ($isHoliday ? 'auto' : 'none')}; */
   `,
 };

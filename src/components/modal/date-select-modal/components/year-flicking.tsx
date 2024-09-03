@@ -19,7 +19,6 @@ function YearFlicking({ currSelectYear, onYearChange }: YearFlickingProps) {
   const handleCurrIdxChange = (idx: number) => {
     setCurrIdx(idx);
   };
-  //TODO: useEffect 써서 deafultIndex 찾아서 FlickingContainer Props 로 넣어주기
 
   return (
     <FlickingContainer

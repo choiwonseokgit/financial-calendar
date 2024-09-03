@@ -1,8 +1,5 @@
 import { useRef } from 'react';
-import {
-  // isScheduleEvent,
-  isSpendingEvent,
-} from '@utils/calendar-event-type-guard';
+import { isSpendingEvent } from '@utils/calendar-event-type-guard';
 import parseIntAndMakeLocaleKR from '@utils/parse-Int-and-make-locale-kr';
 import { EventProps } from 'react-big-calendar';
 import styled from 'styled-components';

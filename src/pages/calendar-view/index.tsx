@@ -226,7 +226,7 @@ function CalendarView() {
   );
 
   //useEffect
-  const { holidayQueries, spendingMoneyQueries, scheduelQueries } =
+  const { holidayQueries, spendingMoneyQueries } =
     useQuriesForDates(calendarDates);
 
   // 공휴일 및 지출금액 API fetch
@@ -237,7 +237,6 @@ function CalendarView() {
         await Promise.all([
           ...holidayQueries.map((query) => query()),
           ...spendingMoneyQueries.map((query) => query()),
-          ...scheduelQueries.map((query) => query()),
         ]);
       } catch (err) {
         console.error(err);
@@ -294,7 +293,7 @@ function CalendarView() {
           onMoveEnd={handleOnMoveEnd}
           onChanged={(e) => setCurrIdx(e.index)}
           moveType={['strict', { count: 1 }]}
-          changeOnHold={true} //범인?
+          changeOnHold={true}
           threshold={50}
           inputType={['touch', 'mouse']}
           onWillRestore={() => (isCanceledRef.current = 1)}
@@ -306,9 +305,9 @@ function CalendarView() {
                 date={date}
                 idx={idx}
                 view={view}
-                // onFlicking={handleFlicking}
                 onNavigate={handleNavigate}
                 onChangeView={handleChangeView}
+                // onFlicking={handleFlicking}
               />
             </S.Section>
           ))}

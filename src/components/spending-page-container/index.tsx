@@ -64,23 +64,6 @@ function SpendingPageContainer(props: SpendingPageContainerProps) {
   return (
     <>
       <S.Container
-        // initial={
-        //   props.type === 'SpendingForm' && props.isEdit
-        //     ? undefined
-        //     : { x: '100%' }
-        // }
-        // animate={
-        //   props.type === 'SpendingForm' && props.isEdit ? undefined : { x: 0 }
-        // }
-        // exit={
-        //   props.type === 'SpendingForm' && props.isEdit
-        //     ? undefined
-        //     : { x: '100%' }
-        // }
-        // transition={{
-        //   duration: 0.3,
-        //   delay: 0,
-        // }}
         {...pageTransition}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
