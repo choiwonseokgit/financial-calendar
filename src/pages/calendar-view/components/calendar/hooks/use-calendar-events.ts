@@ -1,10 +1,8 @@
-// import { useAppSelector } from '@store/hooks';
 import { useAppSelector } from '@store/hooks';
 import {
   TSchedule,
   TSpendingMoney,
-  useGetScheduleQuery,
-  // spendingMoneyApi,
+  // useGetScheduleQuery,
   useGetSpendingMoneyQuery,
 } from '@store/query/calendar-query';
 import {
@@ -31,42 +29,24 @@ export type TFormatCalendarEvents =
   | TFormatScheduleEvents;
 
 type TCalendarEvents = (date: Date | string) => TFormatCalendarEvents[];
-
-//TODO: useCalendarEvents 로 수정 schedules도 받아서
-
+//스케줄 이벤트는  보류
 const useCalendarEvents: TCalendarEvents = (date) => {
-  // const spendingMoneyEvents = useAppSelector((state) => {
-  //   const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
-  //   const events = spendingMoneyApi.endpoints.getSpendingMoney.select({
-  //     year,
-  //     month,
-  //   })(state);
-
-  //   return events.data;
-  // });
   const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
-
   const { data: spendingMoneyEvents } = useGetSpendingMoneyQuery({
     year,
     month,
   });
-
-  const { data: scheduleEvents } = useGetScheduleQuery({
-    year,
-    month,
-  });
-
   const calendarOption = useAppSelector((state) => state.calendarOption);
 
-  const map = new Map();
+  const dailySpendingEventsMap = new Map();
 
   spendingMoneyEvents?.targetDateSpendingMoney.forEach((el) => {
     const idDate = format(parseISO(el.date), 'yyyy/MM/dd');
 
-    if (map.has(idDate)) {
-      const existingEvent = map.get(idDate);
+    if (dailySpendingEventsMap.has(idDate)) {
+      const existingEvent = dailySpendingEventsMap.get(idDate);
       existingEvent.detailEvents.push(el);
-      // total 업데이트
+      // total 계산
       existingEvent.total = (
         parseInt(existingEvent.total) + parseInt(el.spentMoney)
       ).toString();
@@ -80,21 +60,15 @@ const useCalendarEvents: TCalendarEvents = (date) => {
         type: 'spendingMoney',
       };
 
-      map.set(idDate, newEvent);
+      dailySpendingEventsMap.set(idDate, newEvent);
     }
   });
 
   const formatedSpendingMoneyEvents: TFormatSpendingMoneyEvents[] = Array.from(
-    map.values(),
+    dailySpendingEventsMap.values(),
   );
 
-  const formatedScheudleEvents: TFormatScheduleEvents[] =
-    scheduleEvents?.map((event) => ({
-      ...event,
-      type: 'schedule',
-    })) ?? [];
-
-  const allEvents = [...formatedSpendingMoneyEvents, ...formatedScheudleEvents];
+  const allEvents = [...formatedSpendingMoneyEvents];
 
   const calendarEvents = allEvents.filter((event) => {
     const {
@@ -112,6 +86,19 @@ const useCalendarEvents: TCalendarEvents = (date) => {
   });
 
   return calendarEvents;
+
+  // const { data: scheduleEvents } = useGetScheduleQuery({
+  //   year,
+  //   month,
+  // });
+
+  // const formatedScheudleEvents: TFormatScheduleEvents[] =
+  //   scheduleEvents?.map((event) => ({
+  //     ...event,
+  //     type: 'schedule',
+  //   })) ?? [];
+
+  // const allEvents = [...formatedSpendingMoneyEvents, ...formatedScheudleEvents];
 };
 
 export default useCalendarEvents;

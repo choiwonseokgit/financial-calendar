@@ -1,14 +1,13 @@
 import {
-  useLazyGetScheduleQuery,
+  // useLazyGetScheduleQuery,
   useLazyGetSpendingMoneyQuery,
 } from '@store/query/calendar-query';
 import { useLazyGetHolidayQuery } from '@store/query/holiday-query';
 import { format } from 'date-fns';
-
+//스케줄 이벤트 보류
 const useQuriesForDates = (dates: string[]) => {
   const [holidayTrigger] = useLazyGetHolidayQuery();
   const [spendingMoneyTrigger] = useLazyGetSpendingMoneyQuery();
-  const [scheduleTrigger] = useLazyGetScheduleQuery();
 
   const holidayQueries = dates.map((date) => {
     const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
@@ -20,12 +19,13 @@ const useQuriesForDates = (dates: string[]) => {
     return () => spendingMoneyTrigger({ year, month }, true).unwrap();
   });
 
-  const scheduelQueries = dates.map((date) => {
-    const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
-    return () => scheduleTrigger({ year, month }, true).unwrap();
-  });
+  return { holidayQueries, spendingMoneyQueries };
+  // const [scheduleTrigger] = useLazyGetScheduleQuery();
 
-  return { holidayQueries, spendingMoneyQueries, scheduelQueries };
+  // const scheduelQueries = dates.map((date) => {
+  //   const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
+  //   return () => scheduleTrigger({ year, month }, true).unwrap();
+  // });
 };
 
 export default useQuriesForDates;

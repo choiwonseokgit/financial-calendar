@@ -40,8 +40,6 @@ function Calendar({
   onNavigate,
   onChangeView,
 }: CalendarProps) {
-  // TODO: 렌더링 개선하기, 렌더링 많이 일어남
-  // console.log('렌더링');
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const formatSpendingMoneyEvents = useCalendarEvents(date);
@@ -71,36 +69,6 @@ function Calendar({
     (state) => state.calendarOption,
   );
 
-  // const handleSelectEvent = (event: (typeof EVENTS)[0]) => {
-  //   const {
-  //     start,
-  //     end,
-  //     resource: { type },
-  //   } = event;
-  //   if (start && end) {
-  //     if (calDateAndMakeStr(start) !== calDateAndMakeStr(end)) {
-  //       const dates = eachDayOfInterval({ start, end }).map((date) =>
-  //         calDateAndMakeStr(date),
-  //       );
-  //       // console.log(start, end);
-  //       console.log(dates);
-  //     }
-  //   }
-
-  //   if (type === 'schedule' && view === 'month') {
-  //     onNavigate(event.start, idx, view);
-  //     dispatch(select(format(event.start, 'yyyy/MM/dd')));
-  //     onChangeView('day');
-  //     //TODO: day 뷰에서 선택하면 삭제하거나 편집할 수 있게끔하기
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   onFlicking(view);
-  // }, [view]);
-
-  //TODO: useEffect 써서 filtering 하기
-
   return (
     <S.Container $isSpendingMoneyVisible={isSpendingMoneyVisible}>
       <BigCalendar<TFormatCalendarEvents>
@@ -113,21 +81,9 @@ function Calendar({
         onView={onChangeView}
         showAllEvents={true}
         toolbar={false}
-        // events={view === 'day' ? FILTERED_EVENT : EVENTS}
         events={formatSpendingMoneyEvents}
         eventPropGetter={eventPropGetter}
         onSelectEvent={handleSelectEvent}
-        // onShowMore={(dates) => {
-        //   console.log(dates);
-        //   dispatch(select(format(dates[0].start, 'yyyy/MM/dd')));
-        // }}
-        // selectable
-        // onSelectSlot={({ start, action }) => {
-        //   if (action === 'click') {
-        //     dispatch(select(format(start, 'yyyyMMdd')));
-        //   } else return;
-        // }}
-        // titleAccessor={'spentMoney'}
         startAccessor={'startDate'}
         endAccessor={'endDate'}
         components={{
@@ -136,6 +92,17 @@ function Calendar({
             dateHeader: MyDateHeader,
             event: MyEvent,
           },
+          // events={view === 'day' ? FILTERED_EVENT : EVENTS}
+          // onShowMore={(dates) => {
+          //   console.log(dates);
+          //   dispatch(select(format(dates[0].start, 'yyyy/MM/dd')));
+          // }}
+          // selectable
+          // onSelectSlot={({ start, action }) => {
+          //   if (action === 'click') {
+          //     dispatch(select(format(start, 'yyyyMMdd')));
+          //   } else return;
+          // }}
         }}
       />
     </S.Container>

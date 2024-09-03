@@ -1,4 +1,5 @@
 import KakaoIcon from '@assets/icons/kakao.svg';
+import { SERVER_URL } from '@constants/url';
 import styled from 'styled-components';
 
 function Login() {
@@ -7,14 +8,14 @@ function Login() {
       'https://kauth.kakao.com/oauth/authorize?client_id=' +
       process.env.REACT_APP_KAKAO_LOGIN_CLIENT_ID +
       '&redirect_uri=' +
-      encodeURIComponent(`${process.env.REACT_APP_SERVER}/oauth/kakao`) +
+      encodeURIComponent(`${SERVER_URL}/oauth/kakao`) +
       '&response_type=code';
   };
 
   return (
     <S.Container>
       <S.Title>💸financial-calendar📆</S.Title>
-      <S.Description>목표를 설정하고 꾸준하게 기록해 보세요!</S.Description>
+      <S.Description>목표금액을 설정하고 꾸준하게 기록해 보세요!</S.Description>
       <S.KakaoBtn onClick={handleLoginBtnClick}>
         <S.Img src={KakaoIcon} alt="카카오" />
         <S.Label>카카오로 시작하기</S.Label>

@@ -57,8 +57,6 @@ function DateSelectModal({
     day,
   });
 
-  // console.log(onCalendarDatesInit);
-
   const handleSubmit = () => {
     const { year, month, day } = selectingDate;
     const selectedDate = `${year}/${month}/${day}`;

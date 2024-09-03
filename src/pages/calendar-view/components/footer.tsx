@@ -19,7 +19,6 @@ interface FooterProps {
 const variants = {
   open: { opacity: 1, y: 0 },
   closed: { opacity: 0, y: '50%' },
-  // closed: { opacity: 1, y: 'calc(150% + 6px)' },
 };
 
 function Footer({ date }: FooterProps) {
@@ -116,9 +115,10 @@ function Footer({ date }: FooterProps) {
           )}
 
           <div ref={ref} style={{ position: 'relative' }}>
-            <S.PlusBtn onClick={() => setIsOpen(!isOpen)}>
+            <S.PlusBtn onClick={() => handleNavigate('spending-form')}>
               <S.PlusImg src={plusIcon} alt="추가" />
             </S.PlusBtn>
+            {/* 스케줄 작성 폼 보류 */}
             <S.BtnsBox
               animate={isOpen ? 'open' : 'closed'}
               variants={variants}

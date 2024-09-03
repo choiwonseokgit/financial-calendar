@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import CloseIcon from '@assets/icons/xmark-solid.svg';
+import { SERVER_URL } from '@constants/url';
 import useOutsideClickForAnimation from '@hooks/use-outside-click-for-animation';
 import { CALENDAR_CHECK_LIST } from '@pages/calendar-view/constants';
 import { useAppDispatch } from '@store/hooks';
@@ -25,7 +26,7 @@ function SideBar({ onSideBarBtnClick }: SideBarProps) {
       'https://kauth.kakao.com/oauth/logout?client_id=' +
       process.env.REACT_APP_KAKAO_LOGIN_CLIENT_ID +
       '&logout_redirect_uri=' +
-      encodeURIComponent(`${process.env.REACT_APP_SERVER}/oauth/kakao/logout`);
+      encodeURIComponent(`${SERVER_URL}/oauth/kakao/logout`);
   };
 
   return (
