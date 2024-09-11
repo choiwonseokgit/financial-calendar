@@ -21,17 +21,11 @@ function SpendingDetail() {
     locale: ko,
   });
 
-  //const formatTotal = parseIntAndMakeLocaleKR(total);
-
   const targetId = format(startDate, 'yyyy/MM/dd');
 
   const targetEvents = spendingEvents.find((event) => event.id === targetId);
 
-  // console.log(targetEvents);
-
   const total = targetEvents && parseIntAndMakeLocaleKR(targetEvents.total);
-
-  // console.log(events);
 
   return (
     <SpendingPageContainer type="SpendingDetail" date={date}>

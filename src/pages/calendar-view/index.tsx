@@ -202,17 +202,6 @@ function CalendarView() {
     });
   };
 
-  //Calendar
-  // const handleFlicking = useCallback((view: Partial<View>) => {
-  //   if (view !== 'month') {
-  //     console.log('disable');
-  //     flickingRef.current?.disableInput();
-  //   } else {
-  //     console.log('enable');
-  //     flickingRef.current?.enableInput();
-  //   }
-  // }, []);
-
   const handleNavigate = useCallback((date: Date, idx: number, view: View) => {
     const dateStr = formatISO(date);
     calendarDatesDispatch({ type: 'INIT', idx, date: dateStr, view });

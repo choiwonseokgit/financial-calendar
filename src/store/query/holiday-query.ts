@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
-const OPEN_API_KEY = process.env.REACT_APP_OPEN_API_KEY;
+import { createApi } from '@reduxjs/toolkit/query/react';
+import axiosBaseQuery from './axios-base-query';
 
 interface Holiday {
   dateKind: string;
@@ -12,24 +11,22 @@ interface Holiday {
 }
 
 export interface HolidayResponse {
-  item: Holiday | Holiday[];
+  holidays: Holiday | Holiday[] | null;
 }
 
 export const holidayApi = createApi({
   reducerPath: 'holidayApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: `https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${OPEN_API_KEY}&`,
-  }),
+  baseQuery: axiosBaseQuery(),
   endpoints: (builder) => ({
-    getHoliday: builder.query<
-      HolidayResponse | string,
-      { year: string; month: string }
-    >({
-      query: ({ year, month }) =>
-        `&solYear=${year}&solMonth=${month}&_type=json`,
-      transformResponse: (data: any) => data.response.body.items,
-      keepUnusedDataFor: Infinity, //기본 60초
-    }),
+    getHoliday: builder.query<HolidayResponse, { year: string; month: string }>(
+      {
+        query: ({ year, month }) => ({
+          url: `/holidays?month=${month}&year=${year}`,
+          method: 'get',
+        }),
+        keepUnusedDataFor: Infinity, //기본 60초
+      },
+    ),
   }),
 });
 
