@@ -10,8 +10,6 @@ interface TimeSelectProps {
 function TimeSelect({ time, onScheduleTimeChange }: TimeSelectProps) {
   const [isTimeSelectModalOpen, setIsTimeSelectModalOpen] = useState(false);
 
-  console.log(time);
-
   return (
     <>
       {isTimeSelectModalOpen && (

@@ -51,7 +51,6 @@ function ScheduleForm() {
   const defaultTime = format(new Date(), 'a hh:mm', { locale: ko });
   const dispatch = useAppDispatch();
   const pageTransition = usePageTransition();
-  // console.log(defaultTime);
   const [schedule, scheduleDispatch] = useReducer(reducer, {
     title: '',
     color: '#9DD87E',

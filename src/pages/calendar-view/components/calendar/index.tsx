@@ -60,7 +60,6 @@ function Calendar({
   });
 
   const handleSelectEvent = (event: TFormatCalendarEvents) => {
-    // console.log(event);
     dispatch(changeTransitionDirection('next'));
     navigate('/spending-detail', { state: event });
   };

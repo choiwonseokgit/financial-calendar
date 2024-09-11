@@ -10,8 +10,6 @@ interface DateSelectProps {
 function DateSelect({ date, onScheduleDateChange }: DateSelectProps) {
   const [isDateSelectModalOpen, setIsDateSelectModalOpen] = useState(false);
 
-  console.log(onScheduleDateChange);
-
   return (
     <>
       {isDateSelectModalOpen && (
