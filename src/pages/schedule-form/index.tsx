@@ -71,7 +71,7 @@ function ScheduleForm() {
   const [postSchedule] = usePostScheduleMutation();
 
   const moveBack = () => {
-    dispatch(changeTransitionDirection('prev'));
+    dispatch(changeTransitionDirection('left'));
     navigate(-1);
   };
 

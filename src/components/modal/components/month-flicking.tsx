@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import FlickingContainer from '../../components/flicking-container';
+import FlickingContainer from './flicking-container';
 
 interface MonthFlickingProps {
   currSelectMonth: string;

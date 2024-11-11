@@ -1,15 +1,22 @@
 import { useState } from 'react';
 import BarIcon from '@assets/icons/bars-solid.svg';
 import CalendarIcon from '@assets/icons/calendar-days-solid.svg';
+import chartIcon from '@assets/icons/chart-pie-solid.svg';
 import chevronLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
 import chevronRightIcon from '@assets/icons/chevron-right-solid-green.svg';
 import DateSelectModal from '@components/modal/date-select-modal';
 import useGetHolidayTitle from '@hooks/use-get-holiday-title';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
+import {
+  changeChartDate,
+  changeChartDateType,
+} from '@store/slices/chart-slice';
 import { select } from '@store/slices/selected-date-slice';
+import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { View } from 'react-big-calendar';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import SpendingNotice from './components/spending-notice';
 
@@ -38,6 +45,8 @@ function NavBar({
   const { spendingMoney: isSpendingMoneyVisible } = useAppSelector(
     (state) => state.calendarOption,
   );
+  const selectedDate = useAppSelector((state) => state.selectedDate);
+  const navigate = useNavigate();
 
   const formatedDate = format(
     date,
@@ -47,13 +56,20 @@ function NavBar({
     },
   );
 
-  const currDate = format(new Date(), 'M월 d일 EEEE', {
+  const currDate = format(new Date(), 'yyyy/M/dd', {
     locale: ko,
   });
 
   const handleTodayBtnClick = () => {
     onTodayChange();
     dispatch(select(format(new Date(), 'yyyy/MM/dd')));
+  };
+
+  const handleChartImgBtnClick = () => {
+    dispatch(changeTransitionDirection('left'));
+    dispatch(changeChartDate(date));
+    dispatch(changeChartDateType('MONTH'));
+    navigate('/chart');
   };
 
   return (
@@ -67,42 +83,47 @@ function NavBar({
           }}
         />
       )}
-      <S.LeftBox>
-        <S.DateBox>
-          <button
-            onClick={() => {
-              onArrowBtnClick('PREV', view);
-              //dispatch(prevDay());
-            }}
-          >
-            <S.ChevronImg src={chevronLeftIcon} alt="이전" />
-          </button>
-          <S.Date>
-            <div onClick={() => setIsDateSelectModalOpen(true)}>
-              {formatedDate}
-            </div>
-            {isSpendingMoneyVisible && <SpendingNotice date={date} />}
-            <S.Holiday>{view === 'day' && holidayTitle}</S.Holiday>
-          </S.Date>
-          <button
-            onClick={() => {
-              onArrowBtnClick('NEXT', view);
-              //dispatch(nextDay());
-            }}
-          >
-            <S.ChevronImg src={chevronRightIcon} alt="다음" />
-          </button>
-        </S.DateBox>
-        {formatedDate !== currDate && (
+      {isSpendingMoneyVisible ? (
+        <button
+          onClick={handleChartImgBtnClick}
+        >
+          <S.ChartImg src={chartIcon} alt="chart" />
+        </button>
+      ) : (
+        <div />
+      )}
+      <S.DateBox>
+        <button
+          onClick={() => {
+            onArrowBtnClick('PREV', view);
+            //dispatch(prevDay());
+          }}
+        >
+          <S.ChevronImg src={chevronLeftIcon} alt="이전" />
+        </button>
+        <S.DateBtn onClick={() => setIsDateSelectModalOpen(true)}>
+          <div>{formatedDate}</div>
+          {isSpendingMoneyVisible && <SpendingNotice date={date} />}
+          <S.Holiday>{view === 'day' && holidayTitle}</S.Holiday>
+        </S.DateBtn>
+        <button
+          onClick={() => {
+            onArrowBtnClick('NEXT', view);
+            //dispatch(nextDay());
+          }}
+        >
+          <S.ChevronImg src={chevronRightIcon} alt="다음" />
+        </button>
+      </S.DateBox>
+      {view === 'day' && (
+        <S.MonthBtn onClick={onMonthBtnClick}>
+          <S.Calendarimg src={CalendarIcon} alt="달력" />
+        </S.MonthBtn>
+      )}
+      <S.RightBox>
+        {selectedDate !== currDate && (
           <S.TodayBtn onClick={handleTodayBtnClick}>오늘</S.TodayBtn>
         )}
-        {view === 'day' && (
-          <S.MonthBtn onClick={onMonthBtnClick}>
-            <S.Calendarimg src={CalendarIcon} alt="달력" />
-          </S.MonthBtn>
-        )}
-      </S.LeftBox>
-      <S.RightBox>
         <button onClick={() => onSideBarBtnClick(true)}>
           <S.BarImg src={BarIcon} alt="메뉴바" />
         </button>
@@ -120,37 +141,38 @@ const S = {
     align-items: center;
     height: 12dvh;
     max-height: 100px;
-    /* background-color: #dbede8; */
     background-color: var(--green02);
     color: var(--green04);
     position: relative;
-    /* background-color: #318c74; */
-    /* color: white; */
+    padding-left: 15px;
     padding-right: 15px;
   `,
-  LeftBox: styled.div`
-    flex-grow: 1;
-    display: flex;
-    position: relative;
-    align-items: center;
+  ChartImg: styled.img`
+    width: 20px;
+    height: 20px;
+  `,
+  DateBox: styled.div`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     &:hover img {
       opacity: 1;
     }
-    /* background-color: red; */
-  `,
-  DateBox: styled.div`
     display: flex;
+    justify-content: center;
     gap: 5px;
   `,
-  Date: styled.div`
-    /* background-color: green; */
+  DateBtn: styled.button`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: relative;
     font-size: 25px;
     font-weight: bold;
     cursor: pointer;
   `,
   TodayBtn: styled.button`
-    position: absolute;
     left: 60%;
     width: 30px;
     height: 30px;
@@ -184,6 +206,7 @@ const S = {
     gap: 20px;
   `,
   RightBox: styled.div`
+    gap: 20px;
     display: flex;
     align-items: center;
   `,

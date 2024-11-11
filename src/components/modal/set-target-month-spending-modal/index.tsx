@@ -8,7 +8,7 @@ import {
 } from '@store/query/calendar-query';
 import { format } from 'date-fns';
 import styled from 'styled-components';
-import Modal from '../modal';
+import Modal from '../components/modal';
 
 interface SetTargetSpendingModalProps {
   onClose: () => void;

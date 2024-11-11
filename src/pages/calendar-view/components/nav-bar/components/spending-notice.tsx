@@ -49,16 +49,9 @@ export default SpendingNotice;
 
 const S = {
   Container: styled.div`
-    position: absolute;
-    display: flex;
-    /* justify-content: center; */
     font-size: 13px;
     font-weight: normal;
-    /* background-color: red; */
     width: 100%;
-
-    left: 50%;
-    transform: translate(-50%);
     white-space: nowrap;
   `,
   Notice: styled.span<{ $color: string }>`

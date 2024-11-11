@@ -1,3 +1,4 @@
+import InitialSpending from '@components/initial-spending';
 import SpendingPageContainer from '@components/spending-page-container';
 import useCalendarEvents, {
   TFormatCalendarEvents,
@@ -8,7 +9,6 @@ import { format, parseISO } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import InitialSpending from './components/initial-spending';
 
 function SpendingDetail() {
   const location = useLocation();
@@ -67,6 +67,5 @@ const S = {
     font-size: 20px;
     color: var(--green05);
     flex-grow: 1;
-    /* background-color: red; */
   `,
 };

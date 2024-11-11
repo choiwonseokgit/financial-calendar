@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import Flicking, { MoveEndEvent } from '@egjs/react-flicking';
 import usePageTransition from '@hooks/use-page-transition';
-import { useAppSelector } from '@store/hooks';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
 import {
   nextDay,
   nextMonth,
@@ -12,7 +12,6 @@ import calDateAndMakeStr from '@utils/cal-date-and-make-str';
 import { formatISO, parse } from 'date-fns';
 import { motion } from 'framer-motion';
 import { View } from 'react-big-calendar';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import Calendar from './components/calendar/index';
 import Footer from './components/footer';
@@ -128,7 +127,7 @@ function CalendarView() {
     calDateAndMakeStr(new Date(), 1),
   ]);
   const selectedDates = useAppSelector((state) => state.selectedDate);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [view, setView] = useState<View>('month');
   const [currIdx, setCurrIdx] = useState(1);
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);

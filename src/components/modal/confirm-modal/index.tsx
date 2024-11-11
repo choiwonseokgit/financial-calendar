@@ -3,7 +3,7 @@ import {
   TConfirmModalMessages,
 } from '@constants/modal';
 import styled from 'styled-components';
-import Modal from '../modal';
+import Modal from '../components/modal';
 
 interface ConfirmModalProps {
   onClose: () => void;

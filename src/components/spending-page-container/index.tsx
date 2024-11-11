@@ -34,7 +34,7 @@ function SpendingPageContainer(props: SpendingPageContainerProps) {
   const [touchX, setTouchX] = useState(0);
 
   const moveBack = () => {
-    dispatch(changeTransitionDirection('prev'));
+    dispatch(changeTransitionDirection('left'));
     navigate(-1);
   };
   const pageTransition = usePageTransition();

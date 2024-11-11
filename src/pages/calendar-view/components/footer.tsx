@@ -37,7 +37,7 @@ function Footer({ date }: FooterProps) {
     useState<TSetTargetSpendingModal>('setTargetSpending');
 
   const handleNavigate = (page: 'schedule-form' | 'spending-form') => {
-    dispatch(changeTransitionDirection('next'));
+    dispatch(changeTransitionDirection('right'));
     navigate(`/${page}`);
   };
 

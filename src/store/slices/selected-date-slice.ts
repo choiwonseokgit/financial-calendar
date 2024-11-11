@@ -5,7 +5,7 @@ import type { RootState } from '@store/index';
 const initialState = format(new Date(), 'yyyy/MM/dd');
 
 export const selectedDateSlice = createSlice({
-  name: 'view',
+  name: 'selectedDate',
   initialState,
   reducers: {
     select: (_, action: PayloadAction<string>) => {

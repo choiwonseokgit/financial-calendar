@@ -39,11 +39,31 @@ export interface spendingMoneyApiResponse {
   total: number;
 }
 
+export interface spendingMoneyForChartApiResponse {
+  spendingMoneysForChart: [string, string, TSpendingMoney[]][];
+  total: number;
+}
+
 export const calendarApi = createApi({
   reducerPath: 'calendarApi',
   baseQuery: axiosBaseQuery({ baseUrl: '' }),
-  tagTypes: ['SpendingMoney', 'Schedule'],
+  tagTypes: ['SpendingMoney', 'Schedule', 'Chart'],
   endpoints: (builder) => ({
+    /****************spending-money/chart*******************/
+    getSpendingMoneyForChart: builder.query<
+      spendingMoneyForChartApiResponse,
+      { year: string; month: string | null }
+    >({
+      query: ({ month, year }) => ({
+        url: `/spending-moneys/chart?month=${month}&year=${year}`,
+        method: 'get',
+      }),
+      providesTags: (result, error, { year, month }) => [
+        { type: 'Chart', id: `${year}/${month}` },
+      ],
+      keepUnusedDataFor: Infinity,
+    }),
+
     /****************spending-money*******************/
     getSpendingMoney: builder.query<
       spendingMoneyApiResponse,
@@ -71,9 +91,15 @@ export const calendarApi = createApi({
       invalidatesTags: (result, error, { date }) => {
         if (date) {
           const { year, month } = getYearMonthFromISO(date);
-          return [{ type: 'SpendingMoney', id: `${year}/${month}` }];
+          return [
+            { type: 'SpendingMoney', id: `${year}/${month}` },
+            {
+              type: 'Chart',
+              id: `${year}/${month}`,
+            },
+          ];
         }
-        return ['SpendingMoney'];
+        return ['SpendingMoney', 'Chart'];
       },
     }),
 
@@ -89,9 +115,15 @@ export const calendarApi = createApi({
       invalidatesTags: (result, error, { date }) => {
         if (date) {
           const { year, month } = getYearMonthFromISO(date);
-          return [{ type: 'SpendingMoney', id: `${year}/${month}` }];
+          return [
+            { type: 'SpendingMoney', id: `${year}/${month}` },
+            {
+              type: 'Chart',
+              id: `${year}/${month}`,
+            },
+          ];
         }
-        return ['SpendingMoney'];
+        return ['SpendingMoney', 'Chart'];
       },
     }),
 
@@ -107,13 +139,19 @@ export const calendarApi = createApi({
       invalidatesTags: (result, error, { date }) => {
         if (date) {
           const { year, month } = getYearMonthFromISO(date);
-          return [{ type: 'SpendingMoney', id: `${year}/${month}` }];
+          return [
+            { type: 'SpendingMoney', id: `${year}/${month}` },
+            {
+              type: 'Chart',
+              id: `${year}/${month}`,
+            },
+          ];
         }
-        return ['SpendingMoney'];
+        return ['SpendingMoney', 'Chart'];
       },
     }),
 
-    /****************tartget-month-spending*******************/
+    /****************target-month-spending*******************/
     postTargetMonthSpending: builder.mutation<
       TTargetMonthSpending,
       {
@@ -196,6 +234,7 @@ export const calendarApi = createApi({
 });
 
 export const {
+  useGetSpendingMoneyForChartQuery,
   useGetSpendingMoneyQuery,
   useLazyGetSpendingMoneyQuery,
   usePostSpendingMoneyMutation,

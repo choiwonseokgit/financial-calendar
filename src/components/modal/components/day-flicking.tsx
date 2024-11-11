@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getDaysInMonth } from 'date-fns';
-import FlickingContainer from '../../components/flicking-container';
+import FlickingContainer from './flicking-container';
 
 interface DayFlickingProps {
   currSelectYear: string;

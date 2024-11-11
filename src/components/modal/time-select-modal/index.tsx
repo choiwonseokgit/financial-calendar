@@ -2,7 +2,7 @@ import { useReducer } from 'react';
 import { format, parse } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import styled from 'styled-components';
-import Modal from '../modal';
+import Modal from '../components/modal';
 import HourFlicking from './components/hour-flicking';
 import MinuteFlicking from './components/minute-flicking';
 
