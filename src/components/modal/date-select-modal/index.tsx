@@ -1,14 +1,13 @@
 import { useReducer } from 'react';
-import { useAppSelector } from '@store/hooks';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
 import { select } from '@store/slices/selected-date-slice';
 import calDateAndMakeStr from '@utils/cal-date-and-make-str';
 import { parse } from 'date-fns';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import Modal from '../modal';
-import DayFlicking from './components/day-flicking';
-import MonthFlicking from './components/month-flicking';
-import YearFlicking from './components/year-flicking';
+import DayFlicking from '../components/day-flicking';
+import Modal from '../components/modal';
+import MonthFlicking from '../components/month-flicking';
+import YearFlicking from '../components/year-flicking';
 
 interface TSelectingDate {
   year: string;
@@ -47,7 +46,7 @@ function DateSelectModal({
   cb = null,
 }: DateSelectModalProps) {
   const selectedDate = useAppSelector((state) => state.selectedDate);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [year, month, day] = (defaultDate ? defaultDate : selectedDate).split(
     '/',
   );

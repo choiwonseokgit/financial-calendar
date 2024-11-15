@@ -9,6 +9,7 @@ export const MODAL_TITLE = {
   confirm: '확인',
   delete: '삭제',
   date: '날짜 선택',
+  chart: '차트 날짜 선택',
   time: '시간 선택',
   setTargetSpending: '목표 지출 설정',
   editTargetSpending: '목표 지출 수정',

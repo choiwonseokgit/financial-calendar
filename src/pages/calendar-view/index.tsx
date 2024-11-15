@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import Flicking, { MoveEndEvent } from '@egjs/react-flicking';
 import usePageTransition from '@hooks/use-page-transition';
-import { useAppSelector } from '@store/hooks';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
 import {
   nextDay,
   nextMonth,
@@ -12,14 +12,12 @@ import calDateAndMakeStr from '@utils/cal-date-and-make-str';
 import { formatISO, parse } from 'date-fns';
 import { motion } from 'framer-motion';
 import { View } from 'react-big-calendar';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import Calendar from './components/calendar/index';
 import Footer from './components/footer';
 import NavBar from './components/nav-bar';
 import SideBar from './components/side-bar/index';
 import '@egjs/react-flicking/dist/flicking.css';
-import useQuriesForDates from './hooks/use-quries-for-dates';
 
 type TCalendarDates = string[];
 
@@ -128,7 +126,7 @@ function CalendarView() {
     calDateAndMakeStr(new Date(), 1),
   ]);
   const selectedDates = useAppSelector((state) => state.selectedDate);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [view, setView] = useState<View>('month');
   const [currIdx, setCurrIdx] = useState(1);
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
@@ -214,27 +212,6 @@ function CalendarView() {
     [setView],
   );
 
-  //useEffect
-  const { holidayQueries, spendingMoneyQueries } =
-    useQuriesForDates(calendarDates);
-
-  // 공휴일 및 지출금액 API fetch
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // 공휴일과 지출금액 쿼리를 모두 결합하여 실행
-        await Promise.all([
-          ...holidayQueries.map((query) => query()),
-          ...spendingMoneyQueries.map((query) => query()),
-        ]);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchData();
-  }, [calendarDates]);
-
   //view change
   useEffect(() => {
     if (view === 'month') {
@@ -296,7 +273,6 @@ function CalendarView() {
                 view={view}
                 onNavigate={handleNavigate}
                 onChangeView={handleChangeView}
-                // onFlicking={handleFlicking}
               />
             </S.Section>
           ))}

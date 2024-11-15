@@ -1,8 +1,8 @@
 import { PropsWithChildren, useRef } from 'react';
 import Flicking, { ViewportSlot } from '@egjs/react-flicking';
 import styled from 'styled-components';
-import useScrollEvent from './hooks/use-scroll-event';
-import updateFlickingTransform from './utils/update-flicking-transform';
+import useScrollEvent from '../hooks/use-scroll-event';
+import updateFlickingTransform from '../utils/update-flicking-transform';
 
 interface FlickingContainerProps extends PropsWithChildren {
   defaultIdx: number;

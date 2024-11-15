@@ -8,13 +8,15 @@ import { useGetUserQuery } from '@store/query/user-query';
 import { logout } from '@store/slices/login-check-slice';
 import styled, { keyframes } from 'styled-components';
 import CheckList from './components/check-list';
+import UserInfoSkeleton from './components/skeleton/user-info-skeleton';
+import UserNameSkeleton from './components/skeleton/user-name-skeleton';
 
 interface SideBarProps {
   onSideBarBtnClick: (isOpen: boolean) => void;
 }
 
 function SideBar({ onSideBarBtnClick }: SideBarProps) {
-  const { data: user } = useGetUserQuery();
+  const { data: user, isLoading } = useGetUserQuery();
   const dispatch = useAppDispatch();
   const ref = useRef<HTMLDivElement>(null);
   const { isCloseAnimStart, handleCloseAnimStart } =
@@ -33,10 +35,14 @@ function SideBar({ onSideBarBtnClick }: SideBarProps) {
     <S.Background $isCloseAnimStart={isCloseAnimStart}>
       <S.SideBarBox $isCloseAnimStart={isCloseAnimStart} ref={ref}>
         <S.Header>
-          <S.UserInfo>
-            <S.ProfileImg src={user?.profileImage} alt="profileImage" />
-            <S.Name>{user?.nickname}</S.Name>
-          </S.UserInfo>
+          {isLoading ? (
+            <UserInfoSkeleton />
+          ) : (
+            <S.UserInfo>
+              <S.ProfileImg src={user?.profileImage} alt="profileImage" />
+              <S.Name>{user?.nickname}</S.Name>
+            </S.UserInfo>
+          )}
           <button onClick={handleCloseAnimStart}>
             <S.CloseImg src={CloseIcon} alt="닫기" />
           </button>
@@ -50,7 +56,11 @@ function SideBar({ onSideBarBtnClick }: SideBarProps) {
         {/* <S.MoreInfo>더 보기</S.MoreInfo> */}
         <S.LogoutBtn onClick={handleLogout}>
           <div>로그아웃</div>
-          <S.Email>{user?.nickname}</S.Email>
+          {isLoading ? (
+            <UserNameSkeleton />
+          ) : (
+            <S.Email>{user?.nickname}</S.Email>
+          )}
         </S.LogoutBtn>
       </S.SideBarBox>
     </S.Background>

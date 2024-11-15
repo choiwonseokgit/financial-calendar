@@ -30,4 +30,4 @@ export const holidayApi = createApi({
   }),
 });
 
-export const { useGetHolidayQuery, useLazyGetHolidayQuery } = holidayApi;
+export const { useGetHolidayQuery } = holidayApi;

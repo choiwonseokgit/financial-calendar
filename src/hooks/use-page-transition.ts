@@ -4,9 +4,9 @@ const usePageTransition = () => {
   const { direction } = useAppSelector((state) => state.transitionDirection);
 
   const pageTransition = {
-    initial: direction === 'next' ? { x: '100%' } : { x: '-100%' },
+    initial: direction === 'right' ? { x: '100%' } : { x: '-100%' },
     animate: { x: 0 },
-    exit: direction === 'next' ? { x: '-100%' } : { x: '100%' },
+    exit: direction === 'right' ? { x: '-100%' } : { x: '100%' },
     transition: {
       duration: 0.3,
     },

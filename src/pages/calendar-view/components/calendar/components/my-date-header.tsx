@@ -31,7 +31,7 @@ function MyDateHeader({ date, label }: DateHeaderProps) {
   );
 }
 
-export default React.memo(MyDateHeader);
+export default MyDateHeader;
 
 const S = {
   Container: styled.div<{ $isHoliday: boolean }>`

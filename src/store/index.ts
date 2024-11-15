@@ -6,6 +6,7 @@ import { calendarApi } from './query/calendar-query';
 import { holidayApi } from './query/holiday-query';
 import { userApi } from './query/user-query';
 import calendarOptionReducer from './slices/calendar-option-slice';
+import chartReducer from './slices/chart-slice';
 import datesReducer from './slices/datesSlice';
 import loginCheckReducer from './slices/login-check-slice';
 import selectedDateReducer from './slices/selected-date-slice';
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   calendarOption: calendarOptionReducer,
   transitionDirection: transitionDirectionReducer,
   loginCheck: loginCheckReducer,
+  chart: chartReducer,
   [holidayApi.reducerPath]: holidayApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
   [calendarApi.reducerPath]: calendarApi.reducer,

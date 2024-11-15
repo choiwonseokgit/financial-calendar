@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import FlickingContainer from '@components/modal/flicking-container';
+import FlickingContainer from '@components/modal/components/flicking-container';
 
 interface MinuteFlickingProps {
   currSelectMinute: string;

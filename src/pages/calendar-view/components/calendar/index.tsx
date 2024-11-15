@@ -60,7 +60,7 @@ function Calendar({
   });
 
   const handleSelectEvent = (event: TFormatCalendarEvents) => {
-    dispatch(changeTransitionDirection('next'));
+    dispatch(changeTransitionDirection('right'));
     navigate('/spending-detail', { state: event });
   };
 
@@ -117,12 +117,8 @@ const S = {
       height: 88dvh;
       height: ${({ $isSpendingMoneyVisible }) =>
         $isSpendingMoneyVisible ? '73dvh' : '88dvh'};
-      /* max-height: 88dvh; */
-      max-height: 800px;
+      /* max-height: 800px; */
     }
-    /* .rbc-selected-cell {
-      background-color: white;
-    } */
     .rbc-label {
       /* color: #5ca08f; */
     }

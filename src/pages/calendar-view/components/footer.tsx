@@ -37,7 +37,7 @@ function Footer({ date }: FooterProps) {
     useState<TSetTargetSpendingModal>('setTargetSpending');
 
   const handleNavigate = (page: 'schedule-form' | 'spending-form') => {
-    dispatch(changeTransitionDirection('next'));
+    dispatch(changeTransitionDirection('right'));
     navigate(`/${page}`);
   };
 
@@ -92,27 +92,27 @@ function Footer({ date }: FooterProps) {
                 <S.MoneyTag $color={'blue'}>{remainSpending}원</S.MoneyTag>
               </div>
             )}
+            {targetMonthSpending && (
+              <S.EditDeleteBtnBox>
+                <S.SetTargetSpendBtn
+                  onClick={() => {
+                    setModalType('editTargetSpending');
+                    setIsSetTargetSpendingModalOpen(true);
+                  }}
+                >
+                  ✏️목표 수정
+                </S.SetTargetSpendBtn>
+                <S.SetTargetSpendBtn
+                  onClick={() => {
+                    setModalType('deleteTargetSpending');
+                    setIsSetTargetSpendingModalOpen(true);
+                  }}
+                >
+                  ❌목표 삭제
+                </S.SetTargetSpendBtn>
+              </S.EditDeleteBtnBox>
+            )}
           </S.Notice>
-          {targetMonthSpending && (
-            <S.EditDeleteBtnBox>
-              <S.SetTargetSpendBtn
-                onClick={() => {
-                  setModalType('editTargetSpending');
-                  setIsSetTargetSpendingModalOpen(true);
-                }}
-              >
-                ✏️목표 수정
-              </S.SetTargetSpendBtn>
-              <S.SetTargetSpendBtn
-                onClick={() => {
-                  setModalType('deleteTargetSpending');
-                  setIsSetTargetSpendingModalOpen(true);
-                }}
-              >
-                ❌목표 삭제
-              </S.SetTargetSpendBtn>
-            </S.EditDeleteBtnBox>
-          )}
 
           <div ref={ref} style={{ position: 'relative' }}>
             <S.PlusBtn onClick={() => handleNavigate('spending-form')}>
@@ -167,11 +167,13 @@ const S = {
     font-size: 15px;
   `,
   Notice: styled.div`
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 5px;
     color: var(--green04);
+    position: relative;
   `,
   MoneyTag: styled.span<{ $color: string }>`
     color: ${({ $color }) => $color};
@@ -179,8 +181,9 @@ const S = {
   EditDeleteBtnBox: styled.div`
     display: flex;
     gap: 5px;
-    align-self: flex-start;
-    margin-top: 10px;
+    position: absolute;
+    top: -3.5px;
+    right: 0;
   `,
   SetTargetSpendBtn: styled.button`
     padding: 3px;
