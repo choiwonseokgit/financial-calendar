@@ -6,7 +6,7 @@ function MyMonthHeader({ label }: HeaderProps) {
   return <S.Container $label={label}>{label}</S.Container>;
 }
 
-export default React.memo(MyMonthHeader);
+export default MyMonthHeader;
 
 const S = {
   Container: styled.div<{ $label: string }>`

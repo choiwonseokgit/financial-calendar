@@ -84,9 +84,7 @@ function NavBar({
         />
       )}
       {isSpendingMoneyVisible ? (
-        <button
-          onClick={handleChartImgBtnClick}
-        >
+        <button onClick={handleChartImgBtnClick}>
           <S.ChartImg src={chartIcon} alt="chart" />
         </button>
       ) : (
@@ -140,7 +138,7 @@ const S = {
     justify-content: space-between;
     align-items: center;
     height: 12dvh;
-    max-height: 100px;
+    /* max-height: 100px; */
     background-color: var(--green02);
     color: var(--green04);
     position: relative;
