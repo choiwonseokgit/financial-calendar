@@ -236,7 +236,6 @@ export const calendarApi = createApi({
 export const {
   useGetSpendingMoneyForChartQuery,
   useGetSpendingMoneyQuery,
-  useLazyGetSpendingMoneyQuery,
   usePostSpendingMoneyMutation,
   useUpdateSpendingMoneyMutation,
   useDeleteSpendingMoneyMutation,
@@ -244,6 +243,5 @@ export const {
   useUpdateTargetMonthSpendingMutation,
   useDeleteTargetMonthSpendingMutation,
   useGetScheduleQuery,
-  useLazyGetScheduleQuery,
   usePostScheduleMutation,
 } = calendarApi;

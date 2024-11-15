@@ -18,7 +18,6 @@ import Footer from './components/footer';
 import NavBar from './components/nav-bar';
 import SideBar from './components/side-bar/index';
 import '@egjs/react-flicking/dist/flicking.css';
-import useQuriesForDates from './hooks/use-quries-for-dates';
 
 type TCalendarDates = string[];
 
@@ -213,27 +212,6 @@ function CalendarView() {
     [setView],
   );
 
-  //useEffect
-  const { holidayQueries, spendingMoneyQueries } =
-    useQuriesForDates(calendarDates);
-
-  // 공휴일 및 지출금액 API fetch
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // 공휴일과 지출금액 쿼리를 모두 결합하여 실행
-        await Promise.all([
-          ...holidayQueries.map((query) => query()),
-          ...spendingMoneyQueries.map((query) => query()),
-        ]);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchData();
-  }, [calendarDates]);
-
   //view change
   useEffect(() => {
     if (view === 'month') {
@@ -295,7 +273,6 @@ function CalendarView() {
                 view={view}
                 onNavigate={handleNavigate}
                 onChangeView={handleChangeView}
-                // onFlicking={handleFlicking}
               />
             </S.Section>
           ))}
