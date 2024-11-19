@@ -19,7 +19,7 @@ function Auth() {
     navigate(isLogin ? '/' : '/login');
   }, []);
 
-  return <S.Container {...pageTransition}>💸Loading...📆</S.Container>;
+  return <S.Container {...pageTransition}>💸Loading</S.Container>;
 }
 
 export default Auth;
@@ -34,5 +34,25 @@ const S = {
     color: var(--green04);
     font-size: 30px;
     background-color: var(--green02);
+
+    &::after {
+      content: '...📆';
+      animation: loading 1.5s infinite;
+    }
+
+    @keyframes loading {
+      0% {
+        content: '.📆';
+      }
+      33% {
+        content: '..📆';
+      }
+      66% {
+        content: '...📆';
+      }
+      100% {
+        content: '.📆';
+      }
+    }
   `,
 };

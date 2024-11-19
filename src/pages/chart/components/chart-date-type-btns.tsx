@@ -11,19 +11,24 @@ interface ChartDateTypeBtnsProps {
   isSelected: boolean;
   type: 'MONTH' | 'YEAR';
   title: string;
+  cb: () => void;
 }
 
 function ChartDateTypeBtns({
   isSelected,
   type,
   title,
+  cb,
 }: ChartDateTypeBtnsProps) {
   const dispatch = useAppDispatch();
 
   return (
     <S.Button
       $isSelected={isSelected}
-      onClick={() => dispatch(changeChartDateType(type))}
+      onClick={() => {
+        cb();
+        dispatch(changeChartDateType(type));
+      }}
     >
       {title}
     </S.Button>

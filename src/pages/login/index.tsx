@@ -42,6 +42,7 @@ const S = {
     margin-bottom: 10px;
   `,
   Description: styled.div`
+    font-family: 'Pretendard-login';
     color: var(--green05);
     margin-bottom: 20px;
   `,
@@ -55,8 +56,10 @@ const S = {
   `,
   Img: styled.img`
     width: 20px;
+    height: 18.45px;
   `,
   Label: styled.div`
+    font-family: 'Pretendard-login';
     position: absolute;
     top: 50%;
     left: 50%;

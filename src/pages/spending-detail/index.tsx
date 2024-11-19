@@ -1,4 +1,5 @@
 import InitialSpending from '@components/initial-spending';
+import LoadingSpinner from '@components/loading-spinner';
 import SpendingPageContainer from '@components/spending-page-container';
 import useCalendarEvents, {
   TFormatCalendarEvents,
@@ -13,7 +14,7 @@ import styled from 'styled-components';
 function SpendingDetail() {
   const location = useLocation();
   const { startDate }: TFormatCalendarEvents = location.state || {};
-  const calendarEvents = useCalendarEvents(startDate);
+  const { calendarEvents, isLoading } = useCalendarEvents(startDate);
 
   const spendingEvents = calendarEvents.filter(isSpendingEvent);
 
@@ -29,18 +30,22 @@ function SpendingDetail() {
 
   return (
     <SpendingPageContainer type="SpendingDetail" date={date}>
-      <S.Contents>
-        {targetEvents ? (
-          <>
-            <S.Total>금일 총 지출: {total}원</S.Total>
-            {targetEvents.detailEvents.map((event) => (
-              <InitialSpending key={event.id} spendingEvent={event} />
-            ))}
-          </>
-        ) : (
-          <S.Notice>금일 지출이 없습니다!</S.Notice>
-        )}
-      </S.Contents>
+      {isLoading ? (
+        <LoadingSpinner height="100dvh" />
+      ) : (
+        <S.Contents>
+          {targetEvents ? (
+            <>
+              <S.Total>금일 총 지출: {total}원</S.Total>
+              {targetEvents.detailEvents.map((event) => (
+                <InitialSpending key={event.id} spendingEvent={event} />
+              ))}
+            </>
+          ) : (
+            <S.Notice>금일 지출이 없습니다!</S.Notice>
+          )}
+        </S.Contents>
+      )}
     </SpendingPageContainer>
   );
 }

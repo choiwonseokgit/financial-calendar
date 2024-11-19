@@ -28,11 +28,14 @@ export type TFormatCalendarEvents =
   | TFormatSpendingMoneyEvents
   | TFormatScheduleEvents;
 
-type TCalendarEvents = (date: Date | string) => TFormatCalendarEvents[];
+type TCalendarEvents = (date: Date | string) => {
+  calendarEvents: TFormatCalendarEvents[];
+  isLoading: boolean;
+};
 //스케줄 이벤트는  보류
 const useCalendarEvents: TCalendarEvents = (date) => {
   const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
-  const { data: spendingMoneyEvents } = useGetSpendingMoneyQuery({
+  const { data: spendingMoneyEvents, isLoading } = useGetSpendingMoneyQuery({
     year,
     month,
   });
@@ -85,7 +88,7 @@ const useCalendarEvents: TCalendarEvents = (date) => {
     }
   });
 
-  return calendarEvents;
+  return { calendarEvents, isLoading };
 
   // const { data: scheduleEvents } = useGetScheduleQuery({
   //   year,
