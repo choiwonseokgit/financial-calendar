@@ -1,9 +1,12 @@
-import React from 'react';
 import { HeaderProps } from 'react-big-calendar';
 import styled from 'styled-components';
 
 function MyMonthHeader({ label }: HeaderProps) {
-  return <S.Container $label={label}>{label}</S.Container>;
+  return (
+    <S.Container $label={label} role="cell">
+      {label}
+    </S.Container>
+  );
 }
 
 export default MyMonthHeader;

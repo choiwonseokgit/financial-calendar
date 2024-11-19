@@ -21,6 +21,7 @@ import useCalendarEvents from './hooks/use-calendar-events';
 import { TFormatCalendarEvents } from './hooks/use-calendar-events';
 import 'moment/locale/ko';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import LoadingSpinner from '@components/loading-spinner';
 
 moment.locale('ko-KR');
 const localizer = momentLocalizer(moment);
@@ -42,7 +43,8 @@ function Calendar({
 }: CalendarProps) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const formatSpendingMoneyEvents = useCalendarEvents(date);
+  const { calendarEvents: formatSpendingMoneyEvents, isLoading } =
+    useCalendarEvents(date);
 
   const eventPropGetter: EventPropGetter<TFormatCalendarEvents> = (event) => ({
     ...(isSpendingEvent(event) && {
@@ -67,6 +69,11 @@ function Calendar({
   const { spendingMoney: isSpendingMoneyVisible } = useAppSelector(
     (state) => state.calendarOption,
   );
+
+  if (isLoading)
+    return (
+      <LoadingSpinner height={isSpendingMoneyVisible ? `73dvh` : `88dvh`} />
+    );
 
   return (
     <S.Container $isSpendingMoneyVisible={isSpendingMoneyVisible}>

@@ -14,10 +14,10 @@ const DATE_TYPES: { type: 'MONTH' | 'YEAR'; title: string }[] = [
 ];
 
 interface ChartNavBarProps {
-  initClickedIdx: () => void;
+  onClickIdxInit: () => void;
 }
 
-function ChartNavBar({ initClickedIdx }: ChartNavBarProps) {
+function ChartNavBar({ onClickIdxInit }: ChartNavBarProps) {
   const { chartDate, chartDateType } = useAppSelector((state) => state.chart);
   const [isChartDateSelectModalOpen, setIsChartDateSelectModalOpen] =
     useState(false);
@@ -42,6 +42,7 @@ function ChartNavBar({ initClickedIdx }: ChartNavBarProps) {
             {...dateType}
             key={dateType.type}
             isSelected={chartDateType === dateType.type}
+            cb={onClickIdxInit}
           />
         ))}
       </div>
@@ -50,7 +51,7 @@ function ChartNavBar({ initClickedIdx }: ChartNavBarProps) {
           chartDate={chartDate}
           chartDateType={chartDateType}
           onClose={() => setIsChartDateSelectModalOpen(false)}
-          cb={initClickedIdx}
+          cb={onClickIdxInit}
         />
       )}
     </S.Container>
