@@ -1,4 +1,3 @@
-//TODO: 순서 정렬 다시 한번 도전 해보기
 module.exports = {
   root: true,
   env: { browser: true, es2020: true },
