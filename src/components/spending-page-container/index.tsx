@@ -115,7 +115,8 @@ export default SpendingPageContainer;
 const S = {
   Container: styled(motion.div)`
     height: 100dvh;
-    padding: 10px;
+    /* padding: 10px; */
+    padding-inline: 15px;
     background-color: var(--white);
     display: flex;
     flex-direction: column;
@@ -141,6 +142,7 @@ const S = {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 10dvh;
   `,
   ChevronImg: styled.img`
     width: 15px;

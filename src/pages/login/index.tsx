@@ -1,3 +1,4 @@
+import LogoIcon from '@assets/icons/financial-calendar-small-logo.svg';
 import KakaoIcon from '@assets/icons/kakao.svg';
 import { SERVER_URL } from '@constants/url';
 import styled from 'styled-components';
@@ -14,8 +15,13 @@ function Login() {
 
   return (
     <S.Container>
-      <S.Title>💸financial-calendar📆</S.Title>
-      <S.Description>목표금액을 설정하고 꾸준하게 기록해 보세요!</S.Description>
+      <S.TitleBox>
+        <S.Logo src={LogoIcon} alt="logo" />
+        <S.Title>financial-calendar</S.Title>
+      </S.TitleBox>
+      <S.Description>
+        💸목표금액을 설정하고 꾸준하게 기록해 보세요!📆
+      </S.Description>
       <S.KakaoBtn onClick={handleLoginBtnClick}>
         <S.Img src={KakaoIcon} alt="카카오" />
         <S.Label>카카오로 시작하기</S.Label>
@@ -35,11 +41,18 @@ const S = {
     justify-content: center;
     align-items: center;
   `,
+  TitleBox: styled.div`
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  `,
+  Logo: styled.img`
+    width: 50px;
+  `,
   Title: styled.div`
     font-family: 'New Amsterdam';
     color: var(--green04);
     font-size: 40px;
-    margin-bottom: 10px;
   `,
   Description: styled.div`
     font-family: 'Pretendard-login';

@@ -1,5 +1,4 @@
-import { useAppSelector } from '@store/hooks';
-import { spendingMoneyApiResponse } from '@store/query/calendar-query';
+import { useGetSpendingMoneyQuery } from '@store/query/calendar-query';
 import { format } from 'date-fns';
 import styled from 'styled-components';
 
@@ -10,20 +9,20 @@ interface NoticeProps {
 function SpendingNotice({ date }: NoticeProps) {
   const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
 
-  const spendingMoneyData = useAppSelector(
-    (state) =>
-      state.calendarApi.queries[
-        `getSpendingMoney({"month":"${month}","year":"${year}"})`
-      ]?.data as spendingMoneyApiResponse | undefined,
-  );
+  const { data: spendingMoneyEvents, isLoading } = useGetSpendingMoneyQuery({
+    year,
+    month,
+  });
 
-  if (!spendingMoneyData?.targetMonthSpending) {
+  if (isLoading) return <S.Container>로딩중입니다...⏳</S.Container>;
+
+  if (!spendingMoneyEvents?.targetMonthSpending) {
     return <S.Container>목표 지출을 설정해 보세요!🧐</S.Container>;
   }
 
   const remainSpending =
-    parseInt(spendingMoneyData.targetMonthSpending.targetMoney) -
-    spendingMoneyData.total;
+    parseInt(spendingMoneyEvents.targetMonthSpending.targetMoney) -
+    spendingMoneyEvents.total;
 
   const message =
     remainSpending < 0 ? (

@@ -32,6 +32,7 @@ function AnimatedRoutes() {
           <Route path="spending-detail" element={<Page.SpendingDetail />} />
           <Route path="schedule-form" element={<Page.ScheduleForm />} />
           <Route path="chart" element={<Page.Chart />} />
+          <Route path="*" element={<Page.NotFound />} />
         </Route>
       </Routes>
     </AnimatePresence>

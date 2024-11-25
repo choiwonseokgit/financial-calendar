@@ -233,7 +233,6 @@ const S = {
     background-color: var(--white);
     display: flex;
     flex-direction: column;
-    /* gap: 10px; */
   `,
   Header: styled.div`
     display: flex;

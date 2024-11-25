@@ -56,7 +56,7 @@ const S = {
   Contents: styled.div`
     height: 100dvh;
     background-color: var(--white);
-    padding: 10px;
+    padding-inline: 10px;
     display: flex;
     flex-direction: column;
     gap: 5px;

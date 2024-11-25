@@ -256,7 +256,7 @@ const S = {
     display: flex;
     flex-direction: column;
     color: var(--gray02);
-    gap: 10px;
+    gap: 5px;
     border: 1px solid var(--green04);
     border-radius: 5px;
     overflow: hidden;

@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import FooterSkeleton from './components/footer-skeleton';
 
 interface FooterProps {
   date: string;
@@ -22,7 +23,7 @@ const variants = {
 };
 
 function Footer({ date }: FooterProps) {
-  const { data: spendingMoneyEvents } = useGetSpendingMoneyQuery({
+  const { data: spendingMoneyEvents, isLoading } = useGetSpendingMoneyQuery({
     year: format(date, 'yyyy'),
     month: format(date, 'MM'),
   });
@@ -56,6 +57,10 @@ function Footer({ date }: FooterProps) {
   );
 
   if (!isSpendingMoneyVisible) return null;
+
+  if (isLoading) return <FooterSkeleton />;
+
+  //   return <FooterSkeleton />;
 
   return (
     <>

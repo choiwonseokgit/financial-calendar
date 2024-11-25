@@ -59,8 +59,6 @@ function Chart() {
     }
   }, [clickedIdx]);
 
-  // if (isLoading) return <LoadingIndicator height={`100dvh`} />;
-
   const [labels, data] = [
     spendingMoneysQueryData?.spendingMoneysForChart.map((el) => el[0]),
     spendingMoneysQueryData?.spendingMoneysForChart.map((el) => +el[1]),
@@ -134,7 +132,6 @@ function Chart() {
           weight: 'normal',
         },
         color: '#333', // 제목 색상
-        // align: 'start',
       },
     },
     layout: {
@@ -150,7 +147,6 @@ function Chart() {
 
   return (
     <S.Container {...pageTransition}>
-      {/* <LoadingIndicator /> */}
       <ChartNavBar onClickIdxInit={() => setClickedIdx(-1)} />
       {isLoading ? (
         <LoadingSpinner height={`calc(100% - 44px)`} />
@@ -219,7 +215,7 @@ const S = {
   DoughnutBox: styled.div`
     display: flex;
     justify-content: center;
-    height: calc(60% - 44px);
+    height: calc(60% - 10dvh);
   `,
   CategorySpendingBox: styled.div<{ $isEmptySpending: boolean }>`
     height: 40%;
@@ -227,7 +223,8 @@ const S = {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    padding: 10px;
+    padding-block: 10px;
+    padding-inline: 15px;
     overflow-y: auto;
     position: ${({ $isEmptySpending }) => $isEmptySpending && 'relative'};
   `,

@@ -4,6 +4,7 @@ import SpendingForm from '@pages/spending-form';
 import Auth from './auth';
 import Chart from './chart';
 import Login from './login';
+import NotFound from './not-found';
 import ScheduleForm from './schedule-form';
 import SpendingDetail from './spending-detail';
 
@@ -16,4 +17,5 @@ export {
   Auth,
   SpendingDetail,
   Chart,
+  NotFound,
 };

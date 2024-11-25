@@ -65,8 +65,9 @@ const S = {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px;
+    padding: 15px;
     position: relative;
+    height: 10dvh;
   `,
   ChevronImg: styled.img`
     width: 15px;
