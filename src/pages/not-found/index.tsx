@@ -33,6 +33,6 @@ const S = {
     width: 100px;
     height: 30px;
     border: 1px solid var(--green04);
-    border-radius: 10px;
+    border-radius: 20px;
   `,
 };
