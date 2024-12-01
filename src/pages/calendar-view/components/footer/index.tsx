@@ -2,7 +2,6 @@ import { useRef, useState } from 'react';
 import plusIcon from '@assets/icons/plus-solid.svg';
 import SetTargetMonthSpendingModal from '@components/modal/set-target-month-spending-modal';
 import { TSetTargetSpendingModal } from '@constants/modal';
-import useOutSideClick from '@hooks/use-outside-click';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 import { useGetSpendingMoneyQuery } from '@store/query/calendar-query';
 import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
@@ -13,14 +12,14 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import FooterSkeleton from './components/footer-skeleton';
 
+// const variants = {
+//   open: { opacity: 1, y: 0 },
+//   closed: { opacity: 0, y: '50%' },
+// };
+
 interface FooterProps {
   date: string;
 }
-
-const variants = {
-  open: { opacity: 1, y: 0 },
-  closed: { opacity: 0, y: '50%' },
-};
 
 function Footer({ date }: FooterProps) {
   const { data: spendingMoneyEvents, isLoading } = useGetSpendingMoneyQuery({
@@ -31,7 +30,6 @@ function Footer({ date }: FooterProps) {
   const month = format(date, 'M');
   const navigate = useNavigate();
   const ref = useRef(null);
-  const [isOpen, setIsOpen] = useState(false);
   const [isSetTargetSpendingModalOpen, setIsSetTargetSpendingModalOpen] =
     useState(false);
   const [modalType, setModalType] =
@@ -49,8 +47,6 @@ function Footer({ date }: FooterProps) {
     parseInt(spendingMoneyEvents?.targetMonthSpending?.targetMoney as string) -
     (spendingMoneyEvents?.total as number)
   ).toLocaleString('ko-KR');
-
-  useOutSideClick(ref, () => setIsOpen(false));
 
   const { spendingMoney: isSpendingMoneyVisible } = useAppSelector(
     (state) => state.calendarOption,
@@ -122,7 +118,7 @@ function Footer({ date }: FooterProps) {
               <S.PlusImg src={plusIcon} alt="추가" />
             </S.PlusBtn>
             {/* 스케줄 작성 폼 보류 */}
-            <S.BtnsBox
+            {/* <S.BtnsBox
               animate={isOpen ? 'open' : 'closed'}
               variants={variants}
               $isOpen={isOpen}
@@ -133,7 +129,7 @@ function Footer({ date }: FooterProps) {
               <S.PlusBtn onClick={() => handleNavigate('spending-form')}>
                 가계부
               </S.PlusBtn>
-            </S.BtnsBox>
+            </S.BtnsBox> */}
           </div>
         </S.Container>
       </S.Footer>
