@@ -60,8 +60,6 @@ function Footer({ date }: FooterProps) {
 
   if (isLoading) return <FooterSkeleton />;
 
-  //   return <FooterSkeleton />;
-
   return (
     <>
       <S.Footer>
