@@ -115,7 +115,6 @@ export default SpendingPageContainer;
 const S = {
   Container: styled(motion.div)`
     height: 100dvh;
-    /* padding: 10px; */
     padding-inline: 15px;
     background-color: var(--white);
     display: flex;

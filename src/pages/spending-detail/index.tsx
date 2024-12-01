@@ -54,7 +54,7 @@ export default SpendingDetail;
 
 const S = {
   Contents: styled.div`
-    height: 100dvh;
+    height: 90dvh;
     background-color: var(--white);
     padding-inline: 10px;
     display: flex;
