@@ -1,6 +1,8 @@
 import { PropsWithChildren, useRef } from 'react';
+
 import Flicking, { ViewportSlot } from '@egjs/react-flicking';
 import styled from 'styled-components';
+
 import useScrollEvent from '../hooks/use-scroll-event';
 import updateFlickingTransform from '../utils/update-flicking-transform';
 
@@ -51,11 +53,9 @@ export default FlickingContainer;
 const S = {
   FlickingBox: styled.div`
     font-size: 20px;
-    /* background-color: green; */
     width: 58px;
 
     .flicking-viewport {
-      /* background-color: purple; */
       box-sizing: initial;
       height: 120px;
       overflow: visible;
@@ -84,7 +84,7 @@ const S = {
       transition: color 0.2s;
 
       &.selected {
-        color: black;
+        color: var(--black);
       }
     }
 

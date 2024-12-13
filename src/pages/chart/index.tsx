@@ -1,9 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import LoadingSpinner from '@components/loading-spinner';
-import { BACKGROUND_COLORS, BORDER_COLORS } from '@constants/chart-color';
-import usePageTransition from '@hooks/use-page-transition';
-import { useAppSelector } from '@store/hooks';
-import { useGetSpendingMoneyForChartQuery } from '@store/query/calendar-query';
+
+
 import {
   Chart as ChartJS,
   Title,
@@ -18,6 +15,13 @@ import { format } from 'date-fns';
 import { motion } from 'framer-motion';
 import { Doughnut, getElementAtEvent } from 'react-chartjs-2';
 import styled from 'styled-components';
+
+import LoadingSpinner from '@components/loading-spinner';
+import { BACKGROUND_COLORS, BORDER_COLORS } from '@constants/chart-color';
+import usePageTransition from '@hooks/use-page-transition';
+import { useAppSelector } from '@store/hooks';
+import { useGetSpendingMoneyForChartQuery } from '@store/query/calendar-query';
+
 import CategorySpending from './components/category-spending';
 import ChartNavBar from './components/chart-nav-bar';
 import EmptyDoughnut from './components/empty-doughnut';
@@ -27,19 +31,13 @@ import makePercentage from './utils/make-percentage';
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels, Title);
 
 function Chart() {
-  const { chartDate, chartDateType } = useAppSelector((state) => state.chart);
-
+  const { chartDate, chartType } = useAppSelector((state) => state.chart);
   const [year, month] = [
     format(chartDate, 'yyyy'),
-    chartDateType === 'YEAR' ? null : format(chartDate, 'MM'),
+    chartType === 'year' ? null : format(chartDate, 'MM'),
   ];
   const [clickedIdx, setClickedIdx] = useState(-1);
 
-  const { data: spendingMoneysQueryData, isLoading } =
-    useGetSpendingMoneyForChartQuery({
-      year,
-      month,
-    });
   const pageTransition = usePageTransition();
   const chartRef = useRef<ChartJS<'doughnut'>>(null);
   const categoryBoxRef = useRef<HTMLDivElement>(null);
@@ -59,13 +57,30 @@ function Chart() {
     }
   }, [clickedIdx]);
 
-  const [labels, data] = [
-    spendingMoneysQueryData?.spendingMoneysForChart.map((el) => el[0]),
-    spendingMoneysQueryData?.spendingMoneysForChart.map((el) => +el[1]),
+  const { data, isLoading, isError } = useGetSpendingMoneyForChartQuery({
+    year,
+    month,
+  });
+
+  if (isLoading)
+    return (
+      <S.Container {...pageTransition}>
+        <ChartNavBar onClickIdxInit={() => setClickedIdx(-1)} />
+
+        <LoadingSpinner height={`calc(100% - 44px)`} />
+      </S.Container>
+    );
+  if (isError) return <div>Error...</div>;
+
+  const { total, spendingMoneysForChart } = data!;
+
+  const [labels, money] = [
+    spendingMoneysForChart.map((s) => s[0]),
+    spendingMoneysForChart.map((s) => parseInt(s[1])),
   ];
 
   const setElementAtEvent = (element: InteractionItem[]) => {
-    if (!element.length || !spendingMoneysQueryData) return;
+    if (!element.length) return;
 
     const { index: idx } = element[0];
 
@@ -90,7 +105,7 @@ function Chart() {
     datasets: [
       {
         label: '금액',
-        data,
+        data: money,
         backgroundColor: BACKGROUND_COLORS,
         borderColor: BORDER_COLORS,
         borderWidth: 1,
@@ -111,7 +126,6 @@ function Chart() {
         },
         formatter: (value: number, context) => {
           const label = context.chart.data.labels?.[context.dataIndex] || '';
-          const total = spendingMoneysQueryData?.total as number;
           return `${label}\n${makePercentage(value, total)}`;
         },
         textAlign: 'center',
@@ -126,7 +140,7 @@ function Chart() {
       },
       title: {
         display: true,
-        text: `지출: ${(isLoading || (spendingMoneysQueryData?.total as number)).toLocaleString()}원`,
+        text: `지출: ${total.toLocaleString()}원`,
         font: {
           size: 15, // 제목 글씨 크기
           weight: 'normal',
@@ -148,59 +162,44 @@ function Chart() {
   return (
     <S.Container {...pageTransition}>
       <ChartNavBar onClickIdxInit={() => setClickedIdx(-1)} />
-      {isLoading ? (
-        <LoadingSpinner height={`calc(100% - 44px)`} />
-      ) : (
-        <>
-          <S.DoughnutBox>
-            {spendingMoneysQueryData?.spendingMoneysForChart.length ? (
-              <Doughnut
-                ref={chartRef}
-                options={options}
-                data={chartData}
-                onClick={onClick}
-              />
-            ) : (
-              <EmptyDoughnut />
-            )}
-          </S.DoughnutBox>
-          <S.CategorySpendingBox
-            ref={categoryBoxRef}
-            $isEmptySpending={
-              !spendingMoneysQueryData?.spendingMoneysForChart.length
-            }
-          >
-            {spendingMoneysQueryData?.spendingMoneysForChart.length ? (
-              spendingMoneysQueryData.spendingMoneysForChart.map(
-                (spendingMoney, idx) => (
-                  <CategorySpending
-                    key={spendingMoney[0]}
-                    category={spendingMoney[0]}
-                    percentage={makePercentage(
-                      +spendingMoney[1],
-                      spendingMoneysQueryData.total,
-                    )}
-                    total={+spendingMoney[1]}
-                    idx={idx}
-                    onClick={() => {
-                      setClickedIdx((prev) => {
-                        if (prev === idx) return -1;
-                        return idx;
-                      });
-                    }}
-                    isClicked={idx === clickedIdx}
-                    initialSpendings={
-                      spendingMoneysQueryData.spendingMoneysForChart[idx][2]
-                    }
-                  />
-                ),
-              )
-            ) : (
-              <EmptySpending />
-            )}
-          </S.CategorySpendingBox>
-        </>
-      )}
+      <S.DoughnutBox>
+        {spendingMoneysForChart.length ? (
+          <Doughnut
+            ref={chartRef}
+            options={options}
+            data={chartData}
+            onClick={onClick}
+          />
+        ) : (
+          <EmptyDoughnut />
+        )}
+      </S.DoughnutBox>
+      <S.CategorySpendingBox
+        ref={categoryBoxRef}
+        $isEmptySpending={!spendingMoneysForChart.length}
+      >
+        {spendingMoneysForChart.length ? (
+          spendingMoneysForChart.map((spendingMoney, idx) => (
+            <CategorySpending
+              key={spendingMoney[0]}
+              category={spendingMoney[0]}
+              percentage={makePercentage(+spendingMoney[1], total)}
+              total={+spendingMoney[1]}
+              idx={idx}
+              onClick={() => {
+                setClickedIdx((prev) => {
+                  if (prev === idx) return -1;
+                  return idx;
+                });
+              }}
+              isClicked={idx === clickedIdx}
+              initialSpendings={spendingMoneysForChart[idx][2]}
+            />
+          ))
+        ) : (
+          <EmptySpending />
+        )}
+      </S.CategorySpendingBox>
     </S.Container>
   );
 }

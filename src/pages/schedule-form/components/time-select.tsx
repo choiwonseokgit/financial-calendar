@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import TimeSelectModal from '@components/modal/time-select-modal';
+
 import styled from 'styled-components';
+
+import TimeSelectModal from '@components/modal/time-select-modal';
 
 interface TimeSelectProps {
   time: string;

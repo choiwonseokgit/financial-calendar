@@ -1,10 +1,14 @@
 import { useRef } from 'react';
-import { TModal } from '@constants/modal';
+
+import styled, { keyframes } from 'styled-components';
+
 import useOutsideClickForAnimation from '@hooks/use-outside-click-for-animation';
 import { mobileSize } from '@styles/mobile';
-import styled, { keyframes } from 'styled-components';
+
 import ModalHeader from './modal-header';
 import ModalPortal from './modal-portal';
+
+import type { TModal } from '@constants/modal';
 
 interface ModalProps extends React.PropsWithChildren {
   onClose: () => void;
@@ -84,7 +88,7 @@ const S = {
     animation: ${({ $isCloseAnimStart }) =>
         $isCloseAnimStart ? fadeOut : fadeIn}
       0.3s ease-in-out forwards;
-    z-index: 500; //TODO zIndex묶기
+    z-index: 500;
   `,
 
   ModalBox: styled.div`
@@ -93,17 +97,13 @@ const S = {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: white;
-
+    background-color: var(--white);
     margin: 24px;
     padding: 10px;
     border-radius: 10px;
-    /* background: ${(props) => props.theme.modalBg}; */
-    /* box-shadow: 0px 4px 16px 0px ${(props) => props.theme.modalShadow}; */
   `,
 
   SubmitBtn: styled.button<{ $isDisabled?: boolean }>`
-    /* align-self: flex-end; */
     border-radius: 10px;
     padding: 10px 30px;
     color: var(--white);

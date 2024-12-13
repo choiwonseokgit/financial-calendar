@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
-import usePageTransition from '@hooks/use-page-transition';
-import { useAppDispatch } from '@store/hooks';
-import { login } from '@store/slices/login-check-slice';
+
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+
+import usePageTransition from '@hooks/use-page-transition';
+import { useAppDispatch } from '@store/hooks';
+import { login } from '@store/slices/login-check-slice';
 
 function Auth() {
   const navigate = useNavigate();

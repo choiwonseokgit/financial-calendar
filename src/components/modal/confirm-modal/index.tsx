@@ -1,13 +1,12 @@
-import {
-  CONFIRM_MODAL_MESSAGES,
-  TConfirmModalMessages,
-} from '@constants/modal';
 import styled from 'styled-components';
+
+import { CONFIRM_MODAL_MESSAGES, ConfirmModalMessages } from '@constants/modal';
+
 import Modal from '../components/modal';
 
 interface ConfirmModalProps {
   onClose: () => void;
-  modalMessageType: keyof TConfirmModalMessages;
+  modalMessageType: keyof ConfirmModalMessages;
   isSubmit?: boolean;
   onSubmit?: () => void;
 }

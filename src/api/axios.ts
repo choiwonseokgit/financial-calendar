@@ -1,5 +1,6 @@
-import { SERVER_URL } from '@constants/url';
 import axios from 'axios';
+
+import { SERVER_URL } from '@constants/url';
 
 const Axios = axios.create({
   baseURL: SERVER_URL,

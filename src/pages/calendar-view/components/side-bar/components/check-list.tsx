@@ -1,8 +1,9 @@
+import styled from 'styled-components';
+
 import CheckIcon from '@assets/icons/check-solid.svg';
 import { TCalendarCheckList } from '@pages/calendar-view/constants';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 import { toggleOption } from '@store/slices/calendar-option-slice';
-import styled from 'styled-components';
 
 interface CheckListProps {
   type: TCalendarCheckList['type'];

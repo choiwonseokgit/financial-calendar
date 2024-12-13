@@ -1,6 +1,9 @@
 import { useState } from 'react';
-import chevronUpIcon from '@assets/icons/chevron-up-solid.svg';
+
 import styled from 'styled-components';
+
+import chevronUpIcon from '@assets/icons/chevron-up-solid.svg';
+
 import { PASTEL_COLORS, TPastelColors } from '../constants';
 
 interface TitleProps {

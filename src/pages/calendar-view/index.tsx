@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
+
+
 import Flicking, { MoveEndEvent } from '@egjs/react-flicking';
+import { formatISO, parse } from 'date-fns';
+import { motion } from 'framer-motion';
+import { View } from 'react-big-calendar';
+import styled from 'styled-components';
+
 import usePageTransition from '@hooks/use-page-transition';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 import {
@@ -9,10 +16,7 @@ import {
   prevMonth,
 } from '@store/slices/selected-date-slice';
 import calDateAndMakeStr from '@utils/cal-date-and-make-str';
-import { formatISO, parse } from 'date-fns';
-import { motion } from 'framer-motion';
-import { View } from 'react-big-calendar';
-import styled from 'styled-components';
+
 import Calendar from './components/calendar/index';
 import Footer from './components/footer';
 import NavBar from './components/nav-bar';
@@ -22,7 +26,7 @@ import '@egjs/react-flicking/dist/flicking.css';
 type TCalendarDates = string[];
 
 interface Action {
-  type: 'TODAY' | 'PREV' | 'NEXT' | 'INIT';
+  type: 'today' | 'prev' | 'next' | 'init';
   idx?: number;
   view?: View;
   date?: string;
@@ -30,85 +34,81 @@ interface Action {
 
 const reducer = (calendarDates: TCalendarDates, action: Action) => {
   switch (action.type) {
-    case 'TODAY':
-      return [
-        calDateAndMakeStr(new Date(), -1),
-        calDateAndMakeStr(new Date()),
-        calDateAndMakeStr(new Date(), 1),
-      ];
-    case 'PREV': {
-      const { idx, view } = action;
+    case 'today':
+      return Array.from(
+        { length: 3 },
+        (_, i) => calDateAndMakeStr(new Date(), i - 1), // 1번 idx가 기준
+      );
 
-      switch (idx) {
+    case 'prev': {
+      switch (action.idx) {
         case 0:
           return [
             calendarDates[0],
-            calDateAndMakeStr(calendarDates[0], -2, view),
-            calDateAndMakeStr(calendarDates[0], -1, view),
+            calDateAndMakeStr(calendarDates[0], -2),
+            calDateAndMakeStr(calendarDates[0], -1),
           ];
         case 1:
           return [
-            calDateAndMakeStr(calendarDates[1], -1, view),
+            calDateAndMakeStr(calendarDates[1], -1),
             calendarDates[1],
-            calDateAndMakeStr(calendarDates[1], -2, view),
+            calDateAndMakeStr(calendarDates[1], -2),
           ];
         case 2:
           return [
-            calDateAndMakeStr(calendarDates[2], -2, view),
-            calDateAndMakeStr(calendarDates[2], -1, view),
+            calDateAndMakeStr(calendarDates[2], -2),
+            calDateAndMakeStr(calendarDates[2], -1),
             calendarDates[2],
           ];
         default:
           return calendarDates;
       }
     }
-    case 'NEXT': {
-      const { idx, view } = action;
-
-      switch (idx) {
+    case 'next': {
+      switch (action.idx) {
         case 0:
           return [
             calendarDates[0],
-            calDateAndMakeStr(calendarDates[0], 1, view),
-            calDateAndMakeStr(calendarDates[0], 2, view),
+            calDateAndMakeStr(calendarDates[0], 1),
+            calDateAndMakeStr(calendarDates[0], 2),
           ];
         case 1:
           return [
-            calDateAndMakeStr(calendarDates[1], 2, view),
+            calDateAndMakeStr(calendarDates[1], 2),
             calendarDates[1],
-            calDateAndMakeStr(calendarDates[1], 1, view),
+            calDateAndMakeStr(calendarDates[1], 1),
           ];
         case 2:
           return [
-            calDateAndMakeStr(calendarDates[2], 1, view),
-            calDateAndMakeStr(calendarDates[2], 2, view),
+            calDateAndMakeStr(calendarDates[2], 1),
+            calDateAndMakeStr(calendarDates[2], 2),
             calendarDates[2],
           ];
         default:
           return calendarDates;
       }
     }
-    case 'INIT': {
-      const { date, view, idx } = action;
+    case 'init': {
+      const { date, idx } = action;
 
       if (date)
         switch (idx) {
           case 0:
             return [
               date,
-              calDateAndMakeStr(date, 1, view),
-              calDateAndMakeStr(date, -1, view),
+              calDateAndMakeStr(date, 1),
+              calDateAndMakeStr(date, -1),
             ];
           case 1:
             return [
-              calDateAndMakeStr(date, -1, view),
+              calDateAndMakeStr(date, -1),
               date,
-              calDateAndMakeStr(date, 1, view),
+              calDateAndMakeStr(date, 1),
             ];
           case 2:
             return [
-              calDateAndMakeStr(date, 1, view),
-              calDateAndMakeStr(date, -1, view),
+              calDateAndMakeStr(date, 1),
+              calDateAndMakeStr(date, -1),
               date,
             ];
         }
@@ -120,11 +120,10 @@ const reducer = (calendarDates: TCalendarDates, action: Action) => {
 };
 
 function CalendarView() {
-  const [calendarDates, calendarDatesDispatch] = useReducer(reducer, [
-    calDateAndMakeStr(new Date(), -1),
-    calDateAndMakeStr(new Date()),
-    calDateAndMakeStr(new Date(), 1),
-  ]);
+  const [calendarDates, calendarDatesDispatch] = useReducer(
+    reducer,
+    Array.from({ length: 3 }, (_, i) => calDateAndMakeStr(new Date(), i - 1)),
+  );
   const selectedDates = useAppSelector((state) => state.selectedDate);
   const dispatch = useAppDispatch();
   const [view, setView] = useState<View>('month');
@@ -142,10 +141,10 @@ function CalendarView() {
     const idx = e.currentTarget.index;
 
     if (e.direction === 'PREV') {
-      calendarDatesDispatch({ type: 'PREV', idx, view });
+      calendarDatesDispatch({ type: 'prev', idx });
       dispatch(view === 'month' ? prevMonth() : prevDay());
     } else if (e.direction === 'NEXT') {
-      calendarDatesDispatch({ type: 'NEXT', idx, view });
+      calendarDatesDispatch({ type: 'next', idx });
       dispatch(view === 'month' ? nextMonth() : nextDay());
     }
   };
@@ -158,7 +157,7 @@ function CalendarView() {
   //NavBar
   const handleTodayChange = async () => {
     await flickingRef.current?.moveTo(1, 0);
-    calendarDatesDispatch({ type: 'TODAY' });
+    calendarDatesDispatch({ type: 'today' });
   };
 
   const handleMonthBtnClick = () => {
@@ -166,24 +165,24 @@ function CalendarView() {
   };
 
   const handleArrowBtnClick = async (
-    direction: 'PREV' | 'NEXT',
+    direction: 'prev' | 'next',
     view: View,
   ) => {
     if (flickingRef.current?.animating) return;
 
     switch (view) {
       case 'month': {
-        if (direction === 'PREV') {
+        if (direction === 'prev') {
           await flickingRef.current?.prev();
-        } else if (direction === 'NEXT') {
+        } else if (direction === 'next') {
           await flickingRef.current?.next();
         }
         break;
       }
       case 'day': {
-        if (direction === 'PREV') {
+        if (direction === 'prev') {
           await flickingRef.current?.prev(0);
-        } else if (direction === 'NEXT') {
+        } else if (direction === 'next') {
           await flickingRef.current?.next(0);
         }
         break;
@@ -193,7 +192,7 @@ function CalendarView() {
 
   const handleCalendarDatesInit = (newDate: string) => {
     calendarDatesDispatch({
-      type: 'INIT',
+      type: 'init',
       date: newDate,
       idx: currIdx,
       view: view,
@@ -202,7 +201,7 @@ function CalendarView() {
 
   const handleNavigate = useCallback((date: Date, idx: number, view: View) => {
     const dateStr = formatISO(date);
-    calendarDatesDispatch({ type: 'INIT', idx, date: dateStr, view });
+    calendarDatesDispatch({ type: 'init', idx, date: dateStr, view });
   }, []);
 
   const handleChangeView = useCallback(
@@ -227,7 +226,7 @@ function CalendarView() {
       parse(selectedDates, 'yyyy/MM/dd', new Date()),
     );
     calendarDatesDispatch({
-      type: 'INIT',
+      type: 'init',
       date: currSelectDate,
       idx: 1,
       view: view,

@@ -16,7 +16,7 @@ export const MODAL_TITLE = {
   deleteTargetSpending: '목표 지출 삭제',
 } as const;
 
-export type TModalTitle = typeof MODAL_TITLE;
+export type ModalTitle = typeof MODAL_TITLE;
 
 export const CONFIRM_MODAL_MESSAGES = {
   moneyInput: '사용한 돈을 기입해주세요!',
@@ -28,4 +28,4 @@ export const CONFIRM_MODAL_MESSAGES = {
   emptyTargetSpending: '목표 금액을 설정해주세요!',
 } as const;
 
-export type TConfirmModalMessages = typeof CONFIRM_MODAL_MESSAGES;
+export type ConfirmModalMessages = typeof CONFIRM_MODAL_MESSAGES;

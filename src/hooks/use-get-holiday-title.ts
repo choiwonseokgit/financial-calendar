@@ -1,26 +1,24 @@
-// import { useAppSelector } from '@store/hooks';
+import { format } from 'date-fns';
+
 import {
-  // HolidayResponse,
+  HolidayResponse,
   useGetHolidayQuery,
 } from '@store/query/holiday-query';
-import { format } from 'date-fns';
 
 const useGetHolidayTitle = (date: Date | string) => {
   const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
   const fullDate = format(date, 'yyyyMMdd');
 
-  const { data: holidaysData } = useGetHolidayQuery({ year, month });
+  const { data, isLoading } = useGetHolidayQuery({
+    year,
+    month,
+  });
 
-  // const holidaysData = useAppSelector(
-  //   (state) =>
-  //     state.holidayApi.queries[
-  //       `getHoliday({"month":"${month}","year":"${year}"})`
-  //     ],
-  // )?.data as HolidayResponse | undefined;
+  if (isLoading) return null;
 
-  if (!holidaysData || !holidaysData.holidays) return null;
+  const { holidays } = data as HolidayResponse;
 
-  const { holidays } = holidaysData;
+  if (!holidays) return null;
 
   if (Array.isArray(holidays)) {
     return (

@@ -1,3 +1,9 @@
+
+import { format, parseISO } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { useLocation } from 'react-router-dom';
+import styled from 'styled-components';
+
 import InitialSpending from '@components/initial-spending';
 import LoadingSpinner from '@components/loading-spinner';
 import SpendingPageContainer from '@components/spending-page-container';
@@ -6,10 +12,8 @@ import useCalendarEvents, {
 } from '@pages/calendar-view/components/calendar/hooks/use-calendar-events';
 import { isSpendingEvent } from '@utils/calendar-event-type-guard';
 import parseIntAndMakeLocaleKR from '@utils/parse-Int-and-make-locale-kr';
-import { format, parseISO } from 'date-fns';
-import { ko } from 'date-fns/locale';
-import { useLocation } from 'react-router-dom';
-import styled from 'styled-components';
+
+
 
 function SpendingDetail() {
   const location = useLocation();

@@ -1,7 +1,8 @@
-import GlobalStyle from '@styles/global';
-import { mobileSize } from '@styles/mobile';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
+
+import GlobalStyle from '@styles/global';
+import { mobileSize } from '@styles/mobile';
 
 function Root() {
   return (

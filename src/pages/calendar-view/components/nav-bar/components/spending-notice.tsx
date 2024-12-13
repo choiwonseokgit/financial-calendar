@@ -1,6 +1,7 @@
-import { useGetSpendingMoneyQuery } from '@store/query/calendar-query';
 import { format } from 'date-fns';
 import styled from 'styled-components';
+
+import { useGetSpendingMoneyQuery } from '@store/query/calendar-query';
 
 interface NoticeProps {
   date: string;

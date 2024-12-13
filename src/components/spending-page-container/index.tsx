@@ -1,4 +1,9 @@
 import { PropsWithChildren, useState } from 'react';
+
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
 import checkIcon from '@assets/icons/check-solid.svg';
 import chevronLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
 import trashIcon from '@assets/icons/trash-solid.svg';
@@ -7,9 +12,6 @@ import useConfirmModal from '@hooks/use-confirm-modal';
 import usePageTransition from '@hooks/use-page-transition';
 import { useAppDispatch } from '@store/hooks';
 import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
 
 interface SpendingFormProps extends PropsWithChildren {
   type: 'SpendingForm';

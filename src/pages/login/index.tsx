@@ -1,7 +1,8 @@
+import styled from 'styled-components';
+
 import LogoIcon from '@assets/icons/financial-calendar-small-logo.svg';
 import KakaoIcon from '@assets/icons/kakao.svg';
 import { SERVER_URL } from '@constants/url';
-import styled from 'styled-components';
 
 function Login() {
   const handleLoginBtnClick = () => {

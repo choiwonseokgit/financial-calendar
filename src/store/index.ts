@@ -2,12 +2,12 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+
 import { calendarApi } from './query/calendar-query';
 import { holidayApi } from './query/holiday-query';
 import { userApi } from './query/user-query';
 import calendarOptionReducer from './slices/calendar-option-slice';
 import chartReducer from './slices/chart-slice';
-import datesReducer from './slices/datesSlice';
 import loginCheckReducer from './slices/login-check-slice';
 import selectedDateReducer from './slices/selected-date-slice';
 import transitionDirectionReducer from './slices/transition-direction-slice';
@@ -20,7 +20,6 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-  dates: datesReducer,
   view: viewReducer,
   selectedDate: selectedDateReducer,
   calendarOption: calendarOptionReducer,

@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import DateSelectModal from '@components/modal/date-select-modal';
+
 import styled from 'styled-components';
+
+import DateSelectModal from '@components/modal/date-select-modal';
 
 interface DateSelectProps {
   date: string;
@@ -17,7 +19,7 @@ function DateSelect({ date, onScheduleDateChange }: DateSelectProps) {
           onClose={() => setIsDateSelectModalOpen(false)}
           defaultDate={date}
           cb={{
-            type: 'SCHEDULE_FORM',
+            type: 'schedule-form',
             onScheduleDateChange,
           }}
         />

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 import useOutSideClick from './use-outside-click';
 
 const useOutsideClickForAnimation = (

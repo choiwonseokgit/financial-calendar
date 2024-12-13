@@ -1,26 +1,24 @@
+import { format, parseISO } from 'date-fns';
+
 import { useAppSelector } from '@store/hooks';
-import {
-  TSchedule,
-  TSpendingMoney,
-  // useGetScheduleQuery,
-  useGetSpendingMoneyQuery,
-} from '@store/query/calendar-query';
+import { useGetSpendingMoneyQuery } from '@store/query/calendar-query';
 import {
   isScheduleEvent,
   isSpendingEvent,
 } from '@utils/calendar-event-type-guard';
-import { format, parseISO } from 'date-fns';
+
+import { Schedule, SpendingMoney } from '@/types/calendar';
 
 export interface TFormatSpendingMoneyEvents {
   id: string;
   total: string;
   startDate: string;
   endDate: string;
-  detailEvents: TSpendingMoney[];
+  detailEvents: SpendingMoney[];
   type: 'spendingMoney';
 }
 
-export interface TFormatScheduleEvents extends TSchedule {
+export interface TFormatScheduleEvents extends Schedule {
   type: 'schedule';
 }
 

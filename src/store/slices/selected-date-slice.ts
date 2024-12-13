@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { addDays, addMonths, format, startOfMonth } from 'date-fns';
+
 import type { RootState } from '@store/index';
 
 const initialState = format(new Date(), 'yyyy/MM/dd');

@@ -1,22 +1,26 @@
 import { useReducer } from 'react';
+
 import { format, parse } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import styled from 'styled-components';
-import Modal from '../components/modal';
+
 import HourFlicking from './components/hour-flicking';
 import MinuteFlicking from './components/minute-flicking';
+import Modal from '../components/modal';
 
-interface TSelectingTime {
+interface SelectingTime {
   hour: string;
   minute: string;
 }
 
+type TTimeUnit = keyof SelectingTime;
+
 interface Action {
-  type: 'HOUR' | 'MINUTE';
+  type: TTimeUnit;
   timeUnit: string;
 }
 
-const reducer = (selectingTime: TSelectingTime, action: Action) => {
+const reducer = (selectingTime: SelectingTime, action: Action) => {
   return { ...selectingTime, [action.type.toLowerCase()]: action.timeUnit };
 };
 
@@ -40,7 +44,7 @@ function TimeSelectModal({ onClose, defaultTime, cb }: TimeSelectModalProps) {
     minute,
   });
 
-  const handleDateUnitChange = (type: 'HOUR' | 'MINUTE', timeUnit: string) => {
+  const handleDateUnitChange = (type: TTimeUnit, timeUnit: string) => {
     selectingTimeDispatch({ type: type, timeUnit: timeUnit });
   };
 
@@ -60,13 +64,13 @@ function TimeSelectModal({ onClose, defaultTime, cb }: TimeSelectModalProps) {
         <HourFlicking
           currSelectHour={hour}
           onHourChange={(newHour: string) =>
-            handleDateUnitChange('HOUR', newHour)
+            handleDateUnitChange('hour', newHour)
           }
         />
         <MinuteFlicking
           currSelectMinute={minute}
           onMinuteChange={(newMinute: string) =>
-            handleDateUnitChange('MINUTE', newMinute)
+            handleDateUnitChange('minute', newMinute)
           }
         />
       </S.Container>

@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-import * as Page from '@pages/index';
-import { useAppSelector } from '@store/hooks';
+
 import { AnimatePresence } from 'framer-motion';
 import {
   BrowserRouter,
@@ -9,6 +8,10 @@ import {
   useLocation,
   useNavigate,
 } from 'react-router-dom';
+
+
+import * as Page from '@pages/index';
+import { useAppSelector } from '@store/hooks';
 
 function AnimatedRoutes() {
   const location = useLocation();

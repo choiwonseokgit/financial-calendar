@@ -4,6 +4,8 @@ const colors = css`
   :root {
     --black: #000000;
     --white: #ffffff;
+    --blue: blue;
+    --red: red;
 
     //gray
     --gray01: #dddddd;
