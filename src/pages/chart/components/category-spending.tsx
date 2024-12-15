@@ -1,9 +1,11 @@
+import styled from 'styled-components';
+
 import chevronDownIcon from '@assets/icons/chevron-down-solid.svg';
 import chevronUpIcon from '@assets/icons/chevron-up-solid.svg';
 import InitialSpending from '@components/initial-spending';
 import { BACKGROUND_COLORS, BORDER_COLORS } from '@constants/chart-color';
-import { TSpendingMoney } from '@store/query/calendar-query';
-import styled from 'styled-components';
+
+import { SpendingMoney } from '@/types/calendar';
 
 interface CategorySpendingProps {
   category: string;
@@ -12,7 +14,7 @@ interface CategorySpendingProps {
   idx: number;
   onClick: () => void;
   isClicked: boolean;
-  initialSpendings: TSpendingMoney[];
+  initialSpendings: SpendingMoney[];
 }
 
 function CategorySpending({

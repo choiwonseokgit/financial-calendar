@@ -1,13 +1,10 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-interface TChart {
-  chartDate: string;
-  chartDateType: 'MONTH' | 'YEAR';
-}
+import type { Chart } from '@/types/chart';
 
-const initialState: TChart = {
+const initialState: Chart = {
   chartDate: new Date().toISOString(),
-  chartDateType: 'MONTH',
+  chartType: 'month',
 };
 
 export const chartSlice = createSlice({
@@ -17,14 +14,11 @@ export const chartSlice = createSlice({
     changeChartDate: (state, action: PayloadAction<string>) => {
       state.chartDate = action.payload;
     },
-    changeChartDateType: (
-      state,
-      action: PayloadAction<TChart['chartDateType']>,
-    ) => {
-      state.chartDateType = action.payload;
+    changeChartType: (state, action: PayloadAction<Chart['chartType']>) => {
+      state.chartType = action.payload;
     },
   },
 });
 
-export const { changeChartDate, changeChartDateType } = chartSlice.actions;
+export const { changeChartDate, changeChartType } = chartSlice.actions;
 export default chartSlice.reducer;

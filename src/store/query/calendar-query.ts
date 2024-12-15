@@ -1,48 +1,16 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
+
 import getYearMonthFromISO from '@utils/get-year-month-from-iso';
+
+import {
+  Schedule,
+  SpendingMoney,
+  TargetMonthSpending,
+  spendingMoneyApiResponse,
+  spendingMoneyForChartApiResponse,
+} from '@/types/calendar';
+
 import axiosBaseQuery from './axios-base-query';
-
-export interface TSpendingMoney {
-  id: number;
-  spentMoney: string;
-  category: string;
-  date: string;
-  memo?: string;
-  createdAt: string;
-  updatedAt: string;
-  userId: number;
-}
-
-export interface TTargetMonthSpending {
-  id: number;
-  targetDate: string;
-  targetMoney: string;
-  userId: number;
-}
-
-export interface TSchedule {
-  id: number;
-  title: string;
-  color: string;
-  memo: string;
-  isAllDay: boolean;
-  startDate: string;
-  endDate: string;
-  createdAt: string;
-  updatedAt: string;
-  userId: number;
-}
-
-export interface spendingMoneyApiResponse {
-  targetMonthSpending: TTargetMonthSpending | null;
-  targetDateSpendingMoney: TSpendingMoney[];
-  total: number;
-}
-
-export interface spendingMoneyForChartApiResponse {
-  spendingMoneysForChart: [string, string, TSpendingMoney[]][];
-  total: number;
-}
 
 export const calendarApi = createApi({
   reducerPath: 'calendarApi',
@@ -79,10 +47,7 @@ export const calendarApi = createApi({
       keepUnusedDataFor: Infinity,
     }),
 
-    postSpendingMoney: builder.mutation<
-      TSpendingMoney,
-      Partial<TSpendingMoney>
-    >({
+    postSpendingMoney: builder.mutation<SpendingMoney, Partial<SpendingMoney>>({
       query: (newSpendingMoney) => ({
         url: '/spending-moneys',
         method: 'post',
@@ -104,8 +69,8 @@ export const calendarApi = createApi({
     }),
 
     updateSpendingMoney: builder.mutation<
-      TSpendingMoney,
-      Partial<TSpendingMoney>
+      SpendingMoney,
+      Partial<SpendingMoney>
     >({
       query: (newSpendingMoney) => ({
         url: '/spending-moneys',
@@ -128,8 +93,8 @@ export const calendarApi = createApi({
     }),
 
     deleteSpendingMoney: builder.mutation<
-      TSpendingMoney,
-      Partial<TSpendingMoney>
+      SpendingMoney,
+      Partial<SpendingMoney>
     >({
       query: ({ id }) => ({
         url: '/spending-moneys',
@@ -153,7 +118,7 @@ export const calendarApi = createApi({
 
     /****************target-month-spending*******************/
     postTargetMonthSpending: builder.mutation<
-      TTargetMonthSpending,
+      TargetMonthSpending,
       {
         year: string;
         month: string;
@@ -171,7 +136,7 @@ export const calendarApi = createApi({
     }),
 
     updateTargetMonthSpending: builder.mutation<
-      TTargetMonthSpending,
+      TargetMonthSpending,
       {
         year: string;
         month: string;
@@ -205,7 +170,7 @@ export const calendarApi = createApi({
     }),
 
     /****************schedules*******************/
-    getSchedule: builder.query<TSchedule[], { year: string; month: string }>({
+    getSchedule: builder.query<Schedule[], { year: string; month: string }>({
       query: ({ month, year }) => ({
         url: `/schedules?month=${month}&year=${year}`,
         method: 'get',
@@ -216,7 +181,7 @@ export const calendarApi = createApi({
       keepUnusedDataFor: Infinity,
     }),
 
-    postSchedule: builder.mutation<TSchedule, Partial<TSchedule>>({
+    postSchedule: builder.mutation<Schedule, Partial<Schedule>>({
       query: (newSpendingMoney) => ({
         url: '/schedules',
         method: 'post',

@@ -1,41 +1,43 @@
 import { useReducer } from 'react';
-// import calDateAndMakeStr from '@utils/cal-date-and-make-str';
-// import { parse } from 'date-fns';
-import { useAppDispatch } from '@store/hooks';
-// import { select } from '@store/slices/selected-date-slice';
-import { changeChartDate } from '@store/slices/chart-slice';
-import calDateAndMakeStr from '@utils/cal-date-and-make-str';
+
 import { format, parse } from 'date-fns';
 import styled from 'styled-components';
+
+import { useAppDispatch } from '@store/hooks';
+import { changeChartDate } from '@store/slices/chart-slice';
+import calDateAndMakeStr from '@utils/cal-date-and-make-str';
+
 import Modal from '../components/modal';
 import MonthFlicking from '../components/month-flicking';
 import YearFlicking from '../components/year-flicking';
 
-interface TSelectingDate {
+import type { TChart } from '@/types/chart';
+
+interface SelectingDate {
   year: string;
   month: string;
 }
 
 interface Action {
-  type: 'YEAR' | 'MONTH';
+  type: TChart;
   dateUnit: string;
 }
 
-const reducer = (selectingDate: TSelectingDate, action: Action) => {
+const reducer = (selectingDate: SelectingDate, action: Action) => {
   return { ...selectingDate, [action.type.toLowerCase()]: action.dateUnit };
 };
 
 interface DateSelectModalProps {
   onClose: () => void;
   chartDate: string;
-  chartDateType: 'YEAR' | 'MONTH';
+  chartType: TChart;
   cb: () => void;
 }
 
 function ChartDateSelectModal({
   onClose,
   chartDate,
-  chartDateType,
+  chartType,
   cb,
 }: DateSelectModalProps) {
   const dispatch = useAppDispatch();
@@ -47,7 +49,7 @@ function ChartDateSelectModal({
 
   const handleSubmit = () => {
     const { year, month } = selectingDate;
-    const selectedDate = `${year}/${chartDateType === 'MONTH' ? month : '01'}`;
+    const selectedDate = `${year}/${chartType === 'month' ? month : '01'}`;
 
     dispatch(
       changeChartDate(
@@ -57,8 +59,8 @@ function ChartDateSelectModal({
     cb();
   };
 
-  const handleDateUnitChange = (type: 'YEAR' | 'MONTH', dateUnit: string) => {
-    selectingDateDispatch({ type: type, dateUnit: dateUnit });
+  const handleDateUnitChange = (type: TChart, dateUnit: string) => {
+    selectingDateDispatch({ type, dateUnit });
   };
 
   return (
@@ -67,14 +69,14 @@ function ChartDateSelectModal({
         <YearFlicking
           currSelectYear={year}
           onYearChange={(newYear: string) =>
-            handleDateUnitChange('YEAR', newYear)
+            handleDateUnitChange('year', newYear)
           }
         />
-        {chartDateType === 'MONTH' && (
+        {chartType === 'month' && (
           <MonthFlicking
             currSelectMonth={month}
             onMonthChange={(newMonth: string) =>
-              handleDateUnitChange('MONTH', newMonth)
+              handleDateUnitChange('month', newMonth)
             }
           />
         )}

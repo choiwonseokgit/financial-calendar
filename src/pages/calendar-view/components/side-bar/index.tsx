@@ -1,12 +1,13 @@
 import { useRef } from 'react';
+
+import styled, { keyframes } from 'styled-components';
+
 import CloseIcon from '@assets/icons/xmark-solid.svg';
 import { SERVER_URL } from '@constants/url';
 import useOutsideClickForAnimation from '@hooks/use-outside-click-for-animation';
 import { CALENDAR_CHECK_LIST } from '@pages/calendar-view/constants';
-import { useAppDispatch } from '@store/hooks';
 import { useGetUserQuery } from '@store/query/user-query';
-import { logout } from '@store/slices/login-check-slice';
-import styled, { keyframes } from 'styled-components';
+
 import CheckList from './components/check-list';
 import UserInfoSkeleton from './components/skeleton/user-info-skeleton';
 import UserNameSkeleton from './components/skeleton/user-name-skeleton';
@@ -17,13 +18,11 @@ interface SideBarProps {
 
 function SideBar({ onSideBarBtnClick }: SideBarProps) {
   const { data: user, isLoading } = useGetUserQuery();
-  const dispatch = useAppDispatch();
   const ref = useRef<HTMLDivElement>(null);
   const { isCloseAnimStart, handleCloseAnimStart } =
     useOutsideClickForAnimation(ref, () => onSideBarBtnClick(false), 300);
 
   const handleLogout = () => {
-    dispatch(logout());
     window.location.href =
       'https://kauth.kakao.com/oauth/logout?client_id=' +
       process.env.REACT_APP_KAKAO_LOGIN_CLIENT_ID +

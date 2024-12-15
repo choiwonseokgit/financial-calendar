@@ -14,7 +14,11 @@ export default MyMonthHeader;
 const S = {
   Container: styled.div<{ $label: string }>`
     color: ${({ $label }) =>
-      $label === '토' ? 'blue' : $label === '일' ? 'red' : 'var(--gray02)'};
+      $label === '토'
+        ? 'var(--blue)'
+        : $label === '일'
+          ? 'var(--red)'
+          : 'var(--gray02)'};
     font-weight: 500;
   `,
 };

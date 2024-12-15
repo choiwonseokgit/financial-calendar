@@ -1,16 +1,22 @@
 import { useState } from 'react';
+
+import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
 import chevronLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
 import ChartDateSelectModal from '@components/modal/chart-date-select-modal';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
-import { format } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+
+
 import ChartDateTypeBtns from './chart-date-type-btns';
 
-const DATE_TYPES: { type: 'MONTH' | 'YEAR'; title: string }[] = [
-  { type: 'MONTH', title: '월별' },
-  { type: 'YEAR', title: '연별' },
+import type { TChart } from '@/types/chart';
+
+const DATE_TYPES: { type: TChart; title: string }[] = [
+  { type: 'month', title: '월별' },
+  { type: 'year', title: '연별' },
 ];
 
 interface ChartNavBarProps {
@@ -18,7 +24,7 @@ interface ChartNavBarProps {
 }
 
 function ChartNavBar({ onClickIdxInit }: ChartNavBarProps) {
-  const { chartDate, chartDateType } = useAppSelector((state) => state.chart);
+  const { chartDate, chartType } = useAppSelector((state) => state.chart);
   const [isChartDateSelectModalOpen, setIsChartDateSelectModalOpen] =
     useState(false);
   const navigate = useNavigate();
@@ -34,14 +40,14 @@ function ChartNavBar({ onClickIdxInit }: ChartNavBarProps) {
         <S.ChevronImg src={chevronLeftIcon} alt="뒤로가기" />
       </button>
       <S.DateSelectBtn onClick={() => setIsChartDateSelectModalOpen(true)}>
-        {format(chartDate, chartDateType === 'MONTH' ? 'yyyy년 M월' : 'yyyy년')}
+        {format(chartDate, chartType === 'month' ? 'yyyy년 M월' : 'yyyy년')}
       </S.DateSelectBtn>
       <div>
         {DATE_TYPES.map((dateType) => (
           <ChartDateTypeBtns
             {...dateType}
             key={dateType.type}
-            isSelected={chartDateType === dateType.type}
+            isSelected={chartType === dateType.type}
             cb={onClickIdxInit}
           />
         ))}
@@ -49,7 +55,7 @@ function ChartNavBar({ onClickIdxInit }: ChartNavBarProps) {
       {isChartDateSelectModalOpen && (
         <ChartDateSelectModal
           chartDate={chartDate}
-          chartDateType={chartDateType}
+          chartType={chartType}
           onClose={() => setIsChartDateSelectModalOpen(false)}
           cb={onClickIdxInit}
         />

@@ -1,14 +1,18 @@
 import { useRef, useState } from 'react';
+
+import { format } from 'date-fns';
+import styled from 'styled-components';
+
 import MoneyInput from '@components/money-input';
-import { TSetTargetSpendingModal } from '@constants/modal';
 import {
   useDeleteTargetMonthSpendingMutation,
   usePostTargetMonthSpendingMutation,
   useUpdateTargetMonthSpendingMutation,
 } from '@store/query/calendar-query';
-import { format } from 'date-fns';
-import styled from 'styled-components';
+
 import Modal from '../components/modal';
+
+import type { TSetTargetSpendingModal } from '@constants/modal';
 
 interface SetTargetSpendingModalProps {
   onClose: () => void;

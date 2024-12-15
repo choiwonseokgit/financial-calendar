@@ -1,15 +1,13 @@
-// const DATE_TYPES = {
-//   month: '연별',
-//   year: '월별',
-// };
+import styled from 'styled-components';
 
 import { useAppDispatch } from '@store/hooks';
-import { changeChartDateType } from '@store/slices/chart-slice';
-import styled from 'styled-components';
+import { changeChartType } from '@store/slices/chart-slice';
+
+import type { TChart } from '@/types/chart';
 
 interface ChartDateTypeBtnsProps {
   isSelected: boolean;
-  type: 'MONTH' | 'YEAR';
+  type: TChart;
   title: string;
   cb: () => void;
 }
@@ -27,7 +25,7 @@ function ChartDateTypeBtns({
       $isSelected={isSelected}
       onClick={() => {
         cb();
-        dispatch(changeChartDateType(type));
+        dispatch(changeChartType(type));
       }}
     >
       {title}
@@ -45,6 +43,7 @@ const S = {
     padding: 2px;
     background-color: ${({ $isSelected }) =>
       $isSelected ? `var(--green04)` : `none`};
-    color: ${({ $isSelected }) => ($isSelected ? `white` : `black`)};
+    color: ${({ $isSelected }) =>
+      $isSelected ? `var(--white)` : `var(--black)`};
   `,
 };

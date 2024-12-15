@@ -1,4 +1,10 @@
 import { useRef, useState } from 'react';
+
+import { format } from 'date-fns';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
 import plusIcon from '@assets/icons/plus-solid.svg';
 import SetTargetMonthSpendingModal from '@components/modal/set-target-month-spending-modal';
 import { TSetTargetSpendingModal } from '@constants/modal';
@@ -6,16 +12,8 @@ import { useAppDispatch, useAppSelector } from '@store/hooks';
 import { useGetSpendingMoneyQuery } from '@store/query/calendar-query';
 import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
 import parseIntAndMakeLocaleKR from '@utils/parse-Int-and-make-locale-kr';
-import { format } from 'date-fns';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import FooterSkeleton from './components/footer-skeleton';
 
-// const variants = {
-//   open: { opacity: 1, y: 0 },
-//   closed: { opacity: 0, y: '50%' },
-// };
+import FooterSkeleton from './components/footer-skeleton';
 
 interface FooterProps {
   date: string;
@@ -151,7 +149,7 @@ export default Footer;
 
 const S = {
   Footer: styled.footer`
-    background-color: white;
+    background-color: var(--white);
   `,
   Container: styled.div`
     height: 15dvh;

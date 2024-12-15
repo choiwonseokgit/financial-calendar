@@ -1,36 +1,41 @@
 import { useReducer } from 'react';
+
+import { parse } from 'date-fns';
+import styled from 'styled-components';
+
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 import { select } from '@store/slices/selected-date-slice';
 import calDateAndMakeStr from '@utils/cal-date-and-make-str';
-import { parse } from 'date-fns';
-import styled from 'styled-components';
+
 import DayFlicking from '../components/day-flicking';
 import Modal from '../components/modal';
 import MonthFlicking from '../components/month-flicking';
 import YearFlicking from '../components/year-flicking';
 
-interface TSelectingDate {
+interface SelectingDate {
   year: string;
   month: string;
   day: string;
 }
 
+type TDateUnit = keyof SelectingDate;
+
 interface Action {
-  type: 'YEAR' | 'MONTH' | 'DAY';
+  type: TDateUnit;
   dateUnit: string;
 }
 
-const reducer = (selectingDate: TSelectingDate, action: Action) => {
+const reducer = (selectingDate: SelectingDate, action: Action) => {
   return { ...selectingDate, [action.type.toLowerCase()]: action.dateUnit };
 };
 
 type CalendarView = {
-  type: 'CALENDAR_VIEW';
+  type: 'calendar-view';
   onCalendarDatesInit: (newDate: string) => void;
 };
 
 type ScheduleForm = {
-  type: 'SCHEDULE_FORM';
+  type: 'schedule-form';
   onScheduleDateChange: (newDate: string) => void;
 };
 
@@ -61,10 +66,10 @@ function DateSelectModal({
     const selectedDate = `${year}/${month}/${day}`;
 
     switch (cb?.type) {
-      case 'SCHEDULE_FORM':
+      case 'schedule-form':
         cb.onScheduleDateChange(selectedDate);
         break;
-      case 'CALENDAR_VIEW':
+      case 'calendar-view':
         dispatch(select(selectedDate));
         cb.onCalendarDatesInit(
           calDateAndMakeStr(parse(selectedDate, 'yyyy/MM/dd', new Date())),
@@ -76,11 +81,8 @@ function DateSelectModal({
     }
   };
 
-  const handleDateUnitChange = (
-    type: 'YEAR' | 'MONTH' | 'DAY',
-    dateUnit: string,
-  ) => {
-    selectingDateDispatch({ type: type, dateUnit: dateUnit });
+  const handleDateUnitChange = (type: TDateUnit, dateUnit: string) => {
+    selectingDateDispatch({ type, dateUnit });
   };
 
   return (
@@ -89,13 +91,13 @@ function DateSelectModal({
         <YearFlicking
           currSelectYear={year}
           onYearChange={(newYear: string) =>
-            handleDateUnitChange('YEAR', newYear)
+            handleDateUnitChange('year', newYear)
           }
         />
         <MonthFlicking
           currSelectMonth={month}
           onMonthChange={(newMonth: string) =>
-            handleDateUnitChange('MONTH', newMonth)
+            handleDateUnitChange('month', newMonth)
           }
         />
         <DayFlicking
@@ -104,7 +106,7 @@ function DateSelectModal({
           currSelectDay={day}
           selectingYear={selectingDate.year}
           selectingMonth={selectingDate.month}
-          onDayChange={(newDay: string) => handleDateUnitChange('DAY', newDay)}
+          onDayChange={(newDay: string) => handleDateUnitChange('day', newDay)}
         />
       </S.Container>
     </Modal>

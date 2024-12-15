@@ -1,4 +1,12 @@
 import { useReducer } from 'react';
+
+
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import styled, { css } from 'styled-components';
+
 import checkIcon from '@assets/icons/check-solid.svg';
 import chevronLeftIcon from '@assets/icons/chevron-left-solid-green.svg';
 import memoIcon from '@assets/icons/newspaper-solid.svg';
@@ -8,12 +16,7 @@ import usePageTransition from '@hooks/use-page-transition';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 import { usePostScheduleMutation } from '@store/query/calendar-query';
 import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
-// import getYearMonthFromISO from '@utils/get-year-month-from-iso';
-import { format } from 'date-fns';
-import { ko } from 'date-fns/locale';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import styled, { css } from 'styled-components';
+
 import DateSelect from './components/date-select';
 import TimeSelect from './components/time-select';
 import Title from './components/title';
@@ -90,7 +93,6 @@ function ScheduleForm() {
     const end = combineDateTimeToIso(endDate, endTime, isAllDay);
     const isSameDate = start === end;
     const isValidateDateOrder = validateDateOrder(start, end);
-    // const { year, month } = getYearMonthFromISO(startDate);
 
     switch (true) {
       case !title:

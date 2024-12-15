@@ -1,10 +1,11 @@
-import React from 'react';
-import useGetHolidayTitle from '@hooks/use-get-holiday-title';
-import { useAppDispatch, useAppSelector } from '@store/hooks';
-import { select } from '@store/slices/selected-date-slice';
 import { format } from 'date-fns';
 import { DateHeaderProps } from 'react-big-calendar';
 import styled from 'styled-components';
+
+import useGetHolidayTitle from '@hooks/use-get-holiday-title';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
+import { select } from '@store/slices/selected-date-slice';
+
 
 function MyDateHeader({ date, label }: DateHeaderProps) {
   const holidayTitle = useGetHolidayTitle(date);
@@ -35,14 +36,14 @@ export default MyDateHeader;
 
 const S = {
   Container: styled.div<{ $isHoliday: boolean }>`
-    color: ${({ $isHoliday }) => ($isHoliday ? 'red' : 'inherit')};
+    color: ${({ $isHoliday }) => ($isHoliday ? 'var(--red)' : 'inherit')};
   `,
   DateBtn: styled.button<{ $isSelected: boolean }>`
     width: 18px;
     height: 18px;
     border-radius: 50%;
     background-color: ${({ $isSelected }) => $isSelected && 'var(--green04)'};
-    color: ${({ $isSelected }) => $isSelected && 'white'};
+    color: ${({ $isSelected }) => $isSelected && 'var(--white)'};
   `,
   Holiday: styled.p<{ $isHoliday: boolean }>`
     font-size: 11px;

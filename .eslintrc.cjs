@@ -11,6 +11,15 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['react-refresh', 'eslint-plugin-import'],
 
+  settings: {
+    'import/resolver': {
+      typescript: {
+        // typescript resolver 사용
+        project: './tsconfig.json', // tsconfig.json 경로
+      },
+    },
+  },
+
   rules: {
     'no-var': 'error',
     'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
@@ -22,8 +31,7 @@ module.exports = {
           'builtin',
           'external',
           'internal',
-          'parent',
-          'sibling',
+          ['parent', 'sibling'],
           'index',
           'type',
           'unknown',
@@ -31,25 +39,21 @@ module.exports = {
         pathGroups: [
           {
             pattern: 'react',
-            group: 'builtin',
+            group: 'external',
             position: 'before',
           },
           {
-            pattern: '@(?!(.*\\.style$))',
+            pattern: '@/**',
             group: 'internal',
             position: 'after',
           },
-          {
-            pattern: '@**/*.{png,jpg,jpeg,gif}',
-            group: 'unknown',
-            position: 'after',
-          },
         ],
+        pathGroupsExcludedImportTypes: ['react', 'type'],
         alphabetize: {
           order: 'asc',
           caseInsensitive: true,
         },
-        pathGroupsExcludedImportTypes: ['builtin'],
+        'newlines-between': 'always',
       },
     ],
   },

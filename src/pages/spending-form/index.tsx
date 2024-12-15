@@ -1,44 +1,54 @@
 import { useReducer, useRef, useState } from 'react';
+
+
+import Flicking from '@egjs/react-flicking';
+import { format, formatISO, parse, parseISO } from 'date-fns';
+import { useLocation, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
 import chevronDownIcon from '@assets/icons/chevron-down-solid.svg';
 import chevronUpIcon from '@assets/icons/chevron-up-solid.svg';
 import ConfirmModal from '@components/modal/confirm-modal';
 import DateSelectModal from '@components/modal/date-select-modal';
 import MoneyInput from '@components/money-input';
 import SpendingPageContainer from '@components/spending-page-container';
-import Flicking from '@egjs/react-flicking';
 import useConfirmModal from '@hooks/use-confirm-modal';
 import { useAppSelector } from '@store/hooks';
-
 import {
-  TSpendingMoney,
   useDeleteSpendingMoneyMutation,
   usePostSpendingMoneyMutation,
   useUpdateSpendingMoneyMutation,
 } from '@store/query/calendar-query';
-import { useLocation, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+
+
+
 import Category from './components/category';
+
 import '@egjs/react-flicking/dist/flicking.css';
-import { format, formatISO, parse, parseISO } from 'date-fns';
-import { CATEGORYS, TCategory } from './constants/index';
+
 import parseIntAndMakeLocaleKR from '@utils/parse-Int-and-make-locale-kr';
 
+
+import { SpendingMoney } from '@/types/calendar';
+
+import { CATEGORYS, TCategory } from './constants/index';
+
 type SpentMoney = {
-  type: 'SPENT_MONEY';
+  type: 'spent-money';
   spentMoney: string;
 };
 
-type Category = {
-  type: 'CATEGORY';
+type CategoryType = {
+  type: 'category';
   category: TCategory | null;
 };
 
 type Memo = {
-  type: 'MEMO';
+  type: 'memo';
   memo: string;
 };
 
-type SpendingAction = SpentMoney | Category | Memo;
+type SpendingAction = SpentMoney | CategoryType | Memo;
 
 interface TSpending {
   spentMoney: string;
@@ -48,11 +58,11 @@ interface TSpending {
 
 const reducer = (spending: TSpending, action: SpendingAction) => {
   switch (action.type) {
-    case 'SPENT_MONEY':
+    case 'spent-money':
       return { ...spending, spentMoney: action.spentMoney };
-    case 'CATEGORY':
+    case 'category':
       return { ...spending, category: action.category };
-    case 'MEMO':
+    case 'memo':
       return { ...spending, memo: action.memo };
     default:
       return spending;
@@ -68,7 +78,7 @@ function SpendingForm() {
     category: prevCategory,
     spentMoney: prevSpentMoney,
     memo: prevMemo,
-  }: TSpendingMoney = location.state ?? {};
+  }: SpendingMoney = location.state ?? {};
   const queryParams = new URLSearchParams(location.search);
   const isEditPage = queryParams.get('type') === 'edit';
   const [spending, spendingDispatch] = useReducer(reducer, {
@@ -154,11 +164,11 @@ function SpendingForm() {
   };
 
   const handleCategoryClick = (idx: number) => {
-    spendingDispatch({ type: 'CATEGORY', category: CATEGORYS[idx] });
+    spendingDispatch({ type: 'category', category: CATEGORYS[idx] });
   };
 
   const handleSpentMoneyChange = (money: string) => {
-    spendingDispatch({ type: 'SPENT_MONEY', spentMoney: money });
+    spendingDispatch({ type: 'spent-money', spentMoney: money });
   };
 
   return (
@@ -223,7 +233,7 @@ function SpendingForm() {
             placeholder="메모"
             value={spending.memo}
             onChange={(e) =>
-              spendingDispatch({ type: 'MEMO', memo: e.target.value })
+              spendingDispatch({ type: 'memo', memo: e.target.value })
             }
           ></S.TextArea>
         </S.MemoBox>

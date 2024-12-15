@@ -1,22 +1,29 @@
 import { useEffect } from 'react';
-import usePageTransition from '@hooks/use-page-transition';
-import { useAppDispatch } from '@store/hooks';
-import { login } from '@store/slices/login-check-slice';
+
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
+import Axios from '@api/axios';
+import usePageTransition from '@hooks/use-page-transition';
+
+import { User } from '@/types/user';
+
 function Auth() {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const pageTransition = usePageTransition();
-  const urlParams = new URLSearchParams(window.location.search);
-  const userId = urlParams.get('userId');
-  const isLogin = userId !== 'null';
 
   useEffect(() => {
-    dispatch(login({ userId: isLogin ? userId : null }));
-    navigate(isLogin ? '/' : '/login');
+    const initializeAuth = async () => {
+      try {
+        await Axios.get<User>('/users');
+        navigate('/');
+      } catch (err) {
+        navigate('/login');
+      }
+    };
+
+    initializeAuth();
   }, []);
 
   return <S.Container {...pageTransition}>💸Loading</S.Container>;

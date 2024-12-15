@@ -1,9 +1,10 @@
-import CloseIcon from '@assets/icons/xmark-solid.svg';
-import { MODAL_TITLE, TModalTitle } from '@constants/modal';
 import styled from 'styled-components';
 
+import CloseIcon from '@assets/icons/xmark-solid.svg';
+import { MODAL_TITLE, ModalTitle } from '@constants/modal';
+
 interface ModalHeaderProps {
-  type: keyof TModalTitle;
+  type: keyof ModalTitle;
   onClose: () => void;
 }
 

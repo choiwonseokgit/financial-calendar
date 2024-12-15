@@ -1,5 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { View } from 'react-big-calendar';
+
+
 import type { RootState } from '@store/index';
 
 const initialState: View = 'month' as View;

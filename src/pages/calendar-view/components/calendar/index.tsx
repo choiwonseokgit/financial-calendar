@@ -1,10 +1,5 @@
 import React from 'react';
-import { useAppDispatch, useAppSelector } from '@store/hooks';
-import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
-import {
-  isScheduleEvent,
-  isSpendingEvent,
-} from '@utils/calendar-event-type-guard';
+
 import moment from 'moment';
 import {
   Calendar as BigCalendar,
@@ -14,14 +9,23 @@ import {
 } from 'react-big-calendar';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+
+import LoadingSpinner from '@components/loading-spinner';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
+import { changeTransitionDirection } from '@store/slices/transition-direction-slice';
+import {
+  isScheduleEvent,
+  isSpendingEvent,
+} from '@utils/calendar-event-type-guard';
+
 import MyDateHeader from './components/my-date-header';
 import MyEvent from './components/my-event';
 import MyMonthHeader from './components/my-month-header';
 import useCalendarEvents from './hooks/use-calendar-events';
 import { TFormatCalendarEvents } from './hooks/use-calendar-events';
+
 import 'moment/locale/ko';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import LoadingSpinner from '@components/loading-spinner';
 
 moment.locale('ko-KR');
 const localizer = momentLocalizer(moment);
@@ -98,17 +102,6 @@ function Calendar({
             dateHeader: MyDateHeader,
             event: MyEvent,
           },
-          // events={view === 'day' ? FILTERED_EVENT : EVENTS}
-          // onShowMore={(dates) => {
-          //   console.log(dates);
-          //   dispatch(select(format(dates[0].start, 'yyyy/MM/dd')));
-          // }}
-          // selectable
-          // onSelectSlot={({ start, action }) => {
-          //   if (action === 'click') {
-          //     dispatch(select(format(start, 'yyyyMMdd')));
-          //   } else return;
-          // }}
         }}
       />
     </S.Container>
@@ -118,25 +111,16 @@ function Calendar({
 export default React.memo(Calendar);
 
 const S = {
-  Container: styled.div<{ $isSpendingMoneyVisible: boolean }>`
+  Container: styled.section<{ $isSpendingMoneyVisible: boolean }>`
     background-color: white;
     .rbc-calendar {
       height: 88dvh;
       height: ${({ $isSpendingMoneyVisible }) =>
         $isSpendingMoneyVisible ? '73dvh' : '88dvh'};
-      /* max-height: 800px; */
-    }
-    .rbc-label {
-      /* color: #5ca08f; */
     }
     .rbc-month-view {
       border: none;
     }
-
-    .rbc-month-row {
-      /* border-top: none; */
-    }
-
     .rbc-day-bg {
       border-left: none;
     }
@@ -160,10 +144,10 @@ const S = {
 
     .rbc-date-cell {
       &:first-child {
-        color: red;
+        color: var(--red);
       }
       &:last-child {
-        color: blue;
+        color: var(--blue);
       }
     }
 

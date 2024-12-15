@@ -22,7 +22,6 @@ const S = {
     border-top-right-radius: 20px;
     display: flex;
     justify-content: center;
-    /* align-items: center; */
     padding: 10px;
     color: var(--green04);
     font-size: 15px;

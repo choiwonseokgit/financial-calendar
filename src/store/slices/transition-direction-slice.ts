@@ -1,10 +1,10 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-interface TTransitionDirection {
-  direction: 'left' | 'right';
+interface TransitionDirection {
+  direction: 'left' | 'right' | 'none';
 }
 
-const initialState: TTransitionDirection = { direction: 'right' };
+const initialState: TransitionDirection = { direction: 'right' };
 
 export const transitionDirectionSlice = createSlice({
   name: 'transitionDirection',
@@ -12,7 +12,7 @@ export const transitionDirectionSlice = createSlice({
   reducers: {
     changeTransitionDirection: (
       state,
-      action: PayloadAction<TTransitionDirection['direction']>,
+      action: PayloadAction<TransitionDirection['direction']>,
     ) => {
       state.direction = action.payload;
     },

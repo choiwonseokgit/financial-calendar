@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+
 import Flicking from '@egjs/react-flicking';
 
 const useScrollEvent = (
