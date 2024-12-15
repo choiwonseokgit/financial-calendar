@@ -1,12 +1,8 @@
-// import { useEffect } from 'react';
-
-// import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import LogoIcon from '@assets/icons/financial-calendar-small-logo.svg';
 import KakaoIcon from '@assets/icons/kakao.svg';
 import { SERVER_URL } from '@constants/url';
-// import { useAppSelector } from '@store/hooks';
 
 function Login() {
   const handleLoginBtnClick = () => {
@@ -17,14 +13,6 @@ function Login() {
       encodeURIComponent(`${SERVER_URL}/oauth/kakao`) +
       '&response_type=code';
   };
-  // const { user } = useAppSelector((state) => state.auth);
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (user) {
-  //     navigate(-1);
-  //   }
-  // }, [user, navigate]);   
 
   return (
     <S.Container>

@@ -28,13 +28,6 @@ Axios.interceptors.response.use(
           return axios(error.config);
         }
       } catch (err) {
-        // if (err instanceof AxiosError && err.response?.status === 401) {
-        //   // refreshToken 갱신 실패
-        //   if (window.location.pathname !== '/login') {
-        //     window.location.href = '/login';
-        //   }
-        // }
-
         throw new Error('세션이 만료되었습니다. 다시 로그인해주세요.');
       }
     }
