@@ -18,7 +18,6 @@ export default Root;
 const S = {
   Container: styled.div`
     inset: 0px;
-    /* pointer-events: none; */
     position: fixed;
     z-index: 100;
     ${mobileSize}

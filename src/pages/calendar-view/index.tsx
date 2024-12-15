@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 
-
 import Flicking, { MoveEndEvent } from '@egjs/react-flicking';
 import { formatISO, parse } from 'date-fns';
 import { motion } from 'framer-motion';

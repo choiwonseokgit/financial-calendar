@@ -6,9 +6,9 @@ import storage from 'redux-persist/lib/storage';
 import { calendarApi } from './query/calendar-query';
 import { holidayApi } from './query/holiday-query';
 import { userApi } from './query/user-query';
+import authReducer from './slices/auth-slice';
 import calendarOptionReducer from './slices/calendar-option-slice';
 import chartReducer from './slices/chart-slice';
-import loginCheckReducer from './slices/login-check-slice';
 import selectedDateReducer from './slices/selected-date-slice';
 import transitionDirectionReducer from './slices/transition-direction-slice';
 import viewReducer from './slices/viewSlice';
@@ -16,7 +16,7 @@ import viewReducer from './slices/viewSlice';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['loginCheck', 'calendarOption'],
+  whitelist: ['calendarOption'],
 };
 
 const rootReducer = combineReducers({
@@ -24,7 +24,7 @@ const rootReducer = combineReducers({
   selectedDate: selectedDateReducer,
   calendarOption: calendarOptionReducer,
   transitionDirection: transitionDirectionReducer,
-  loginCheck: loginCheckReducer,
+  auth: authReducer,
   chart: chartReducer,
   [holidayApi.reducerPath]: holidayApi.reducer,
   [userApi.reducerPath]: userApi.reducer,

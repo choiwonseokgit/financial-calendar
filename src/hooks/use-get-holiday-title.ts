@@ -1,22 +1,19 @@
 import { format } from 'date-fns';
 
-import {
-  HolidayResponse,
-  useGetHolidayQuery,
-} from '@store/query/holiday-query';
+import { useGetHolidayQuery } from '@store/query/holiday-query';
 
 const useGetHolidayTitle = (date: Date | string) => {
   const [year, month] = [format(date, 'yyyy'), format(date, 'MM')];
   const fullDate = format(date, 'yyyyMMdd');
 
-  const { data, isLoading } = useGetHolidayQuery({
+  const { data, isLoading, isError } = useGetHolidayQuery({
     year,
     month,
   });
 
-  if (isLoading) return null;
+  if (isLoading || isError || !data) return null;
 
-  const { holidays } = data as HolidayResponse;
+  const { holidays } = data;
 
   if (!holidays) return null;
 

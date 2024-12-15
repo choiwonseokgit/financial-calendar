@@ -18,7 +18,6 @@ import {
   isSpendingEvent,
 } from '@utils/calendar-event-type-guard';
 
-
 import MyDateHeader from './components/my-date-header';
 import MyEvent from './components/my-event';
 import MyMonthHeader from './components/my-month-header';
@@ -112,7 +111,7 @@ function Calendar({
 export default React.memo(Calendar);
 
 const S = {
-  Container: styled.div<{ $isSpendingMoneyVisible: boolean }>`
+  Container: styled.section<{ $isSpendingMoneyVisible: boolean }>`
     background-color: white;
     .rbc-calendar {
       height: 88dvh;

@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 interface TransitionDirection {
-  direction: 'left' | 'right';
+  direction: 'left' | 'right' | 'none';
 }
 
 const initialState: TransitionDirection = { direction: 'right' };

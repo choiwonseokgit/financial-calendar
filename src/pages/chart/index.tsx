@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 
-
 import {
   Chart as ChartJS,
   Title,

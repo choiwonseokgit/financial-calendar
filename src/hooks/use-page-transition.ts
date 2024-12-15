@@ -4,10 +4,12 @@ const MOVE_VALUES = {
   init: {
     right: { x: '100%' },
     left: { x: '-100%' },
+    none: { x: 0 },
   },
   exit: {
     right: { x: '-100%' },
     left: { x: '100%' },
+    none: { x: 0 },
   },
 };
 
