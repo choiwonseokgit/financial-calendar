@@ -22,9 +22,7 @@
 
 
 
-https://github.com/user-attachments/assets/44328f34-0540-4c9d-8247-0ce7db03e140
-
-
+<img src="https://github.com/user-attachments/assets/2d054080-fc62-4268-b7b7-96815fa65367" width="320px" height="568px"/>
 
 
 
@@ -34,7 +32,7 @@ https://github.com/user-attachments/assets/44328f34-0540-4c9d-8247-0ce7db03e140
   
 
 
-https://github.com/user-attachments/assets/6f243871-dff4-4826-95ba-92503263eccf
+<img src="https://github.com/user-attachments/assets/fe896842-eb01-426f-b1fa-576d872bce360" width="320px" height="568px"/>
 
 
 
@@ -45,8 +43,18 @@ https://github.com/user-attachments/assets/6f243871-dff4-4826-95ba-92503263eccf
 
 
 
+<img src="https://github.com/user-attachments/assets/4f0293a9-8c19-4843-ac89-9fb93a94e813" width="320px" height="568px"/>
 
-https://github.com/user-attachments/assets/13b258eb-1137-4117-84f6-81420dcf4154
+
+
+
+<br><br>
+
+✅ `차트` - 상단 좌측의 차트 버튼을 통해 차트 페이지로 이동할 수 있습니다. 월별/연별 지출을 카테고리 별로 확인이 가능합니다. 각 카테고리 클릭 시
+하단의 클릭한 카테고리의 세부 지출 리스트를 확인 할 수 있습니다.
+
+
+<img src="https://github.com/user-attachments/assets/fdfab213-2dc8-4a94-ad23-3d7d89e40ee7" width="320px" height="568px"/>
 
 
 
@@ -57,8 +65,8 @@ https://github.com/user-attachments/assets/13b258eb-1137-4117-84f6-81420dcf4154
 선택 할 수 있습니다. 그리고 로그아웃 버튼을 통해서 로그아웃이 가능합니다.
 
 
+<img src="https://github.com/user-attachments/assets/7475dc90-e36e-472b-8927-11719b97b6c1" width="320px" height="568px"/>
 
-https://github.com/user-attachments/assets/1b5d8d23-d800-4815-9ab6-7d303fc55a3d
 
 
 
